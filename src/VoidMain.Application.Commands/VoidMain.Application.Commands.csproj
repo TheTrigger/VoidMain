@@ -2,18 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
-    <Version>0.0.1</Version>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <Version>0.1.0</Version>
     <Authors>Maxim Kornilov</Authors>
-    <Description>VoidMain is a framework for building command-line applications.</Description>
-    <PackageProjectUrl>https://github.com/Maxim-Kornilov/VoidMain</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Maxim-Kornilov/VoidMain/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Maxim-Kornilov/VoidMain</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Maxim-Kornilov/VoidMain</RepositoryUrl>
     <PackageTags>cli;command-line;commands</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\netstandard1.4\VoidMain.xml</DocumentationFile>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VoidMain.Hosting\VoidMain.Hosting.csproj" />
+  </ItemGroup>
 
 </Project>
