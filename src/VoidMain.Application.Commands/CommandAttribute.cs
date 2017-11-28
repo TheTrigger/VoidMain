@@ -8,6 +8,15 @@ namespace VoidMain.Application.Commands
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public CommandAttribute()
+        {
+        }
+
+        public CommandAttribute(string name)
+        {
+            Name = name;
+        }
+
         public override string ToString() => Name;
     }
 
