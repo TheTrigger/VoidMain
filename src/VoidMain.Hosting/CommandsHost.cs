@@ -21,12 +21,12 @@ namespace VoidMain.Hosting
             _isDisposed = false;
         }
 
-        public Task StartAsync(CancellationToken token = default(CancellationToken))
+        public async Task StartAsync(CancellationToken token = default(CancellationToken))
         {
-            ThrowIfDisposed();
             token.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
             EnsureApplicationBuilt();
-            return _cli.StartAsync(_app, token);
+            await _cli.StartAsync(_app, token).ConfigureAwait(false);
         }
 
         public async Task StopAsync(CancellationToken token = default(CancellationToken))
