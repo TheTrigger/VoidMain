@@ -7,6 +7,7 @@ namespace VoidMain.CommandLineIinterface.Console
     {
         private static readonly Lazy<PlatformConsole> _instance
             = new Lazy<PlatformConsole>(() => new PlatformConsole());
+
         public static PlatformConsole Instance => _instance.Value;
 
         private PlatformConsole() { }
@@ -21,6 +22,12 @@ namespace VoidMain.CommandLineIinterface.Console
         {
             get => System.Console.Out;
             set => System.Console.SetOut(value);
+        }
+
+        public event ConsoleCancelEventHandler CancelKeyPress
+        {
+            add => System.Console.CancelKeyPress += value;
+            remove => System.Console.CancelKeyPress -= value;
         }
 
         public int BufferHeight
@@ -47,6 +54,7 @@ namespace VoidMain.CommandLineIinterface.Console
             set => System.Console.CursorLeft = value;
         }
 
+        public bool KeyAvailable => System.Console.KeyAvailable;
         public ConsoleKeyInfo ReadKey(bool intercept) => System.Console.ReadKey(intercept);
         public string ReadLine() => System.Console.ReadLine();
 

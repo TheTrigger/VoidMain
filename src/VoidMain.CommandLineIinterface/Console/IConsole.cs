@@ -7,12 +7,14 @@ namespace VoidMain.CommandLineIinterface.Console
     {
         TextReader In { get; set; }
         TextWriter Out { get; set; }
+        event ConsoleCancelEventHandler CancelKeyPress;
 
         int BufferHeight { get; set; }
         int BufferWidth { get; set; }
         int CursorTop { get; set; }
         int CursorLeft { get; set; }
 
+        bool KeyAvailable { get; }
         ConsoleKeyInfo ReadKey(bool intercept);
         string ReadLine();
 
