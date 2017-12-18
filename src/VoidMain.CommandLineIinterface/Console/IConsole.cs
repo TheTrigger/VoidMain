@@ -5,9 +5,10 @@ namespace VoidMain.CommandLineIinterface.Console
 {
     public interface IConsole
     {
+        event ConsoleCancelEventHandler CancelKeyPress;
+
         TextReader In { get; set; }
         TextWriter Out { get; set; }
-        event ConsoleCancelEventHandler CancelKeyPress;
 
         int BufferHeight { get; set; }
         int BufferWidth { get; set; }

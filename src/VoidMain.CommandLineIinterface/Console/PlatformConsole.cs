@@ -5,12 +5,18 @@ namespace VoidMain.CommandLineIinterface.Console
 {
     public sealed class PlatformConsole : IConsole
     {
+        private PlatformConsole() { }
+
         private static readonly Lazy<PlatformConsole> _instance
             = new Lazy<PlatformConsole>(() => new PlatformConsole());
 
         public static PlatformConsole Instance => _instance.Value;
 
-        private PlatformConsole() { }
+        public event ConsoleCancelEventHandler CancelKeyPress
+        {
+            add => System.Console.CancelKeyPress += value;
+            remove => System.Console.CancelKeyPress -= value;
+        }
 
         public TextReader In
         {
@@ -24,12 +30,7 @@ namespace VoidMain.CommandLineIinterface.Console
             set => System.Console.SetOut(value);
         }
 
-        public event ConsoleCancelEventHandler CancelKeyPress
-        {
-            add => System.Console.CancelKeyPress += value;
-            remove => System.Console.CancelKeyPress -= value;
-        }
-
+#pragma warning disable PC001 // API not supported on all platforms
         public int BufferHeight
         {
             get => System.Console.BufferHeight;
@@ -41,6 +42,7 @@ namespace VoidMain.CommandLineIinterface.Console
             get => System.Console.BufferWidth;
             set => System.Console.BufferWidth = value;
         }
+#pragma warning restore PC001 // API not supported on all platforms
 
         public int CursorTop
         {
