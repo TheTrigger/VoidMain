@@ -115,7 +115,6 @@ namespace VoidMain.CommandLineIinterface.Console
 
                     if (String.IsNullOrEmpty(commandLine))
                     {
-                        _console.WriteLine();
                         continue;
                     }
 

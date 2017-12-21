@@ -1,4 +1,5 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.Internal;
 
 namespace VoidMain.CommandLineIinterface.Console.InputHandlers
 {
@@ -24,10 +25,10 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
                     MoveToEnd(lineView);
                     break;
                 case ConsoleKey.LeftArrow:
-                    MoveLeft(lineView, HasControlKey(keyInfo));
+                    MoveLeft(lineView, keyInfo.HasControlKey());
                     break;
                 case ConsoleKey.RightArrow:
-                    MoveRight(lineView, HasControlKey(keyInfo));
+                    MoveRight(lineView, keyInfo.HasControlKey());
                     break;
                 default:
                     return false;
@@ -67,11 +68,6 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             {
                 lineView.Move(1);
             }
-        }
-
-        private bool HasControlKey(ConsoleKeyInfo keyInfo)
-        {
-            return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control);
         }
     }
 }

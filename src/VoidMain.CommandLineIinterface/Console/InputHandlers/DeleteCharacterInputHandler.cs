@@ -1,4 +1,5 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.Internal;
 
 namespace VoidMain.CommandLineIinterface.Console.InputHandlers
 {
@@ -17,14 +18,14 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
         {
             switch (keyInfo.Key)
             {
-                case ConsoleKey.Escape:
-                    ClearAll(lineView);
-                    break;
                 case ConsoleKey.Backspace:
-                    DeleteBackward(lineView, HasControlKey(keyInfo));
+                    DeleteBackward(lineView, keyInfo.HasControlKey());
                     break;
                 case ConsoleKey.Delete:
-                    DeleteForward(lineView, HasControlKey(keyInfo));
+                    DeleteForward(lineView, keyInfo.HasControlKey());
+                    break;
+                case ConsoleKey.Escape:
+                    ClearAll(lineView);
                     break;
                 default:
                     return false;
@@ -59,11 +60,6 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             {
                 lineView.Delete(1);
             }
-        }
-
-        private bool HasControlKey(ConsoleKeyInfo keyInfo)
-        {
-            return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control);
         }
     }
 }

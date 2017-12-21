@@ -4,6 +4,7 @@ using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.Console;
 using VoidMain.CommandLineIinterface.Console.ConsoleCursors;
 using VoidMain.CommandLineIinterface.Console.InputHandlers;
+using VoidMain.CommandLineIinterface.History;
 using VoidMain.CommandLineIinterface.Parser;
 
 namespace VoidMain.Hosting
@@ -26,8 +27,12 @@ namespace VoidMain.Hosting
                 services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
                 services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
                 services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
+                services.AddTransient<IConsoleInputHandler, CommandsHistoryInputHandler>();
 
                 services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
+
+                services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
+                services.AddSingleton<ICommandsHistoryStorage, InMemoryCommandsHistoryStorage>();
 
                 services.AddTransient<ICommandLineParser, CommandLineParser>();
             });

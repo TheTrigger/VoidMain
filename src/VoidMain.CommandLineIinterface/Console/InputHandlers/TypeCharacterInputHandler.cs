@@ -8,7 +8,7 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
 
         public bool Handle(ConsoleKeyInfo keyInfo, ICommandLineView lineView)
         {
-            // TODO: Handle 'Insert' key
+            // TODO: Handle 'Insert' key.
             if (!Char.IsControl(keyInfo.KeyChar))
             {
                 lineView.Type(keyInfo.KeyChar);

@@ -140,7 +140,7 @@ namespace VoidMain.CommandLineIinterface.Console
             _console.Write(value);
 
             int offset = 0;
-            while (_lineBuilder.Position != _lineBuilder.Length)
+            while (_lineBuilder.Position < _lineBuilder.Length && offset < value.Length)
             {
                 _lineBuilder[_lineBuilder.Position] = value[offset];
                 _lineBuilder.Move(1);
