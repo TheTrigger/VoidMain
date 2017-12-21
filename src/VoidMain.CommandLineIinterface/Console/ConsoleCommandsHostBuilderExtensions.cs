@@ -19,7 +19,6 @@ namespace VoidMain.Hosting
                 services.AddConsoleCursor();
 
                 services.AddSingleton<ICommandLineIinterface, ConsoleInterface>();
-                services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
 
                 services.AddTransient<ICommandLineReader, ConsoleCommandLineReader>();
                 services.AddTransient<IPrompt, CmdPrompt>();

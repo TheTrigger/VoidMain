@@ -13,6 +13,7 @@ namespace VoidMain.CommandLineIinterface.Console
         private readonly IConsole _console;
         private readonly ICommandLineReader _commandLineReader;
         private readonly ICommandLineParser _commandLineParser;
+        private readonly ConsoleLockingOutput _output;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
@@ -23,6 +24,7 @@ namespace VoidMain.CommandLineIinterface.Console
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _commandLineReader = commandLineReader ?? throw new ArgumentNullException(nameof(commandLineReader));
             _commandLineParser = commandLineParser ?? throw new ArgumentNullException(nameof(commandLineParser));
+            _output = new ConsoleLockingOutput(console);
             _cliLoopTokenSource = new CancellationTokenSource();
             _cliLoop = null;
             IsRunning = false;
@@ -87,6 +89,7 @@ namespace VoidMain.CommandLineIinterface.Console
                 {
                     try
                     {
+                        _output.LockForRead();
                         commandLine = await _commandLineReader.ReadLineAsync(consoleTokenSource.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
@@ -109,6 +112,10 @@ namespace VoidMain.CommandLineIinterface.Console
                             break;
                         }
                     }
+                    finally
+                    {
+                        _output.Unlock();
+                    }
 
                     // Reset flag after succesfull reading.
                     isFirstCancel = true;
@@ -130,6 +137,7 @@ namespace VoidMain.CommandLineIinterface.Console
                         var context = new Dictionary<string, object>();
                         _commandLineParser.ParseToContext(commandLine, context);
                         context[ContextKey.CommandCancelled] = consoleTokenSource.Token;
+                        context[ContextKey.Output] = _output;
 
                         if (loopToken.IsCancellationRequested)
                         {

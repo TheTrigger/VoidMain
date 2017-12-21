@@ -4,7 +4,7 @@ namespace VoidMain.CommandLineIinterface.Console
 {
     public class ConsoleLockingOutput : ICommandLineOutput
     {
-        private const string LockErrorMessage = "Output is locked during the read operation.";
+        private const string LockErrorMessage = "Output is locked during a read operation.";
 
         private readonly IConsole _console;
         private bool _isLocked;

@@ -7,5 +7,7 @@
         public static readonly string CommandName = Namespace + "CommandName";
         public static readonly string CommandOptions = Namespace + "CommandOptions";
         public static readonly string CommandOperands = Namespace + "CommandOperands";
+        public static readonly string CommandCancelled = Namespace + "CommandCancelled";
+        public static readonly string Output = Namespace + "Output";
     }
 }
