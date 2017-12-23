@@ -9,7 +9,7 @@ namespace SimpleApp
         static void Main(string[] args)
         {
             var host = new CommandsHostBuilder()
-                .UseSimpleConsole()
+                .UseConsole()
                 .UseStartup<Program>()
                 .Build();
 
