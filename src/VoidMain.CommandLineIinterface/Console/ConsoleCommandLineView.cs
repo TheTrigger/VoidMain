@@ -112,6 +112,7 @@ namespace VoidMain.CommandLineIinterface.Console
             if (_lineBuilder.Position < _lineBuilder.Length)
             {
                 _lineBuilder[_lineBuilder.Position] = value;
+                _lineBuilder.Move(1);
             }
             else
             {
