@@ -18,5 +18,10 @@ namespace VoidMain.CommandLineIinterface.Internal
         {
             return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control);
         }
+
+        public static bool HasNoModifiers(this ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Modifiers == 0;
+        }
     }
 }
