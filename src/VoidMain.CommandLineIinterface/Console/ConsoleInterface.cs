@@ -75,7 +75,6 @@ namespace VoidMain.CommandLineIinterface.Console
         {
             await Task.Yield();
 
-            var comparer = StringComparer.OrdinalIgnoreCase;
             var consoleTokenSource = new ConsoleCancelEventTokenSource(_console);
             loopToken.Register(consoleTokenSource.Cancel);
             IsRunning = true;
@@ -123,13 +122,6 @@ namespace VoidMain.CommandLineIinterface.Console
                     if (String.IsNullOrEmpty(commandLine))
                     {
                         continue;
-                    }
-
-                    // TODO: Replace with proper commands.
-                    if (comparer.Equals(commandLine, "q") ||
-                        comparer.Equals(commandLine, "quit"))
-                    {
-                        break;
                     }
 
                     try
