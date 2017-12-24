@@ -9,26 +9,30 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
 
         public int Order { get; set; } = 0;
 
-        public bool Handle(ConsoleKeyInfo keyInfo, ICommandLineView lineView)
+        public void Handle(ConsoleInputEventArgs args)
         {
-            if (!Char.IsControl(keyInfo.KeyChar))
+            if (args.IsHandledHint) return;
+
+            var input = args.Input;
+            var lineView = args.LineView;
+
+            if (!Char.IsControl(input.KeyChar))
             {
                 if (_insert)
                 {
-                    lineView.TypeOver(keyInfo.KeyChar);
+                    lineView.TypeOver(input.KeyChar);
                 }
                 else
                 {
-                    lineView.Type(keyInfo.KeyChar);
+                    lineView.Type(input.KeyChar);
                 }
-                return true;
+                args.IsHandledHint = true;
             }
-            else if (keyInfo.Key == ConsoleKey.Insert && keyInfo.HasNoModifiers())
+            else if (input.Key == ConsoleKey.Insert && input.HasNoModifiers())
             {
                 _insert = !_insert;
-                return true;
+                args.IsHandledHint = true;
             }
-            return false;
         }
     }
 }

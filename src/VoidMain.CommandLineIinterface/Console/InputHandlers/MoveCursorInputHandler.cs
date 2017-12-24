@@ -14,59 +14,72 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             _fastNavigation = fastNavigation ?? throw new ArgumentNullException(nameof(fastNavigation));
         }
 
-        public bool Handle(ConsoleKeyInfo keyInfo, ICommandLineView lineView)
+        public void Handle(ConsoleInputEventArgs args)
         {
-            switch (keyInfo.Key)
+            if (args.IsHandledHint) return;
+
+            switch (args.Input.Key)
             {
                 case ConsoleKey.Home:
-                    MoveToStart(lineView);
+                    MoveToStart(args);
                     break;
                 case ConsoleKey.End:
-                    MoveToEnd(lineView);
+                    MoveToEnd(args);
                     break;
                 case ConsoleKey.LeftArrow:
-                    MoveLeft(lineView, keyInfo.HasControlKey());
+                    MoveLeft(args);
                     break;
                 case ConsoleKey.RightArrow:
-                    MoveRight(lineView, keyInfo.HasControlKey());
+                    MoveRight(args);
                     break;
                 default:
-                    return false;
+                    break;
             }
-            return true;
         }
 
-        private void MoveToStart(ICommandLineView lineView)
+        private void MoveToStart(ConsoleInputEventArgs args)
         {
-            lineView.MoveTo(0);
+            args.LineView.MoveTo(0);
+            args.IsHandledHint = true;
         }
 
-        private void MoveToEnd(ICommandLineView lineView)
+        private void MoveToEnd(ConsoleInputEventArgs args)
         {
-            lineView.MoveTo(lineView.Length);
+            args.LineView.MoveTo(args.LineView.Length);
+            args.IsHandledHint = true;
         }
 
-        private void MoveLeft(ICommandLineView lineView, bool fast)
+        private void MoveLeft(ConsoleInputEventArgs args)
         {
+            bool fast = args.Input.HasControlKey();
+            var lineView = args.LineView;
+
             if (fast)
             {
                 lineView.MoveTo(_fastNavigation.FindPrev(lineView));
+                args.IsHandledHint = true;
             }
             else if (lineView.Position > 0)
             {
                 lineView.Move(-1);
+                args.IsHandledHint = true;
             }
         }
 
-        private void MoveRight(ICommandLineView lineView, bool fast)
+        private void MoveRight(ConsoleInputEventArgs args)
         {
+            bool fast = args.Input.HasControlKey();
+            var lineView = args.LineView;
+
             if (fast)
             {
                 lineView.MoveTo(_fastNavigation.FindNext(lineView));
+                args.IsHandledHint = true;
             }
             else if (lineView.Position < lineView.Length)
             {
                 lineView.Move(1);
+                args.IsHandledHint = true;
             }
         }
     }

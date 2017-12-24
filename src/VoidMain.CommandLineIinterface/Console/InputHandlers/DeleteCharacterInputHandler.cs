@@ -14,52 +14,64 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             _fastNavigation = fastNavigation ?? throw new ArgumentNullException(nameof(fastNavigation));
         }
 
-        public bool Handle(ConsoleKeyInfo keyInfo, ICommandLineView lineView)
+        public void Handle(ConsoleInputEventArgs args)
         {
-            switch (keyInfo.Key)
+            if (args.IsHandledHint) return;
+
+            switch (args.Input.Key)
             {
                 case ConsoleKey.Backspace:
-                    DeleteBackward(lineView, keyInfo.HasControlKey());
+                    DeleteBackward(args);
                     break;
                 case ConsoleKey.Delete:
-                    DeleteForward(lineView, keyInfo.HasControlKey());
+                    DeleteForward(args);
                     break;
                 case ConsoleKey.Escape:
-                    ClearAll(lineView);
+                    ClearAll(args);
                     break;
                 default:
-                    return false;
+                    break;
             }
-            return true;
         }
 
-        private void ClearAll(ICommandLineView lineView)
+        private void DeleteBackward(ConsoleInputEventArgs args)
         {
-            lineView.ClearAll();
-        }
+            bool fast = args.Input.HasControlKey();
+            var lineView = args.LineView;
 
-        private void DeleteBackward(ICommandLineView lineView, bool fast)
-        {
             if (fast)
             {
                 lineView.Delete(_fastNavigation.FindPrev(lineView) - lineView.Position);
+                args.IsHandledHint = true;
             }
             else if (lineView.Position > 0)
             {
                 lineView.Delete(-1);
+                args.IsHandledHint = true;
             }
         }
 
-        private void DeleteForward(ICommandLineView lineView, bool fast)
+        private void DeleteForward(ConsoleInputEventArgs args)
         {
+            bool fast = args.Input.HasControlKey();
+            var lineView = args.LineView;
+
             if (fast)
             {
                 lineView.Delete(_fastNavigation.FindNext(lineView) - lineView.Position);
+                args.IsHandledHint = true;
             }
             else if (lineView.Position < lineView.Length)
             {
                 lineView.Delete(1);
+                args.IsHandledHint = true;
             }
+        }
+
+        private void ClearAll(ConsoleInputEventArgs args)
+        {
+            args.LineView.ClearAll();
+            args.IsHandledHint = true;
         }
     }
 }

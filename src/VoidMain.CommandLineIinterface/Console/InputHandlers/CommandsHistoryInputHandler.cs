@@ -16,55 +16,60 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             _temp = null;
         }
 
-        public bool Handle(ConsoleKeyInfo keyInfo, ICommandLineView view)
+        public void Handle(ConsoleInputEventArgs args)
         {
-            switch (keyInfo.Key)
+            if (args.IsHandledHint) return;
+
+            switch (args.Input.Key)
             {
                 case ConsoleKey.UpArrow:
-                    SetPrevCommand(view);
+                    SetPrevCommand(args);
                     break;
                 case ConsoleKey.DownArrow:
-                    SetNextCommand(view);
+                    SetNextCommand(args);
                     break;
                 case ConsoleKey.Enter:
-                    AddCommand(view);
+                    AddCommand(args);
                     break;
                 default:
-                    return false;
+                    break;
             }
-            return true;
         }
 
-        private void SetPrevCommand(ICommandLineView view)
+        private void SetPrevCommand(ConsoleInputEventArgs args)
         {
             if (_historyManager.TryGetPrevCommand(out string command))
             {
                 if (_temp == null)
                 {
-                    _temp = view.ToString();
+                    _temp = args.LineView.ToString();
                 }
-                view.ReplaceWith(command);
+                args.LineView.ReplaceWith(command);
+                args.IsHandledHint = true;
             }
         }
 
-        private void SetNextCommand(ICommandLineView view)
+        private void SetNextCommand(ConsoleInputEventArgs args)
         {
             if (_historyManager.TryGetNextCommand(out string command))
             {
-                view.ReplaceWith(command);
+                args.LineView.ReplaceWith(command);
+                args.IsHandledHint = true;
             }
             else if (_temp != null)
             {
-                view.ReplaceWith(_temp);
+                args.LineView.ReplaceWith(_temp);
                 _temp = null;
+                args.IsHandledHint = true;
             }
         }
 
-        private void AddCommand(ICommandLineView view)
+        private void AddCommand(ConsoleInputEventArgs args)
         {
-            string command = view.ToString();
+            string command = args.LineView.ToString();
             _historyManager.AddCommand(command);
             _temp = null;
+            args.IsHandledHint = true;
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace VoidMain.CommandLineIinterface.Console
+﻿namespace VoidMain.CommandLineIinterface.Console
 {
     public interface IConsoleInputHandler
     {
         int Order { get; }
-        bool Handle(ConsoleKeyInfo keyInfo, ICommandLineView view);
+        void Handle(ConsoleInputEventArgs args);
     }
 }

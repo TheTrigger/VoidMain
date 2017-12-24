@@ -40,17 +40,22 @@ namespace VoidMain.CommandLineIinterface.Console
                 var keyInfo = await _keyReader.ReadKeyAsync(token, intercept: true).ConfigureAwait(false);
 
                 _viewManager.StartChanges();
-                var view = _viewManager.GetView();
+                var lineView = _viewManager.GetView();
+
+                var eventArgs = new ConsoleInputEventArgs();
+                eventArgs.LineView = lineView;
+                eventArgs.Input = keyInfo;
+                eventArgs.IsHandledHint = false;
+
                 for (int i = 0; i < _inputHandlers.Length; i++)
                 {
-                    bool handled = _inputHandlers[i].Handle(keyInfo, view);
-                    if (handled) break;
+                    _inputHandlers[i].Handle(eventArgs);
                 }
                 _viewManager.EndChanges();
 
                 if (keyInfo.Key == ConsoleKey.Enter)
                 {
-                    return FinishRead(view);
+                    return FinishRead(lineView);
                 }
             }
 
