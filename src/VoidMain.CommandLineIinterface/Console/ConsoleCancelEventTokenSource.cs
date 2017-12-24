@@ -29,14 +29,16 @@ namespace VoidMain.CommandLineIinterface.Console
 
         private void Cancelled(object sender, ConsoleCancelEventArgs e)
         {
-            if (e.SpecialKey != ConsoleSpecialKey.ControlC || _isDisposed)
-            {
-                return;
-            }
+            if (_isDisposed) return;
+
             lock (_tokenSource)
             {
                 e.Cancel = true;
-                _tokenSource.Cancel();
+                // ISSUE: `CancelKeyPress -= Cancelled` hangs if token
+                // was cancelled inside ConsoleCancelEventHandler.
+                // WORKAROUND: Use `CancelAfter(0)` because it starts
+                // a timer and performs cancelation in another thread.
+                _tokenSource.CancelAfter(0);
             }
         }
 

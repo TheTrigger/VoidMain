@@ -155,7 +155,6 @@ namespace VoidMain.CommandLineIinterface.Console
             }
             finally
             {
-                // TODO: Fix hanging.
                 consoleTokenSource.Dispose();
                 IsRunning = false;
             }
