@@ -11,6 +11,7 @@ namespace VoidMain.CommandLineIinterface.Console
     public class ConsoleInterface : ICommandLineIinterface
     {
         private readonly IConsole _console;
+        private readonly IPrompt _prompt;
         private readonly ICommandLineReader _commandLineReader;
         private readonly ICommandLineParser _commandLineParser;
         private readonly ConsoleLockingOutput _output;
@@ -18,10 +19,11 @@ namespace VoidMain.CommandLineIinterface.Console
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
 
-        public ConsoleInterface(IConsole console,
+        public ConsoleInterface(IConsole console, IPrompt prompt,
             ICommandLineReader commandLineReader, ICommandLineParser commandLineParser)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
+            _prompt = prompt ?? throw new ArgumentNullException(nameof(prompt));
             _commandLineReader = commandLineReader ?? throw new ArgumentNullException(nameof(commandLineReader));
             _commandLineParser = commandLineParser ?? throw new ArgumentNullException(nameof(commandLineParser));
             _output = new ConsoleLockingOutput(console);
@@ -89,7 +91,7 @@ namespace VoidMain.CommandLineIinterface.Console
                     try
                     {
                         _output.LockForRead();
-                        commandLine = await _commandLineReader.ReadLineAsync(consoleTokenSource.Token).ConfigureAwait(false);
+                        commandLine = await _commandLineReader.ReadLineAsync(_prompt, consoleTokenSource.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {

@@ -5,6 +5,6 @@ namespace VoidMain.CommandLineIinterface.Console
 {
     public interface ICommandLineReader
     {
-        Task<string> ReadLineAsync(CancellationToken token);
+        Task<string> ReadLineAsync(IPrompt prompt, CancellationToken token);
     }
 }

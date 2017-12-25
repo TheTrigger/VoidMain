@@ -10,16 +10,14 @@ namespace VoidMain.CommandLineIinterface.Console
     {
         private readonly IConsole _console;
         private readonly ICommandLineViewManager _viewManager;
-        private readonly IPrompt _prompt;
         private readonly IConsoleInputHandler[] _inputHandlers;
         private readonly ConsoleKeyAsyncReader _keyReader;
 
-        public ConsoleCommandLineReader(IConsole console, ICommandLineViewManager viewManager,
-            IPrompt prompt, IEnumerable<IConsoleInputHandler> inputHandlers)
+        public ConsoleCommandLineReader(IConsole console,
+            ICommandLineViewManager viewManager, IEnumerable<IConsoleInputHandler> inputHandlers)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _viewManager = viewManager ?? throw new ArgumentNullException(nameof(viewManager));
-            _prompt = prompt ?? throw new ArgumentNullException(nameof(prompt));
             if (inputHandlers == null)
             {
                 throw new ArgumentNullException(nameof(inputHandlers));
@@ -28,12 +26,15 @@ namespace VoidMain.CommandLineIinterface.Console
             _keyReader = new ConsoleKeyAsyncReader(_console, 100, 1000);
         }
 
-        public async Task<string> ReadLineAsync(CancellationToken token)
+        public async Task<string> ReadLineAsync(IPrompt prompt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
-            string promptMessage = _prompt.GetMessage();
-            _console.Write(promptMessage);
+            string promptMessage = prompt.GetMessage();
+            if (!String.IsNullOrEmpty(promptMessage))
+            {
+                _console.Write(promptMessage);
+            }
 
             while (!token.IsCancellationRequested)
             {
