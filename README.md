@@ -4,18 +4,21 @@ Almost every part of the framework can be extended or replaced.
 
 ## Work in progress
 
-### Planned features
+**Planned features**
 - Command-line interface
-  - Syntax highlight
+  - Async and cancellable input **(done)**
+  - Masked input
+  - Prompt message  **(done)**
+  - Commands history  **(done)**
   - Autocomplete
-  - Commands history
+  - Syntax highlight
+- Easy configuration with
+  - Method signature
+  - Attributes
+  - Expression trees
 - Standard commands
   - Help commands
   - Version command
-- Easy configuration
-  - with method signature
-  - with attributes
-  - with expression trees
 
 ## How to use?
 
@@ -26,7 +29,7 @@ class Program : IStartup
     static void Main(string[] args)
     {
         var host = new CommandsHostBuilder()
-            .UseSimpleConsole()
+            .UseConsole()
             .UseStartup<Program>()
             .Build();
 
