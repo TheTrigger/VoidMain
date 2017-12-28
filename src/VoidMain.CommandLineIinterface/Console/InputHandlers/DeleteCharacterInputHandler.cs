@@ -39,7 +39,7 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
 
-            if (fast)
+            if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
                 lineView.Delete(_fastNavigation.FindPrev(lineView) - lineView.Position);
                 args.IsHandledHint = true;
@@ -56,7 +56,7 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
 
-            if (fast)
+            if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
                 lineView.Delete(_fastNavigation.FindNext(lineView) - lineView.Position);
                 args.IsHandledHint = true;

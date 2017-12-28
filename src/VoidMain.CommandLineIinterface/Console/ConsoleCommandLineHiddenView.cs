@@ -2,18 +2,14 @@
 
 namespace VoidMain.CommandLineIinterface.Console
 {
-    public class ConsoleCommandLineView : ICommandLineView
+    public class ConsoleCommandLineHiddenView : ICommandLineView
     {
-        private readonly IConsole _console;
-        private readonly IConsoleCursor _cursor;
         private readonly CommandLineBuilder _lineBuilder;
 
-        public ConsoleCommandLineView(IConsole console, IConsoleCursor cursor)
+        public ConsoleCommandLineHiddenView()
         {
-            _console = console ?? throw new ArgumentNullException(nameof(console));
-            _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
             _lineBuilder = new CommandLineBuilder();
-            ViewType = CommandLineViewType.Normal;
+            ViewType = CommandLineViewType.Hidden;
             MaskSymbol = Char.MinValue;
         }
 
@@ -31,69 +27,31 @@ namespace VoidMain.CommandLineIinterface.Console
         public void Move(int offset)
         {
             _lineBuilder.Move(offset); // Throws if out of range
-            _cursor.Move(offset);
         }
 
         public void MoveTo(int newPos)
         {
-            int oldPos = _lineBuilder.Position;
             _lineBuilder.MoveTo(newPos); // Throws if out of range
-            _cursor.Move(newPos - oldPos);
         }
 
         public void Delete(int count)
         {
             if (count == 0) return;
-
             _lineBuilder.Delete(count); // Throws if out of range
-
-            if (count < 0)
-            {
-                _cursor.Move(count);
-                count = -count;
-            }
-
-            if (_lineBuilder.Position != _lineBuilder.Length)
-            {
-                string tail = _lineBuilder.ToString(_lineBuilder.Position);
-                _console.Write(tail);
-            }
-            FillWith(' ', count);
-            _cursor.Move(_lineBuilder.Position - _lineBuilder.Length - count);
         }
 
         public void ClearAll()
         {
-            _cursor.Move(-_lineBuilder.Position);
-            FillWith(' ', _lineBuilder.Length);
-            _cursor.Move(-_lineBuilder.Length);
-
             _lineBuilder.Clear();
-        }
-
-        private void FillWith(char symbol, int length)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                _console.Write(symbol);
-            }
         }
 
         public void Type(char value)
         {
-            _console.Write(value);
-            if (_lineBuilder.Position != _lineBuilder.Length)
-            {
-                string tail = _lineBuilder.ToString(_lineBuilder.Position);
-                _console.Write(tail);
-                _cursor.Move(-tail.Length);
-            }
             _lineBuilder.Insert(value);
         }
 
         public void TypeOver(char value)
         {
-            _console.Write(value);
             if (_lineBuilder.Position < _lineBuilder.Length)
             {
                 _lineBuilder[_lineBuilder.Position] = value;
@@ -108,22 +66,12 @@ namespace VoidMain.CommandLineIinterface.Console
         public void Type(string value)
         {
             if (String.IsNullOrEmpty(value)) return;
-
-            _console.Write(value);
-            if (_lineBuilder.Position != _lineBuilder.Length)
-            {
-                string tail = _lineBuilder.ToString(_lineBuilder.Position);
-                _console.Write(tail);
-                _cursor.Move(-tail.Length);
-            }
             _lineBuilder.Insert(value);
         }
 
         public void TypeOver(string value)
         {
             if (String.IsNullOrEmpty(value)) return;
-
-            _console.Write(value);
 
             int offset = 0;
             while (_lineBuilder.Position < _lineBuilder.Length && offset < value.Length)

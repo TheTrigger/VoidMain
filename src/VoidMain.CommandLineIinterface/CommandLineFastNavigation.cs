@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface
 {
     public class CommandLineFastNavigation : ICommandLineFastNavigation
     {

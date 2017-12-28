@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.Console
+﻿namespace VoidMain.CommandLineIinterface
 {
     public interface ICommandLineFastNavigation
     {

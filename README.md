@@ -7,9 +7,9 @@ Almost every part of the framework can be extended or replaced.
 **Planned features**
 - Command-line interface
   - Async and cancellable input **(done)**
-  - Masked input
-  - Prompt message  **(done)**
-  - Commands history  **(done)**
+  - Masked input **(done)**
+  - Prompt message **(done)**
+  - Commands history **(done)**
   - Autocomplete
   - Syntax highlight
 - Easy configuration with

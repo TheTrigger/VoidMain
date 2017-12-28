@@ -54,7 +54,7 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
 
-            if (fast)
+            if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
                 lineView.MoveTo(_fastNavigation.FindPrev(lineView));
                 args.IsHandledHint = true;
@@ -71,7 +71,7 @@ namespace VoidMain.CommandLineIinterface.Console.InputHandlers
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
 
-            if (fast)
+            if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
                 lineView.MoveTo(_fastNavigation.FindNext(lineView));
                 args.IsHandledHint = true;

@@ -12,20 +12,20 @@ namespace VoidMain.CommandLineIinterface.Console
     {
         private readonly IConsole _console;
         private readonly IPrompt _prompt;
-        private readonly ICommandLineReader _commandLineReader;
-        private readonly ICommandLineParser _commandLineParser;
+        private readonly ICommandLineReader _reader;
+        private readonly ICommandLineParser _parser;
         private readonly ConsoleLockingOutput _output;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
 
         public ConsoleInterface(IConsole console, IPrompt prompt,
-            ICommandLineReader commandLineReader, ICommandLineParser commandLineParser)
+            ICommandLineReader reader, ICommandLineParser parser)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _prompt = prompt ?? throw new ArgumentNullException(nameof(prompt));
-            _commandLineReader = commandLineReader ?? throw new ArgumentNullException(nameof(commandLineReader));
-            _commandLineParser = commandLineParser ?? throw new ArgumentNullException(nameof(commandLineParser));
+            _reader = reader ?? throw new ArgumentNullException(nameof(reader));
+            _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _output = new ConsoleLockingOutput(console);
             _cliLoopTokenSource = new CancellationTokenSource();
             _cliLoop = null;
@@ -91,7 +91,7 @@ namespace VoidMain.CommandLineIinterface.Console
                     try
                     {
                         _output.LockForRead();
-                        commandLine = await _commandLineReader.ReadLineAsync(_prompt, consoleTokenSource.Token).ConfigureAwait(false);
+                        commandLine = await _reader.ReadLineAsync(_prompt, consoleTokenSource.Token).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {
@@ -129,7 +129,7 @@ namespace VoidMain.CommandLineIinterface.Console
                     try
                     {
                         var context = new Dictionary<string, object>();
-                        _commandLineParser.ParseToContext(commandLine, context);
+                        _parser.ParseToContext(commandLine, context);
                         context[ContextKey.CommandCancelled] = consoleTokenSource.Token;
                         context[ContextKey.Output] = _output;
 

@@ -22,7 +22,7 @@ namespace VoidMain.Hosting
 
                 services.AddTransient<ICommandLineReader, ConsoleCommandLineReader>();
                 services.AddTransient<IPrompt, CmdPrompt>();
-                services.AddTransient<ICommandLineViewManager, ConsoleCommandLineView>();
+                services.AddTransient<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
                 services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
                 services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
                 services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();

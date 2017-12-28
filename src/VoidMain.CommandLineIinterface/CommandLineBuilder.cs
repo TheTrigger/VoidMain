@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface
 {
     public class CommandLineBuilder
     {
