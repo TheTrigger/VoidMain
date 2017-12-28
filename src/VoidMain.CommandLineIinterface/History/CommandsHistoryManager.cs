@@ -15,11 +15,14 @@ namespace VoidMain.CommandLineIinterface.History
         private readonly int _maxCount;
         private int _current;
 
+        public int Count { get { EnsureCommandsLoaded(); return _commands.Count; } }
+        public int MaxCount => _maxCount;
+
         public CommandsHistoryManager(ICommandsHistoryStorage storage)
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
             _savePeriod = 10_000; // TODO: Configure save period.
-            _maxCount = 3; // TODO: Configure count.
+            _maxCount = 10; // TODO: Configure count.
         }
 
         private void EnsureCommandsLoaded()
