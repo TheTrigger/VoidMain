@@ -7,7 +7,7 @@ namespace VoidMain.CommandLineIinterface
         private static Predicate<char> IsWhitespace = Char.IsWhiteSpace;
         private static Predicate<char> IsNotWhitespace = c => !Char.IsWhiteSpace(c);
 
-        public int FindNext(ICommandLineView lineView)
+        public int FindNext(ICommandLineReadOnlyView lineView)
         {
             if (lineView.Position >= lineView.Length - 1)
             {
@@ -23,7 +23,7 @@ namespace VoidMain.CommandLineIinterface
             return SkipWhileForward(lineView, currPos, predicate);
         }
 
-        public int FindPrev(ICommandLineView lineView)
+        public int FindPrev(ICommandLineReadOnlyView lineView)
         {
             if (lineView.Position == 0) return 0;
 
@@ -36,7 +36,7 @@ namespace VoidMain.CommandLineIinterface
             return SkipWhileBackward(lineView, currPos, predicate) + 1;
         }
 
-        public static int SkipWhileForward(ICommandLineView lineView,
+        private static int SkipWhileForward(ICommandLineReadOnlyView lineView,
             int start, Predicate<char> predicate)
         {
             int pos;
@@ -48,7 +48,7 @@ namespace VoidMain.CommandLineIinterface
             return pos;
         }
 
-        public static int SkipWhileBackward(ICommandLineView lineView,
+        private static int SkipWhileBackward(ICommandLineReadOnlyView lineView,
             int start, Predicate<char> predicate)
         {
             int pos;

@@ -2,7 +2,7 @@
 {
     public interface ICommandLineFastNavigation
     {
-        int FindNext(ICommandLineView lineView);
-        int FindPrev(ICommandLineView lineView);
+        int FindNext(ICommandLineReadOnlyView lineView);
+        int FindPrev(ICommandLineReadOnlyView lineView);
     }
 }
