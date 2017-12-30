@@ -4,8 +4,6 @@ namespace VoidMain.CommandLineIinterface.Console
 {
     public class ConsoleLockingOutput : ICommandLineOutput
     {
-        private const string LockErrorMessage = "Output is locked during a read operation.";
-
         private readonly IConsole _console;
         private bool _isLocked;
 
@@ -18,57 +16,65 @@ namespace VoidMain.CommandLineIinterface.Console
         public void LockForRead() => _isLocked = true;
         public void Unlock() => _isLocked = false;
 
+        private void ThrowIfLocked()
+        {
+            if (_isLocked)
+            {
+                throw new InvalidOperationException("Output is locked during a read operation.");
+            }
+        }
+
         public void Write(char value)
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.Write(value);
         }
 
         public void Write(string value)
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.Write(value);
         }
 
         public void Write(object value)
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.Write(value);
         }
 
         public void Write(string format, params object[] args)
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.Write(format, args);
         }
 
         public void WriteLine()
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.WriteLine();
         }
 
         public void WriteLine(string value)
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.WriteLine(value);
         }
 
         public void WriteLine(object value)
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.WriteLine(value);
         }
 
         public void WriteLine(string format, params object[] args)
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.WriteLine(format, args);
         }
 
         public void Clear()
         {
-            if (_isLocked) throw new InvalidOperationException(LockErrorMessage);
+            ThrowIfLocked();
             _console.Clear();
         }
     }
