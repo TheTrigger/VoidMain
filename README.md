@@ -12,10 +12,15 @@ Almost every part of the framework can be extended or replaced.
   - Commands history **(done)**
   - Autocomplete
   - Syntax highlight
+  - Command-line parser
 - Easy configuration with
   - Method signature
   - Attributes
   - Expression trees
+- Commands execution
+  - Command resolver
+  - Value parsers
+  - Arguments binder
 - Standard commands
   - Help commands
   - Version command
@@ -61,10 +66,7 @@ public class GreetingsModule : Module
 CMD> app.exe greetings hello world
 ```
 
-You can get rid of `greetings` if you set module name to `null` like this:
-```csharp
-[Module(Name = null)]
-```
+You can get rid of `greetings` if you set module name to `null` like this: `[Module(Name = null)]`
 ```
 CMD> app.exe hello world
 ```
