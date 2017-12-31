@@ -80,7 +80,8 @@ namespace VoidMain.CommandLineIinterface.Parser
                     }
                     else if (Char.IsDigit(next))
                     {
-                        token = ScanPotentialNegativeNumberToken(input, cursor);
+                        // Possibly a negative number.
+                        token = ScanLiteralOrIdentifierToken(input, cursor);
                     }
                     else
                     {
@@ -104,64 +105,98 @@ namespace VoidMain.CommandLineIinterface.Parser
             return token;
         }
 
-        private SyntaxToken ScanPotentialNegativeNumberToken(string input, ElementsCursor<char> cursor)
-        {
-            int start = cursor.Position;
-
-            cursor.MoveNext(2);
-
-            while (!cursor.IsAtTheEnd())
-            {
-                var c = cursor.Peek();
-                if(Char.IsWhiteSpace(c)) break;
-                cursor.MoveNext();
-            }
-
-            int length = cursor.Position - start;
-
-            return _syntaxFactory.IdentifierOrLiteralToken(
-                input, start, length, input.Substring(start, length));
-        }
-
         private SyntaxToken ScanLiteralOrIdentifierToken(string input, ElementsCursor<char> cursor)
         {
             int start = cursor.Position;
-            bool quoted = false;
+            char? quote = null;
             var stringValue = new StringBuilder(128);
+
+            char first = cursor.Peek();
+            bool isIdentifier = Char.IsLetter(first);
+
+            if (first == '"' || first == '\'')
+            {
+                quote = first;
+                isIdentifier = false;
+                cursor.MoveNext();
+            }
 
             while (!cursor.IsAtTheEnd())
             {
-                var c = cursor.Peek();
+                char c = cursor.Peek();
 
-                if (Char.IsWhiteSpace(c) || c == '=' || c == ':')
+                if (Char.IsWhiteSpace(c))
                 {
-                    if (!quoted) break;
+                    if (!quote.HasValue) break;
                     stringValue.Append(c);
                     cursor.MoveNext();
                 }
-                else if (c == '"')
+                else if (c == '=' || c == ':')
                 {
-                    // escaped quote symbol
-                    if (quoted && cursor.Peek(1) == '"')
+                    if (isIdentifier) break;
+                    stringValue.Append(c);
+                    cursor.MoveNext();
+                }
+                else if (c == '"' || c == '\'')
+                {
+                    // Start of another quoted literal.
+                    if (!quote.HasValue) break;
+
+                    if (c == quote)
                     {
-                        stringValue.Append('"');
-                        cursor.MoveNext(2);
+                        char next = cursor.Peek(1);
+                        if (next == c)
+                        {
+                            // Escaped quote sequence.
+                            stringValue.Append(c);
+                            cursor.MoveNext(2);
+                        }
+                        else
+                        {
+                            // Closing quote symbol.
+                            cursor.MoveNext();
+                            break;
+                        }
                     }
                     else
                     {
-                        quoted = !quoted;
+                        // Another quote symbol.
+                        stringValue.Append(c);
                         cursor.MoveNext();
                     }
                 }
                 else
                 {
+                    if (isIdentifier && !IsIdentifierSymbol(c))
+                    {
+                        isIdentifier = false;
+                    }
                     stringValue.Append(c);
                     cursor.MoveNext();
                 }
             }
 
-            return _syntaxFactory.IdentifierOrLiteralToken(
-                input, start, cursor.Position - start, stringValue.ToString());
+            // We don't know for sure that this is a pure identifier without a context
+            // but we definitely can identify a pure literal.
+            if (isIdentifier)
+            {
+                return _syntaxFactory.IdentifierOrLiteralToken(
+                    input, start, cursor.Position - start, stringValue.ToString());
+            }
+            else
+            {
+                return _syntaxFactory.LiteralToken(
+                    input, start, cursor.Position - start, stringValue.ToString(), quoted: quote.HasValue);
+            }
+        }
+
+        private bool IsIdentifierSymbol(char symbol)
+        {
+            // First symbol must be a letter but it tested separately.
+            return Char.IsLetterOrDigit(symbol)
+                || symbol == '_'
+                || symbol == '-'
+                || symbol == '.';
         }
     }
 }

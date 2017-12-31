@@ -33,15 +33,37 @@ namespace VoidMain.CommandLineIinterface.Tests
         }
 
         [Theory]
+        [InlineData("a", 0, 0)]
+        [InlineData(" a ", 1, 1)]
+        [InlineData("  a  ", 2, 2)]
+        public void LexTokenTrivia(string input, int leading, int trailing)
+        {
+            // Arrange
+            var syntaxFactory = new SyntaxFactory();
+            var lexer = new CommandLineLexer(syntaxFactory);
+
+            // Act
+            var token = lexer.Lex(input).First();
+
+            // Assert
+            if (leading > 0)
+            {
+                Assert.True(token.HasLeadingTrivia);
+                Assert.Equal(leading, token.LeadingTrivia.Span.Length);
+            }
+            if (trailing > 0)
+            {
+                Assert.True(token.HasTrailingTrivia);
+                Assert.Equal(trailing, token.TrailingTrivia.Span.Length);
+            }
+        }
+
+        [Theory]
         [InlineData("-", "-", SyntaxKind.DashToken)]
         [InlineData("--", "--", SyntaxKind.DashDashToken)]
         [InlineData("=", "=", SyntaxKind.EqualsToken)]
         [InlineData(":", ":", SyntaxKind.ColonToken)]
-        [InlineData("-1", "-1", SyntaxKind.IdentifierOrLiteralToken)]
-        [InlineData("-1L", "-1L", SyntaxKind.IdentifierOrLiteralToken)]
-        [InlineData("a", "a", SyntaxKind.IdentifierOrLiteralToken)]
-        [InlineData("a_1", "a_1", SyntaxKind.IdentifierOrLiteralToken)]
-        public void LexSingleToken(string input, string value, SyntaxKind kind)
+        public void LexSpecialToken(string input, string value, SyntaxKind kind)
         {
             // Arrange
             var syntaxFactory = new SyntaxFactory();
@@ -56,15 +78,19 @@ namespace VoidMain.CommandLineIinterface.Tests
         }
 
         [Theory]
-        [InlineData("  -  ", "-", SyntaxKind.DashToken)]
-        [InlineData("  --  ", "--", SyntaxKind.DashDashToken)]
-        [InlineData("  =  ", "=", SyntaxKind.EqualsToken)]
-        [InlineData("  :  ", ":", SyntaxKind.ColonToken)]
-        [InlineData("  -1  ", "-1", SyntaxKind.IdentifierOrLiteralToken)]
-        [InlineData("  -1L  ", "-1L", SyntaxKind.IdentifierOrLiteralToken)]
-        [InlineData("  a  ", "a", SyntaxKind.IdentifierOrLiteralToken)]
-        [InlineData("  a_1  ", "a_1", SyntaxKind.IdentifierOrLiteralToken)]
-        public void LexSingleTokenWithTrivia(string input, string value, SyntaxKind kind)
+        [InlineData("-1", "-1")]
+        [InlineData("-1L", "-1L")]
+        [InlineData("-1.0", "-1.0")]
+        [InlineData("-1,0", "-1,0")]
+        [InlineData("-1.0e+3", "-1.0e+3")]
+        [InlineData("-1.0e-3", "-1.0e-3")]
+        [InlineData("-1(", "-1(")]
+        [InlineData("-1=", "-1=")]
+        [InlineData("-1:", "-1:")]
+        [InlineData("-1 ", "-1")]
+        [InlineData("-1\"", "-1")]
+        [InlineData("-1'", "-1")]
+        public void LexNegativeNumberToken(string input, string value)
         {
             // Arrange
             var syntaxFactory = new SyntaxFactory();
@@ -75,23 +101,21 @@ namespace VoidMain.CommandLineIinterface.Tests
 
             // Assert
             Assert.Equal(value, token.StringValue);
-            Assert.Equal(kind, token.Kind);
-            Assert.True(token.HasLeadingTrivia);
-            Assert.True(token.HasTrailingTrivia);
+            Assert.Equal(SyntaxKind.LiteralToken, token.Kind);
         }
 
         [Theory]
-        [InlineData("\"a\"", "a")]
-        [InlineData("\" a \"", " a ")]
-        [InlineData("\"\"\"a\"\"\"", "\"a\"")]
-        [InlineData("\"'a'\"", "'a'")]
-        [InlineData("\"\"\"\"", "\"")]
-        [InlineData("\"\\\"", "\\")]
-        [InlineData("\"a", "a")]
-        [InlineData("\" ", " ")]
-        [InlineData("\"a=b\"", "a=b")]
-        [InlineData("\"a:b\"", "a:b")]
-        public void LexQuotedToken(string input, string value)
+        [InlineData("a", "a")]
+        [InlineData("a1", "a1")]
+        [InlineData("a_b", "a_b")]
+        [InlineData("a-b", "a-b")]
+        [InlineData("a.b", "a.b")]
+        [InlineData("a=", "a")]
+        [InlineData("a:", "a")]
+        [InlineData("a ", "a")]
+        [InlineData("a\"", "a")]
+        [InlineData("a'", "a")]
+        public void LexPossiblyIdentifierToken(string input, string value)
         {
             // Arrange
             var syntaxFactory = new SyntaxFactory();
@@ -103,6 +127,67 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(value, token.StringValue);
             Assert.Equal(SyntaxKind.IdentifierOrLiteralToken, token.Kind);
+        }
+
+        [Theory]
+        [InlineData("1", "1")]
+        [InlineData("1a", "1a")]
+        [InlineData("+a", "+a")]
+        [InlineData("a+", "a+")]
+        [InlineData("1=", "1=")]
+        [InlineData("1:", "1:")]
+        [InlineData("1 ", "1")]
+        [InlineData("1\"", "1")]
+        [InlineData("1'", "1")]
+        public void LexLiteralToken(string input, string value)
+        {
+            // Arrange
+            var syntaxFactory = new SyntaxFactory();
+            var lexer = new CommandLineLexer(syntaxFactory);
+
+            // Act
+            var token = lexer.Lex(input).First();
+
+            // Assert
+            Assert.Equal(value, token.StringValue);
+            Assert.Equal(SyntaxKind.LiteralToken, token.Kind);
+        }
+
+        [Theory]
+        [InlineData("\"a\"", "a")]
+        [InlineData("\" a \"", " a ")]
+        [InlineData("\"\"\"a\"\"\"", "\"a\"")]
+        [InlineData("\"'a'\"", "'a'")]
+        [InlineData("\"\"\"\"", "\"")]
+        [InlineData("\"a", "a")]
+        [InlineData("\" ", " ")]
+        [InlineData("\"a=b\"", "a=b")]
+        [InlineData("\"a:b\"", "a:b")]
+        [InlineData("\"a\"b", "a")]
+        [InlineData("\"\\\"", "\\")]
+        [InlineData("'a'", "a")]
+        [InlineData("' a '", " a ")]
+        [InlineData("'''a'''", "'a'")]
+        [InlineData("'\"a\"'", "\"a\"")]
+        [InlineData("''''", "'")]
+        [InlineData("'a", "a")]
+        [InlineData("' ", " ")]
+        [InlineData("'a=b'", "a=b")]
+        [InlineData("'a:b'", "a:b")]
+        [InlineData("'a'b", "a")]
+        [InlineData("'\\'", "\\")]
+        public void LexQuotedLiteralToken(string input, string value)
+        {
+            // Arrange
+            var syntaxFactory = new SyntaxFactory();
+            var lexer = new CommandLineLexer(syntaxFactory);
+
+            // Act
+            var token = lexer.Lex(input).First();
+
+            // Assert
+            Assert.Equal(value, token.StringValue);
+            Assert.Equal(SyntaxKind.QuotedLiteralToken, token.Kind);
         }
 
         [Theory]
