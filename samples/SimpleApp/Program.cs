@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using VoidMain.Application.Builder;
 using VoidMain.Hosting;
 
@@ -8,6 +9,8 @@ namespace SimpleApp
     {
         static void Main(string[] args)
         {
+            PrintDevelopmentNote();
+
             var host = new CommandsHostBuilder()
                 .UseConsole()
                 .UseStartup<Program>()
@@ -24,6 +27,16 @@ namespace SimpleApp
         public void ConfigureApplication(IApplicationBuilder app)
         {
             app.RunCommands();
+        }
+
+        private static void PrintDevelopmentNote()
+        {
+            Console.WriteLine("=======================================================");
+            Console.WriteLine("This framework is still in early development.");
+            Console.WriteLine("See README.md to learn what features are available.");
+            Console.WriteLine("Type 'quit' or press Ctrl+C twice to close application.");
+            Console.WriteLine("=======================================================");
+            Console.WriteLine();
         }
     }
 }
