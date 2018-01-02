@@ -2,17 +2,25 @@
 VoidMain is a framework for building command-line applications, inspired by ASP.NET Core.
 Almost every part of the framework can be extended or replaced.
 
-## Work in progress
+## This is a work in progress.
 
-**Planned features**
+**The current state of planned features:**
 - Command-line interface
-  - Async and cancellable input **(done)**
-  - Masked input **(done)**
-  - Prompt message **(done)**
+  - Command-line reader **(done)**
+    - Async and cancellable **(done)**
+    - Masked input **(done)**
+    - Hidden input **(done)**
+  - Prompt message provider **(done)**
   - Commands history **(done)**
-  - Autocomplete
-  - Syntax highlight
+    - In-memory storage **(done)**
+    - File storage
   - Command-line parser
+  - Syntax highlight
+  - Autocomplete
+    - Command name provider
+    - Option name provider
+    - Enum value provider
+    - File path provider
 - Easy configuration with
   - Method signature
   - Attributes
