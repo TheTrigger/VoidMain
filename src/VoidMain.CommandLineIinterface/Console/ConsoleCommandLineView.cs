@@ -58,25 +58,17 @@ namespace VoidMain.CommandLineIinterface.Console
                 string tail = _lineBuilder.ToString(_lineBuilder.Position);
                 _console.Write(tail);
             }
-            FillWith(' ', count);
+            _console.Write(' ', count);
             _cursor.Move(_lineBuilder.Position - _lineBuilder.Length - count);
         }
 
         public void ClearAll()
         {
             _cursor.Move(-_lineBuilder.Position);
-            FillWith(' ', _lineBuilder.Length);
+            _console.Write(' ', _lineBuilder.Length);
             _cursor.Move(-_lineBuilder.Length);
 
             _lineBuilder.Clear();
-        }
-
-        private void FillWith(char symbol, int length)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                _console.Write(symbol);
-            }
         }
 
         public void Type(char value)

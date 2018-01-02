@@ -57,35 +57,21 @@ namespace VoidMain.CommandLineIinterface.Console
             {
                 _cursor.Move(diff);
             }
-            FillWith(' ', count);
+            _console.Write(' ', count);
             _cursor.Move(-diff - count);
         }
 
         public void ClearAll()
         {
             _cursor.Move(-_lineBuilder.Position);
-            FillWith(' ', _lineBuilder.Length);
+            _console.Write(' ', _lineBuilder.Length);
             _cursor.Move(-_lineBuilder.Length);
 
             _lineBuilder.Clear();
         }
 
-        private void FillWith(char symbol, int length)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                _console.Write(symbol);
-            }
-        }
-
-        private Random _rnd = new Random();
-
         public void Type(char value)
         {
-            MaskSymbol = value == ' '
-                ? '_'
-                : (char)_rnd.Next('a', 'z');
-
             if (_lineBuilder.Position == _lineBuilder.Length)
             {
                 _console.Write(MaskSymbol);
@@ -103,10 +89,6 @@ namespace VoidMain.CommandLineIinterface.Console
 
         public void TypeOver(char value)
         {
-            MaskSymbol = value == ' '
-                ? '_'
-                : (char)_rnd.Next('a', 'z');
-
             if (_lineBuilder.Position < _lineBuilder.Length)
             {
                 _lineBuilder[_lineBuilder.Position] = value;
@@ -126,13 +108,13 @@ namespace VoidMain.CommandLineIinterface.Console
 
             if (_lineBuilder.Position == _lineBuilder.Length)
             {
-                FillWith(MaskSymbol, value.Length);
+                _console.Write(MaskSymbol, value.Length);
             }
             else
             {
                 int diff = _lineBuilder.Length - _lineBuilder.Position;
                 _cursor.Move(diff);
-                FillWith(MaskSymbol, value.Length);
+                _console.Write(MaskSymbol, value.Length);
                 _cursor.Move(-diff);
             }
 
@@ -155,7 +137,7 @@ namespace VoidMain.CommandLineIinterface.Console
             {
                 value = value.Substring(offset);
                 _lineBuilder.Insert(value);
-                FillWith(MaskSymbol, value.Length);
+                _console.Write(MaskSymbol, value.Length);
             }
         }
     }
