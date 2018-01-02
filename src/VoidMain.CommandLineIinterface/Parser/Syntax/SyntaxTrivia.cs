@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.CommandLineIinterface.Parser.Syntax
 {
-    public class SyntaxTrivia : SyntaxNode
+    public sealed class SyntaxTrivia : SyntaxNode
     {
         public SyntaxTrivia(SyntaxKind kind, TextSpan span, bool missing = false)
         {

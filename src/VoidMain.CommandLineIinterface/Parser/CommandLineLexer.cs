@@ -27,18 +27,14 @@ namespace VoidMain.CommandLineIinterface.Parser
             var chars = new CharsReadOnlyList(commandLine);
             var cursor = new ElementsCursor<char>(chars, EndOfInput);
 
-            SyntaxToken token = null;
+            var builder = new SyntaxTokenBuilder();
             do
             {
-                var leading = LexSyntaxTrivia(commandLine, cursor);
-                token = LexSyntaxToken(commandLine, cursor);
-                var trailing = LexSyntaxTrivia(commandLine, cursor);
-
-                token.LeadingTrivia = leading;
-                token.TrailingTrivia = trailing;
-
-                yield return token;
-            } while (token.Kind != SyntaxKind.EndOfInputToken);
+                builder.LeadingTrivia = LexSyntaxTrivia(commandLine, cursor);
+                LexSyntaxToken(builder, commandLine, cursor);
+                builder.TrailingTrivia = LexSyntaxTrivia(commandLine, cursor);
+                yield return builder.Build();
+            } while (builder.Kind != SyntaxKind.EndOfInputToken);
         }
 
         private SyntaxTrivia LexSyntaxTrivia(string input, ElementsCursor<char> cursor)
@@ -62,50 +58,48 @@ namespace VoidMain.CommandLineIinterface.Parser
             return _syntaxFactory.WhitespaceTrivia(input, start, cursor.Position - start);
         }
 
-        private SyntaxToken LexSyntaxToken(string input, ElementsCursor<char> cursor)
+        private void LexSyntaxToken(
+            SyntaxTokenBuilder builder, string input, ElementsCursor<char> cursor)
         {
-            SyntaxToken token = null;
-
             switch (cursor.Peek())
             {
                 case EndOfInput:
-                    token = _syntaxFactory.EndOfInputToken(input, cursor.Position);
+                    _syntaxFactory.EndOfInputToken(builder, input, cursor.Position);
                     break;
                 case '-':
                     char next = cursor.Peek(1);
                     if (next == '-')
                     {
-                        token = _syntaxFactory.DashDashToken(input, cursor.Position);
+                        _syntaxFactory.DashDashToken(builder, input, cursor.Position);
                         cursor.MoveNext(2);
                     }
                     else if (Char.IsDigit(next))
                     {
                         // Possibly a negative number.
-                        token = ScanLiteralOrIdentifierToken(input, cursor);
+                        ScanLiteralOrIdentifierToken(builder, input, cursor);
                     }
                     else
                     {
-                        token = _syntaxFactory.DashToken(input, cursor.Position);
+                        _syntaxFactory.DashToken(builder, input, cursor.Position);
                         cursor.MoveNext();
                     }
                     break;
                 case '=':
-                    token = _syntaxFactory.EqualsToken(input, cursor.Position);
+                    _syntaxFactory.EqualsToken(builder, input, cursor.Position);
                     cursor.MoveNext();
                     break;
                 case ':':
-                    token = _syntaxFactory.ColonToken(input, cursor.Position);
+                    _syntaxFactory.ColonToken(builder, input, cursor.Position);
                     cursor.MoveNext();
                     break;
                 default:
-                    token = ScanLiteralOrIdentifierToken(input, cursor);
+                    ScanLiteralOrIdentifierToken(builder, input, cursor);
                     break;
             }
-
-            return token;
         }
 
-        private SyntaxToken ScanLiteralOrIdentifierToken(string input, ElementsCursor<char> cursor)
+        private void ScanLiteralOrIdentifierToken(
+            SyntaxTokenBuilder builder, string input, ElementsCursor<char> cursor)
         {
             int start = cursor.Position;
             char? quote = null;
@@ -180,13 +174,13 @@ namespace VoidMain.CommandLineIinterface.Parser
             // but we definitely can identify a pure literal.
             if (isIdentifier)
             {
-                return _syntaxFactory.IdentifierOrLiteralToken(
-                    input, start, cursor.Position - start, stringValue.ToString());
+                _syntaxFactory.IdentifierOrLiteralToken(builder, input,
+                    start, cursor.Position - start, stringValue.ToString());
             }
             else
             {
-                return _syntaxFactory.LiteralToken(
-                    input, start, cursor.Position - start, stringValue.ToString(), quoted: quote.HasValue);
+                _syntaxFactory.LiteralToken(builder, input,
+                    start, cursor.Position - start, stringValue.ToString(), quoted: quote.HasValue);
             }
         }
 
