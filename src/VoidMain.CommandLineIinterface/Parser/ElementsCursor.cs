@@ -5,18 +5,15 @@ namespace VoidMain.CommandLineIinterface.Parser
 {
     public class ElementsCursor<T>
     {
-        private int _position;
-        private readonly IReadOnlyList<T> _elements;
-        private readonly T _terminalElement;
-
-        public int Position => _position;
-        public IReadOnlyList<T> Elements => _elements;
+        public int Position { get; private set; }
+        public IReadOnlyList<T> Elements { get; }
+        public T TerminalElement { get; }
 
         public ElementsCursor(IReadOnlyList<T> elements, T terminalElement)
         {
-            _elements = elements ?? throw new ArgumentNullException(nameof(elements));
-            _terminalElement = terminalElement;
-            _position = 0;
+            Elements = elements ?? throw new ArgumentNullException(nameof(elements));
+            TerminalElement = terminalElement;
+            Position = 0;
         }
 
         /// <summary>
@@ -25,7 +22,7 @@ namespace VoidMain.CommandLineIinterface.Parser
         /// <returns></returns>
         public bool IsAtTheEnd()
         {
-            return _position >= _elements.Count;
+            return Position >= Elements.Count;
         }
 
         /// <summary>
@@ -42,7 +39,7 @@ namespace VoidMain.CommandLineIinterface.Parser
         /// </summary>
         public void MoveNext(int delta = 1)
         {
-            _position += delta;
+            Position += delta;
         }
 
         /// <summary>
@@ -50,12 +47,12 @@ namespace VoidMain.CommandLineIinterface.Parser
         /// </summary>
         public T Peek(int delta = 0)
         {
-            int peekPosition = _position + delta;
-            if (peekPosition >= _elements.Count)
+            int peekPosition = Position + delta;
+            if (peekPosition >= Elements.Count)
             {
-                return _terminalElement;
+                return TerminalElement;
             }
-            return _elements[peekPosition];
+            return Elements[peekPosition];
         }
 
         public override string ToString()

@@ -4,8 +4,6 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
 {
     public struct TextSpan : IEquatable<TextSpan>, IEquatable<string>
     {
-        public static readonly TextSpan Empty = new TextSpan();
-
         private readonly string _source;
         private readonly int _start;
         private readonly int _length;
@@ -46,6 +44,7 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
 
         public static TextSpan RangeInclusive(TextSpan start, TextSpan end)
         {
+            if(ReferenceEquals(start.Source, null))
             if (start._source != end._source)
             {
                 throw new ArgumentException(nameof(end),

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,17 +12,24 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
         public int Count => _children.Length;
         public SyntaxNode this[int index] => _children[index];
 
-        protected SyntaxTreeNode(SyntaxKind kind, IEnumerable<SyntaxNode> children)
+        protected SyntaxTreeNode(SyntaxKind kind, SyntaxNode child)
         {
             Kind = kind;
-            _children = children.Where(_ => _ != null).ToArray();
+            _children = new[] { child };
+            Span = child.Span;
+            FullSpan = child.FullSpan;
+        }
 
-            if (_children.Length == 0)
+        protected SyntaxTreeNode(SyntaxKind kind, IEnumerable<SyntaxNode> children)
+        {
+            var nodes = children.Where(_ => _ != null).ToArray();
+            if (nodes.Length == 0)
             {
-                Span = TextSpan.Empty;
-                FullSpan = TextSpan.Empty;
-                return;
+                throw new ArgumentNullException(nameof(children));
             }
+
+            Kind = kind;
+            _children = nodes;
 
             var first = _children[0];
             var last = _children[_children.Length - 1];
@@ -30,9 +38,11 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
             FullSpan = TextSpan.RangeInclusive(first.FullSpan, last.FullSpan);
         }
 
-        protected abstract bool AcceptSelf<TParam>(ICommandLineSyntaxVisitor<TParam> visitor, TParam param);
+        protected abstract bool AcceptSelf<TParam>(
+            ICommandLineSyntaxVisitor<TParam> visitor, TParam param);
 
-        public void Accept<TParam>(ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
+        public void Accept<TParam>(
+            ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
         {
             if (AcceptSelf(visitor, param))
             {
@@ -43,7 +53,8 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
             }
         }
 
-        public void Accept<TParam>(ISyntaxTokenVisitor<TParam> visitor, TParam param)
+        public void Accept<TParam>(
+            ISyntaxNodeVisitor<TParam> visitor, TParam param)
         {
             if (visitor.VisitNode(this, param))
             {
@@ -61,7 +72,8 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
             }
         }
 
-        public IEnumerator<SyntaxNode> GetEnumerator() => ((IEnumerable<SyntaxNode>)_children).GetEnumerator();
+        public IEnumerator<SyntaxNode> GetEnumerator()
+            => ((IEnumerable<SyntaxNode>)_children).GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => _children.GetEnumerator();
     }
 }

@@ -9,6 +9,15 @@
         public SyntaxTrivia LeadingTrivia { get; set; }
         public SyntaxTrivia TrailingTrivia { get; set; }
 
+        public SyntaxTokenBuilder()
+        {
+        }
+
+        public SyntaxTokenBuilder(SyntaxToken token)
+        {
+            InitializeWith(token);
+        }
+
         public void InitializeWith(SyntaxToken token)
         {
             Kind = token.Kind;

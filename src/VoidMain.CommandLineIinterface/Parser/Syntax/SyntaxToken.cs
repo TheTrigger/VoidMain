@@ -2,7 +2,6 @@
 {
     public sealed class SyntaxToken : SyntaxNode
     {
-        public override bool IsToken => true;
         public override TextSpan FullSpan => GetFullSpan();
         public string StringValue { get; }
 

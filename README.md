@@ -14,7 +14,7 @@ Almost every part of the framework can be extended or replaced.
   - Commands history **(done)**
     - In-memory storage **(done)**
     - File storage
-  - Command-line parser
+  - Command-line parser **(done\*)**
   - Syntax highlight
   - Autocomplete
     - Command name provider
@@ -32,6 +32,8 @@ Almost every part of the framework can be extended or replaced.
 - Standard commands
   - Help commands
   - Version command
+
+**\*** *Stacked short options are not supported yet.*
 
 ## How to use?
 

@@ -1,16 +1,19 @@
 ﻿namespace VoidMain.CommandLineIinterface.Parser.Syntax
 {
-    public class OperandSyntax : SyntaxTreeNode
+    public sealed class OperandSyntax : ArgumentSyntax
     {
-        public SyntaxToken Value { get; }
+        public ValueSyntax Value { get; }
+        public int Index { get; }
 
-        public OperandSyntax(SyntaxToken value)
+        public OperandSyntax(ValueSyntax value, int index)
             : base(SyntaxKind.OperandSyntax, new[] { value })
         {
             Value = value;
+            Index = index;
         }
 
-        protected override bool AcceptSelf<TParam>(ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
+        protected override bool AcceptSelf<TParam>(
+            ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
         {
             return visitor.VisitOperand(this, param);
         }

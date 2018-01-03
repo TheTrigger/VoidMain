@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using VoidMain.CommandLineIinterface.Internal;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 
@@ -9,7 +10,6 @@ namespace VoidMain.CommandLineIinterface.Parser
     public class CommandLineLexer : ICommandLineLexer
     {
         private const char EndOfInput = '\0';
-
         private readonly SyntaxFactory _syntaxFactory;
 
         public CommandLineLexer(SyntaxFactory syntaxFactory)
@@ -17,12 +17,14 @@ namespace VoidMain.CommandLineIinterface.Parser
             _syntaxFactory = syntaxFactory ?? throw new ArgumentNullException(nameof(syntaxFactory));
         }
 
-        public IEnumerable<SyntaxToken> Lex(string commandLine)
+        public IEnumerable<SyntaxToken> Lex(string commandLine,
+            CancellationToken cancellation = default(CancellationToken))
         {
             if (commandLine == null)
             {
                 throw new ArgumentNullException(nameof(commandLine));
             }
+            cancellation.ThrowIfCancellationRequested();
 
             var chars = new CharsReadOnlyList(commandLine);
             var cursor = new ElementsCursor<char>(chars, EndOfInput);
@@ -33,6 +35,8 @@ namespace VoidMain.CommandLineIinterface.Parser
                 builder.LeadingTrivia = LexSyntaxTrivia(commandLine, cursor);
                 LexSyntaxToken(builder, commandLine, cursor);
                 builder.TrailingTrivia = LexSyntaxTrivia(commandLine, cursor);
+
+                cancellation.ThrowIfCancellationRequested();
                 yield return builder.Build();
             } while (builder.Kind != SyntaxKind.EndOfInputToken);
         }

@@ -1,24 +1,27 @@
-﻿namespace VoidMain.CommandLineIinterface.Parser.Syntax
+﻿using System.Collections.Generic;
+
+namespace VoidMain.CommandLineIinterface.Parser.Syntax
 {
-    public class CommandLineSyntax : SyntaxTreeNode
+    public sealed class CommandLineSyntax : SyntaxTreeNode
     {
         public CommandNameSyntax CommandName { get; }
-        public OptionsSectionSyntax Options { get; }
-        public OperandsSectionSyntax Operands { get; }
+        public ArgumentsSectionSyntax Arguments { get; }
         public SyntaxToken EndOfInput { get; }
+        public IReadOnlyList<SyntaxError> Errors { get; }
+        public bool HasErrors => Errors?.Count > 0;
 
-        public CommandLineSyntax(CommandNameSyntax commandName,
-            OptionsSectionSyntax options, OperandsSectionSyntax operands,
-            SyntaxToken endOfInput)
-            : base(SyntaxKind.CommandLineSyntax, new SyntaxNode[] { commandName, options, operands, endOfInput })
+        public CommandLineSyntax(CommandNameSyntax commandName, ArgumentsSectionSyntax arguments,
+            SyntaxToken endOfInput, IReadOnlyList<SyntaxError> errors)
+            : base(SyntaxKind.CommandLineSyntax, new SyntaxNode[] { commandName, arguments, endOfInput })
         {
             CommandName = commandName;
-            Options = options;
-            Operands = operands;
+            Arguments = arguments;
             EndOfInput = endOfInput;
+            Errors = errors;
         }
 
-        protected override bool AcceptSelf<TParam>(ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
+        protected override bool AcceptSelf<TParam>(
+            ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
         {
             return visitor.VisitCommandLine(this, param);
         }

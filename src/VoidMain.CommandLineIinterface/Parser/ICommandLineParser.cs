@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using VoidMain.CommandLineIinterface.Parser.Syntax;
 
 namespace VoidMain.CommandLineIinterface.Parser
 {
     public interface ICommandLineParser
     {
-        void ParseToContext(string commandLine, Dictionary<string, object> context);
+        CommandLineSyntax Parse(string commandLine, CancellationToken cancellation);
     }
 }

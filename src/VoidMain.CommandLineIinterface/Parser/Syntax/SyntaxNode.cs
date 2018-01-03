@@ -7,9 +7,6 @@
         public virtual TextSpan FullSpan { get; protected set; }
         public bool IsMissing { get; protected set; }
 
-        public virtual bool IsTrivia => false;
-        public virtual bool IsToken => false;
-
-        public override string ToString() => $"\"{Span.Text}\" [{Kind}]";
+        public override string ToString() => $"\"{Span.Text}\" [{(IsMissing ? "--" : "")}{Kind}]";
     }
 }

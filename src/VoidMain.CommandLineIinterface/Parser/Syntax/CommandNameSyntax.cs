@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace VoidMain.CommandLineIinterface.Parser.Syntax
 {
-    public class CommandNameSyntax : SyntaxTreeNode
+    public sealed class CommandNameSyntax : SyntaxTreeNode
     {
-        public IReadOnlyList<SyntaxNode> NameParts { get; }
+        public IReadOnlyList<SyntaxToken> NameParts { get; }
 
-        public CommandNameSyntax(IReadOnlyList<SyntaxNode> nameParts)
+        public CommandNameSyntax(IReadOnlyList<SyntaxToken> nameParts)
             : base(SyntaxKind.CommandNameSyntax, nameParts)
         {
-            NameParts = nameParts.ToArray();
+            NameParts = nameParts;
         }
 
-        protected override bool AcceptSelf<TParam>(ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
+        protected override bool AcceptSelf<TParam>(
+            ICommandLineSyntaxVisitor<TParam> visitor, TParam param)
         {
             return visitor.VisitCommandName(this, param);
         }

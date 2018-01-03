@@ -73,5 +73,30 @@
             builder.InitializeWith(quoted ? SyntaxKind.QuotedLiteralToken : SyntaxKind.LiteralToken,
                 new TextSpan(input, position, length), stringValue, missing);
         }
+
+        public SyntaxError MissingWhitespaceError(TextSpan span)
+        {
+            return new SyntaxError(span, "WM0001", "Whitespace is missing");
+        }
+
+        public SyntaxError MissingEndOfInputError(TextSpan span)
+        {
+            return new SyntaxError(span, "WM0002", "End of input is missing");
+        }
+
+        public SyntaxError MissingOptionValueError(TextSpan span)
+        {
+            return new SyntaxError(span, "WM0003", "Option value is missing");
+        }
+
+        public SyntaxError UnknownOptionNameError(TextSpan span)
+        {
+            return new SyntaxError(span, "WM0004", "Unknown option name");
+        }
+
+        public SyntaxError UnrecognizedInputError(TextSpan span)
+        {
+            return new SyntaxError(span, "WM0005", "Unrecognized input");
+        }
     }
 }

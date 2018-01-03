@@ -15,16 +15,16 @@
         bool VisitCommandName(CommandNameSyntax commandName, TParam param);
 
         /// <summary>
-        /// Visits OptionsSectionSyntax node.
+        /// Visits VisitArgumentsSection node.
         /// </summary>
         /// <returns>True if need to visit children nodes.</returns>
-        bool VisitOptionsSection(OptionsSectionSyntax optionsSection, TParam param);
+        bool VisitArgumentsSection(ArgumentsSectionSyntax argumentsSection, TParam param);
 
         /// <summary>
-        /// Visits OperandsSectionSyntax node.
+        /// Visits OperandsSectionMarkerSyntax node.
         /// </summary>
         /// <returns>True if need to visit children nodes.</returns>
-        bool VisitOperandsSection(OperandsSectionSyntax operandsSection, TParam param);
+        bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax operandsSectionMarker, TParam param);
 
         /// <summary>
         /// Visits OptionSyntax node.
@@ -37,5 +37,11 @@
         /// </summary>
         /// <returns>True if need to visit children nodes.</returns>
         bool VisitOperand(OperandSyntax operand, TParam param);
+
+        /// <summary>
+        /// Visits ValueSyntax node.
+        /// </summary>
+        /// <returns>True if need to visit children nodes.</returns>
+        bool VisitValue(ValueSyntax value, TParam param);
     }
 }

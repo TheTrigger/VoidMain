@@ -2,14 +2,13 @@
 {
     public sealed class SyntaxTrivia : SyntaxNode
     {
+        public override TextSpan FullSpan => Span;
+
         public SyntaxTrivia(SyntaxKind kind, TextSpan span, bool missing = false)
         {
             Kind = kind;
             Span = span;
-            IsMissing = IsMissing;
+            IsMissing = missing;
         }
-
-        public override bool IsTrivia => true;
-        public override TextSpan FullSpan => Span;
     }
 }

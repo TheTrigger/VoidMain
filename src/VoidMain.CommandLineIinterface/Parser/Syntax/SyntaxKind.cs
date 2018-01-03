@@ -25,9 +25,10 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
         // Parser nodes
         CommandLineSyntax = 0b1010_1000_0000_0000_0000_0000_0000,
         CommandNameSyntax = 0b1010_0100_0000_0000_0000_0000_0000,
-        OptionsSectionSyntax = 0b1010_0010_0000_0000_0000_0000_0000,
-        OperandsSectionSyntax = 0b1010_0001_0000_0000_0000_0000_0000,
+        ArgumentsSectionSyntax = 0b1010_0010_0000_0000_0000_0000_0000,
+        OperandsSectionMarkerSyntax = 0b1010_0001_0000_0000_0000_0000_0000,
         OptionSyntax = 0b1010_0000_1000_0000_0000_0000_0000,
-        OperandSyntax = 0b1010_0000_0100_0000_0000_0000_0000
+        OperandSyntax = 0b1010_0000_0100_0000_0000_0000_0000,
+        ValueSyntax = 0b1010_0000_0010_0000_0000_0000_0000
     }
 }
