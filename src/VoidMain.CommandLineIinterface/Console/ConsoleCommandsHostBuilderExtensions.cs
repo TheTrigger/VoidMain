@@ -6,6 +6,7 @@ using VoidMain.CommandLineIinterface.Console.ConsoleCursors;
 using VoidMain.CommandLineIinterface.Console.InputHandlers;
 using VoidMain.CommandLineIinterface.History;
 using VoidMain.CommandLineIinterface.Parser;
+using VoidMain.CommandLineIinterface.Parser.Syntax;
 
 namespace VoidMain.Hosting
 {
@@ -20,9 +21,9 @@ namespace VoidMain.Hosting
 
                 services.AddSingleton<ICommandLineIinterface, ConsoleInterface>();
 
-                services.AddTransient<ICommandLineReader, ConsoleCommandLineReader>();
-                services.AddTransient<IPrompt, CmdPrompt>();
-                services.AddTransient<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
+                services.AddSingleton<ICommandLineReader, ConsoleCommandLineReader>();
+                services.AddSingleton<IPrompt, CmdPrompt>();
+                services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
                 services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
                 services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
                 services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
@@ -33,7 +34,10 @@ namespace VoidMain.Hosting
                 services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
                 services.AddSingleton<ICommandsHistoryStorage, InMemoryCommandsHistoryStorage>();
 
-                services.AddTransient<ICommandLineParser, CommandLineParser>();
+                services.AddSingleton<ICommandLineParser, CommandLineParser>();
+                services.AddSingleton<ICommandLineLexer, CommandLineLexer>();
+                services.AddSingleton<ISemanticModel, EmptySemanticModel>();
+                services.AddSingleton<SyntaxFactory, SyntaxFactory>();
             });
         }
 

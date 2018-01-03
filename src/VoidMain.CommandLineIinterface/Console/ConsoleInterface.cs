@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Builder;
 using VoidMain.CommandLineIinterface.Parser;
-using VoidMain.Hosting;
+using VoidMain.CommandLineIinterface.Parser.Syntax;
 
 namespace VoidMain.CommandLineIinterface.Console
 {
@@ -15,6 +15,7 @@ namespace VoidMain.CommandLineIinterface.Console
         private readonly ICommandLineReader _reader;
         private readonly ICommandLineParser _parser;
         private readonly ConsoleLockingOutput _output;
+        private readonly ContextCreationHelper _contextHelper;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
@@ -27,6 +28,7 @@ namespace VoidMain.CommandLineIinterface.Console
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _output = new ConsoleLockingOutput(console);
+            _contextHelper = new ContextCreationHelper();
             _cliLoopTokenSource = new CancellationTokenSource();
             _cliLoop = null;
             IsRunning = false;
@@ -95,63 +97,62 @@ namespace VoidMain.CommandLineIinterface.Console
                     }
                     catch (OperationCanceledException)
                     {
-                        if (loopToken.IsCancellationRequested)
-                        {
-                            // Do not throw because this is a normal loop ending.
-                            break;
-                        }
+                        // Do not throw because this is a normal loop ending.
+                        if (loopToken.IsCancellationRequested) break;
+
                         consoleTokenSource.Reset();
                         _console.WriteLine();
-                        if (isFirstCancel)
-                        {
-                            isFirstCancel = false;
-                            continue;
-                        }
-                        else
-                        {
-                            // Exit on double Ctrl+C hotkey.
-                            break;
-                        }
+
+                        // Exit on double Ctrl+C hotkey.
+                        if (!isFirstCancel) break;
+
+                        isFirstCancel = false;
+                        _console.WriteLine("Press Ctrl+C again to close application");
+                        continue;
                     }
                     finally
                     {
                         _output.Unlock();
                     }
 
-                    // Reset flag after succesfull reading.
+                    // Reset the flag after a succesfull reading.
                     isFirstCancel = true;
 
-                    if (String.IsNullOrEmpty(commandLine))
-                    {
-                        continue;
-                    }
+                    if (String.IsNullOrWhiteSpace(commandLine)) continue;
 
                     try
                     {
-                        var context = new Dictionary<string, object>();
-                        _parser.ParseToContext(commandLine, context);
-                        context[ContextKey.CommandCancelled] = consoleTokenSource.Token;
-                        context[ContextKey.Output] = _output;
+                        var parsedCommandLine = _parser.Parse(commandLine, consoleTokenSource.Token);
 
-                        if (loopToken.IsCancellationRequested)
+                        if (parsedCommandLine.HasErrors)
                         {
-                            break;
+                            PrintParseErrors(parsedCommandLine);
+                            continue;
                         }
+
+                        var context = new Dictionary<string, object>();
+                        _contextHelper.UseContext(context)
+                            .SetOutput(_output)
+                            .SetCancellation(consoleTokenSource.Token)
+                            .SetRawCommandLine(commandLine)
+                            .SetParsedCommandLine(parsedCommandLine);
+
+                        // End command-line loop.
+                        if (loopToken.IsCancellationRequested) break;
 
                         await application(context).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {
-                        if (loopToken.IsCancellationRequested)
-                        {
-                            // Do not throw because this is a normal loop ending.
-                            break;
-                        }
+                        // Do not throw because this is a normal loop ending.
+                        if (loopToken.IsCancellationRequested) break;
+
                         consoleTokenSource.Reset();
+                        _console.WriteLine();
                     }
                     catch (Exception ex)
                     {
-                        PriontErrorMessage(ex, verbose: false);
+                        PrintErrorMessage(ex, verbose: false);
                     }
                 }
             }
@@ -162,16 +163,42 @@ namespace VoidMain.CommandLineIinterface.Console
             }
         }
 
-        private void PriontErrorMessage(Exception ex, bool verbose)
+        private void PrintParseErrors(CommandLineSyntax commandLineSyntax)
         {
-            if (verbose)
+            _console.WriteLine(commandLineSyntax.FullSpan);
+
+            var errors = commandLineSyntax.Errors;
+            int indexSpace = errors.Count.ToString().Length;
+
+            for (int i = 0; i < errors.Count; i++)
             {
-                _console.WriteLine("Error: " + ex.ToString());
+                var error = errors[i];
+                var span = error.Span;
+
+                _console.Write(' ', span.Start);
+                _console.Write('^', span.IsEmpty ? 1 : span.Length);
+
+                string index = (i + 1).ToString().PadLeft(indexSpace);
+                _console.WriteLine(index);
             }
-            else
+
+            for (int i = 0; i < errors.Count; i++)
             {
-                _console.WriteLine("Error: " + ex.Message);
+                var error = errors[i];
+                string index = (i + 1).ToString().PadLeft(indexSpace);
+                _console.WriteLine($"{index}) {error.Message}");
             }
+
+            _console.WriteLine();
+        }
+
+        private void PrintErrorMessage(Exception ex, bool verbose)
+        {
+            string errorMessage = verbose
+                ? ex.ToString()
+                : ex.Message;
+
+            _console.WriteLine("Error: " + errorMessage);
             _console.WriteLine();
         }
     }
