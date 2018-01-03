@@ -21,16 +21,16 @@
         bool VisitArgumentsSection(ArgumentsSectionSyntax argumentsSection, TParam param);
 
         /// <summary>
-        /// Visits OperandsSectionMarkerSyntax node.
-        /// </summary>
-        /// <returns>True if need to visit children nodes.</returns>
-        bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax operandsSectionMarker, TParam param);
-
-        /// <summary>
         /// Visits OptionSyntax node.
         /// </summary>
         /// <returns>True if need to visit children nodes.</returns>
         bool VisitOption(OptionSyntax option, TParam param);
+
+        /// <summary>
+        /// Visits OperandsSectionMarkerSyntax node.
+        /// </summary>
+        /// <returns>True if need to visit children nodes.</returns>
+        bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax operandsSectionMarker, TParam param);
 
         /// <summary>
         /// Visits OperandSyntax node.

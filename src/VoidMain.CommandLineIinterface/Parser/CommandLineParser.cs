@@ -176,7 +176,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
 
             bool missingValue = valueMarker != null &&
-                (!HasMoreTokens(cursor) || (valueMarker.HasTrailingTrivia && IsOptionName(token, () => cursor.Peek(1))));
+                (!HasMoreTokens(cursor) || (valueMarker.HasTrailingTrivia && IsOptionNameOrSectionMarker(token, () => cursor.Peek(1))));
 
             if (missingValue)
             {
@@ -207,7 +207,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
 
             bool isValue = (valueMarker != null && !valueMarker.HasTrailingTrivia)
-                || !IsOptionName(token, () => cursor.Peek(1));
+                || !IsOptionNameOrSectionMarker(token, () => cursor.Peek(1));
 
             if (isValue)
             {
@@ -338,6 +338,11 @@ namespace VoidMain.CommandLineIinterface.Parser
             if (HasSpaceAfterOrEnd(nameMarker, () => name)) return false;
 
             return IsIdentifier(name);
+        }
+
+        private bool IsOptionNameOrSectionMarker(SyntaxToken token, Func<SyntaxToken> getNextToken)
+        {
+            return IsOptionName(token, getNextToken) || IsOperandsSectionMarker(token, getNextToken);
         }
 
         private bool IsFlag(Type valueType)
