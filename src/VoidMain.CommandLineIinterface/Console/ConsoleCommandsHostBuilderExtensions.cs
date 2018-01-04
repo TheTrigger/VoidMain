@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Runtime.InteropServices;
 using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.Console;
@@ -7,6 +8,7 @@ using VoidMain.CommandLineIinterface.Console.InputHandlers;
 using VoidMain.CommandLineIinterface.History;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.Hosting
 {
@@ -38,6 +40,9 @@ namespace VoidMain.Hosting
                 services.AddSingleton<ICommandLineLexer, CommandLineLexer>();
                 services.AddSingleton<ISemanticModel, EmptySemanticModel>();
                 services.AddSingleton<SyntaxFactory, SyntaxFactory>();
+
+                services.AddSingleton<ISyntaxHighlighter<ConsoleColor?>, SyntaxHighlighter<ConsoleColor?>>();
+                services.AddSingleton<SyntaxPallete<ConsoleColor?>, DefaultConsoleSyntaxPallete>();
             });
         }
 

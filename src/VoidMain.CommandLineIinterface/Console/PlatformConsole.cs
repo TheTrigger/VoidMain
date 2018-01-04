@@ -56,6 +56,20 @@ namespace VoidMain.CommandLineIinterface.Console
             set => System.Console.CursorLeft = value;
         }
 
+        public ConsoleColor BackgroundColor
+        {
+            get => System.Console.BackgroundColor;
+            set => System.Console.BackgroundColor = value;
+        }
+
+        public ConsoleColor ForegroundColor
+        {
+            get => System.Console.ForegroundColor;
+            set => System.Console.ForegroundColor = value;
+        }
+
+        public void ResetColors() => System.Console.ResetColor();
+
         public bool KeyAvailable => System.Console.KeyAvailable;
         public ConsoleKeyInfo ReadKey(bool intercept) => System.Console.ReadKey(intercept);
         public string ReadLine() => System.Console.ReadLine();

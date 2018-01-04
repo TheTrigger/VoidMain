@@ -18,7 +18,7 @@
         /// Visits VisitArgumentsSection node.
         /// </summary>
         /// <returns>True if need to visit children nodes.</returns>
-        bool VisitArgumentsSection(ArgumentsSectionSyntax argumentsSection, TParam param);
+        bool VisitArgumentsSection(ArgumentsSectionSyntax arguments, TParam param);
 
         /// <summary>
         /// Visits OptionSyntax node.
@@ -30,7 +30,7 @@
         /// Visits OperandsSectionMarkerSyntax node.
         /// </summary>
         /// <returns>True if need to visit children nodes.</returns>
-        bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax operandsSectionMarker, TParam param);
+        bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax marker, TParam param);
 
         /// <summary>
         /// Visits OperandSyntax node.

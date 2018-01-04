@@ -1,4 +1,4 @@
-﻿using VoidMain.CommandLineIinterface.Console;
+﻿using VoidMain.CommandLineIinterface.Console.Views;
 using Xunit;
 
 namespace VoidMain.CommandLineIinterface.Tests

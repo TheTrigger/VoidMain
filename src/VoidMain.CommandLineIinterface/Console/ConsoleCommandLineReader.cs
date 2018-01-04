@@ -52,26 +52,37 @@ namespace VoidMain.CommandLineIinterface.Console
             }
 
             var lineView = _viewManager.GetView(viewOptions);
+            var lineViewLifecycle = lineView as ICommandLineViewLifecycle;
             var eventArgs = new ConsoleInputEventArgs();
 
-            while (!token.IsCancellationRequested)
+            lineViewLifecycle?.BeginReadingLine();
+            try
             {
-                var keyInfo = await _keyReader.ReadKeyAsync(token, intercept: true).ConfigureAwait(false);
-
-                eventArgs.LineView = lineView;
-                eventArgs.Input = keyInfo;
-                eventArgs.IsHandledHint = false;
-
-                for (int i = 0; i < _inputHandlers.Length; i++)
+                while (!token.IsCancellationRequested)
                 {
-                    _inputHandlers[i].Handle(eventArgs);
-                }
+                    var keyInfo = await _keyReader.ReadKeyAsync(token, intercept: true).ConfigureAwait(false);
 
-                if (keyInfo.Key == ConsoleKey.Enter)
-                {
-                    _console.WriteLine();
-                    return lineView.ToString();
+                    eventArgs.LineView = lineView;
+                    eventArgs.Input = keyInfo;
+                    eventArgs.IsHandledHint = false;
+
+                    lineViewLifecycle?.BeginHandlingInput();
+                    for (int i = 0; i < _inputHandlers.Length; i++)
+                    {
+                        _inputHandlers[i].Handle(eventArgs);
+                    }
+                    lineViewLifecycle?.EndHandlingInput();
+
+                    if (keyInfo.Key == ConsoleKey.Enter)
+                    {
+                        _console.WriteLine();
+                        return lineView.ToString();
+                    }
                 }
+            }
+            finally
+            {
+                lineViewLifecycle?.EndReadingLine();
             }
 
             token.ThrowIfCancellationRequested();

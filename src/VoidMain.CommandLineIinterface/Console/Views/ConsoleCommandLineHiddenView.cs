@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface.Console.Views
 {
     public class ConsoleCommandLineHiddenView : ICommandLineView
     {
@@ -26,18 +26,22 @@ namespace VoidMain.CommandLineIinterface.Console
 
         public void Move(int offset)
         {
-            _lineBuilder.Move(offset); // Throws if out of range
+            // Throws if out of range
+            _lineBuilder.Move(offset);
         }
 
         public void MoveTo(int newPos)
         {
-            _lineBuilder.MoveTo(newPos); // Throws if out of range
+            // Throws if out of range
+            _lineBuilder.MoveTo(newPos);
         }
 
         public void Delete(int count)
         {
             if (count == 0) return;
-            _lineBuilder.Delete(count); // Throws if out of range
+
+            // Throws if out of range
+            _lineBuilder.Delete(count);
         }
 
         public void ClearAll()

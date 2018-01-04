@@ -15,7 +15,7 @@ Almost every part of the framework can be extended or replaced.
     - In-memory storage **(done)**
     - File storage **(done)**
   - Command-line parser **(done\*)**
-  - Syntax highlight
+  - Syntax highlighting **(done\*\*)**
   - Autocomplete
     - Command name provider
     - Option name provider
@@ -33,7 +33,8 @@ Almost every part of the framework can be extended or replaced.
   - Help commands
   - Version command
 
-**\*** *Stacked short options are not supported yet.*
+**\*** *Stacked short options are not supported yet.* <br>
+**\*\*** *Errors highlighting is not supported yet.*
 
 ## How to use?
 
@@ -73,12 +74,12 @@ public class GreetingsModule : Module
 
 **Command line**
 ```
-CMD> app.exe greetings hello world
+CMD> greetings hello world
 ```
 
 You can get rid of `greetings` if you set module name to `null` like this: `[Module(Name = null)]`
 ```
-CMD> app.exe hello world
+CMD> hello world
 ```
 
 ## License

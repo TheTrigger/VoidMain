@@ -15,6 +15,10 @@ namespace VoidMain.CommandLineIinterface.Console
         int CursorTop { get; set; }
         int CursorLeft { get; set; }
 
+        ConsoleColor BackgroundColor { get; set; }
+        ConsoleColor ForegroundColor { get; set; }
+        void ResetColors();
+
         bool KeyAvailable { get; }
         ConsoleKeyInfo ReadKey(bool intercept);
         string ReadLine();
