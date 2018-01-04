@@ -80,3 +80,6 @@ You can get rid of `greetings` if you set module name to `null` like this: `[Mod
 ```
 CMD> app.exe hello world
 ```
+
+## License
+MIT License. See LICENSE file for more details.
