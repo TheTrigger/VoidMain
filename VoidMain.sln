@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Application.Comman
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Hosting.Tests", "test\VoidMain.Hosting.Tests\VoidMain.Hosting.Tests.csproj", "{EF98BFFB-C59C-477F-94C9-C3E77FAE0E22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidMain.CommandLineIinterface.Tests", "test\VoidMain.CommandLineIinterface.Tests\VoidMain.CommandLineIinterface.Tests.csproj", "{D38CE9F0-0526-4CC1-A0BF-5EA34128C0BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface.Tests", "test\VoidMain.CommandLineIinterface.Tests\VoidMain.CommandLineIinterface.Tests.csproj", "{D38CE9F0-0526-4CC1-A0BF-5EA34128C0BA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3E6E63F-93F0-450B-978C-050CFE51027B}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
