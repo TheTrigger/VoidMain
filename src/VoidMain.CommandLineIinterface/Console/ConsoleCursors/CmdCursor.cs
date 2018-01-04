@@ -16,7 +16,7 @@ namespace VoidMain.CommandLineIinterface.Console.ConsoleCursors
             if (offset == 0) return;
 
             int left = _console.CursorLeft + offset;
-            if (0 < left && left < _console.BufferWidth)
+            if (0 <= left && left < _console.BufferWidth)
             {
                 _console.CursorLeft = left;
                 return;
