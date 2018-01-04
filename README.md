@@ -33,10 +33,10 @@ Almost every part of the framework can be extended or replaced.
   - Help commands
   - Version command
 
-**\*** *Stacked short options are not supported yet.* <br>
+**\*** *Stacked short options are not supported yet.*<br>
 **\*\*** *Errors highlighting is not supported yet.*
 
-## How to use?
+## How to use it (as soon as it's ready)? 
 
 **C# code**
 ```csharp

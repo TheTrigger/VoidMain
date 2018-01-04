@@ -9,15 +9,15 @@ namespace VoidMain.CommandLineIinterface.Console
     public class ConsoleCommandLineReader : ICommandLineReader
     {
         private readonly IConsole _console;
-        private readonly ICommandLineViewProvider _viewManager;
+        private readonly ICommandLineViewProvider _viewProvider;
         private readonly IConsoleInputHandler[] _inputHandlers;
         private readonly ConsoleKeyAsyncReader _keyReader;
 
         public ConsoleCommandLineReader(IConsole console,
-            ICommandLineViewProvider viewManager, IEnumerable<IConsoleInputHandler> inputHandlers)
+            ICommandLineViewProvider viewProvider, IEnumerable<IConsoleInputHandler> inputHandlers)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _viewManager = viewManager ?? throw new ArgumentNullException(nameof(viewManager));
+            _viewProvider = viewProvider ?? throw new ArgumentNullException(nameof(viewProvider));
             if (inputHandlers == null)
             {
                 throw new ArgumentNullException(nameof(inputHandlers));
@@ -51,7 +51,7 @@ namespace VoidMain.CommandLineIinterface.Console
                 _console.Write(promptMessage);
             }
 
-            var lineView = _viewManager.GetView(viewOptions);
+            var lineView = _viewProvider.GetView(viewOptions);
             var lineViewLifecycle = lineView as ICommandLineViewLifecycle;
             var eventArgs = new ConsoleInputEventArgs();
 
