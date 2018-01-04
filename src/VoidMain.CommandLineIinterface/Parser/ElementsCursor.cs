@@ -26,15 +26,6 @@ namespace VoidMain.CommandLineIinterface.Parser
         }
 
         /// <summary>
-        /// Move the cursor to the next element and return it.
-        /// </summary>
-        public T GetNext()
-        {
-            MoveNext();
-            return Peek();
-        }
-
-        /// <summary>
         /// Move the cursor to the next element.
         /// </summary>
         public void MoveNext(int delta = 1)

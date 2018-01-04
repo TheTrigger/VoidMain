@@ -32,26 +32,6 @@ namespace VoidMain.CommandLineIinterface.Tests
         }
 
         [Theory]
-        [InlineData(new int[] { 1, 2, 3 }, 1, 2)]
-        [InlineData(new int[] { 1, 2, 3 }, 2, 3)]
-        [InlineData(new int[] { 1, 2, 3 }, 3, 0)]
-        public void GetNextOrTerminal(int[] elements, int index, int expected)
-        {
-            // Arrange
-            var cursor = new ElementsCursor<int>(elements, 0);
-
-            // Act
-            int actual = 0;
-            for (int i = 0; i < index; i++)
-            {
-                actual = cursor.GetNext();
-            }
-
-            // Assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
         [InlineData(new int[] { 1, 2, 3 }, 0, 0)]
         [InlineData(new int[] { 1, 2, 3 }, 1, 1)]
         [InlineData(new int[] { 1, 2, 3 }, 2, 2)]
