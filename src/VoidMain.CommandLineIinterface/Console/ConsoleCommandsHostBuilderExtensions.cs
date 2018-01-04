@@ -32,7 +32,7 @@ namespace VoidMain.Hosting
                 services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
 
                 services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
-                services.AddSingleton<ICommandsHistoryStorage, InMemoryCommandsHistoryStorage>();
+                services.AddSingleton<ICommandsHistoryStorage, FileCommandsHistoryStorage>();
 
                 services.AddSingleton<ICommandLineParser, CommandLineParser>();
                 services.AddSingleton<ICommandLineLexer, CommandLineLexer>();

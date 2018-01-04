@@ -13,7 +13,7 @@ Almost every part of the framework can be extended or replaced.
   - Prompt message provider **(done)**
   - Commands history **(done)**
     - In-memory storage **(done)**
-    - File storage
+    - File storage **(done)**
   - Command-line parser **(done\*)**
   - Syntax highlight
   - Autocomplete

@@ -6,13 +6,13 @@ using VoidMain.CommandLineIinterface.Internal;
 
 namespace VoidMain.CommandLineIinterface.History
 {
-    public class CommandsHistoryManager : ICommandsHistoryManager
+    public class CommandsHistoryManager : ICommandsHistoryManager, IDisposable
     {
         private readonly ICommandsHistoryStorage _storage;
-        private int _isSchedulled = 0;
-        private int _savePeriod;
-        private PushOutCollection<string> _commands;
+        private readonly int _savePeriod;
         private readonly int _maxCount;
+        private PushOutCollection<string> _commands;
+        private int _isSchedulled = 0;
         private int _current;
 
         public int Count { get { EnsureCommandsLoaded(); return _commands.Count; } }
@@ -22,7 +22,7 @@ namespace VoidMain.CommandLineIinterface.History
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
             _savePeriod = 10_000; // TODO: Configure save period.
-            _maxCount = 10; // TODO: Configure count.
+            _maxCount = 10; // TODO: Configure max count.
         }
 
         private void EnsureCommandsLoaded()
@@ -109,21 +109,34 @@ namespace VoidMain.CommandLineIinterface.History
                 Task.Delay(_savePeriod).ContinueWith(task =>
                 {
                     Interlocked.CompareExchange(ref _isSchedulled, 0, 1);
-                    try
-                    {
-                        string[] commands = null;
-                        lock (_commands)
-                        {
-                            commands = _commands.ToArray();
-                        }
-                        _storage.Save(commands);
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
+                    SaveCommands();
                 });
             }
+        }
+
+        private void SaveCommands()
+        {
+            try
+            {
+                string[] commands = null;
+                lock (_commands)
+                {
+                    commands = _commands.ToArray();
+                }
+                lock (_storage)
+                {
+                    _storage.Save(commands);
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        public void Dispose()
+        {
+            SaveCommands();
         }
     }
 }
