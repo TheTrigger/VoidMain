@@ -37,7 +37,7 @@ namespace VoidMain.CommandLineIinterface
 
         public ContextCreationHelper SetCancellation(CancellationToken token)
         {
-            _context[ContextKey.CommandCancelled] = token;
+            _context[ContextKey.CommandCanceled] = token;
             return this;
         }
 

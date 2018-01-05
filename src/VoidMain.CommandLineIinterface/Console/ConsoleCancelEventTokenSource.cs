@@ -17,25 +17,25 @@ namespace VoidMain.CommandLineIinterface.Console
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _isDisposed = false;
             _tokenSource = new CancellationTokenSource();
-            _console.CancelKeyPress += Cancelled;
+            _console.CancelKeyPress += Canceled;
         }
 
         public void Dispose()
         {
             if (_isDisposed) return;
-            _console.CancelKeyPress -= Cancelled;
+            _console.CancelKeyPress -= Canceled;
             _tokenSource.Dispose();
         }
 
-        private void Cancelled(object sender, ConsoleCancelEventArgs e)
+        private void Canceled(object sender, ConsoleCancelEventArgs e)
         {
             if (_isDisposed) return;
 
             lock (_tokenSource)
             {
                 e.Cancel = true;
-                // ISSUE: `CancelKeyPress -= Cancelled` hangs if token
-                // was cancelled inside ConsoleCancelEventHandler.
+                // ISSUE: `CancelKeyPress -= Canceled` hangs if token
+                // was canceled inside ConsoleCancelEventHandler.
                 // WORKAROUND: Use `CancelAfter(0)` because it starts
                 // a timer and performs cancelation in another thread.
                 _tokenSource.CancelAfter(0);
