@@ -11,24 +11,24 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
         ParserNode = 0b1010_0000_0000_0000_0000_0000_0000,
 
         // Lexer nodes
-        EndOfInputToken = 0b1100_0000_0000_0000_0000_0000_0001,
-        WhitespaceTrivia = 0b1100_0000_0000_0000_0000_0000_0010,
-        LiteralToken = 0b1100_0000_0000_0000_0000_0000_0100,
-        QuotedLiteralToken = LiteralToken | 0b1100_0000_0000_0000_0000_0000_1000,
-        IdentifierToken = 0b1100_0000_0000_0000_0000_0001_0000,
+        EndOfInputToken = LexerNode | 0b0000_0000_0000_0000_0000_0000_0001,
+        WhitespaceTrivia = LexerNode | 0b0000_0000_0000_0000_0000_0000_0010,
+        LiteralToken = LexerNode | 0b0000_0000_0000_0000_0000_0000_0100,
+        QuotedLiteralToken = LiteralToken | 0b0000_0000_0000_0000_0000_0000_1000,
+        IdentifierToken = LexerNode | 0b0000_0000_0000_0000_0000_0001_0000,
         IdentifierOrLiteralToken = IdentifierToken | LiteralToken,
-        DashToken = 0b1100_0000_0000_0000_0000_0010_0000,
-        DashDashToken = 0b1100_0000_0000_0000_0000_0100_0000,
-        EqualsToken = 0b1100_0000_0000_0000_0000_1000_0000,
-        ColonToken = 0b1100_0000_0000_0000_0001_0000_0000,
+        DashToken = LexerNode | 0b0000_0000_0000_0000_0000_0010_0000,
+        DashDashToken = LexerNode | 0b0000_0000_0000_0000_0000_0100_0000,
+        EqualsToken = LexerNode | 0b0000_0000_0000_0000_0000_1000_0000,
+        ColonToken = LexerNode | 0b0000_0000_0000_0000_0001_0000_0000,
 
         // Parser nodes
-        CommandLineSyntax = 0b1010_1000_0000_0000_0000_0000_0000,
-        CommandNameSyntax = 0b1010_0100_0000_0000_0000_0000_0000,
-        ArgumentsSectionSyntax = 0b1010_0010_0000_0000_0000_0000_0000,
-        OperandsSectionMarkerSyntax = 0b1010_0001_0000_0000_0000_0000_0000,
-        OptionSyntax = 0b1010_0000_1000_0000_0000_0000_0000,
-        OperandSyntax = 0b1010_0000_0100_0000_0000_0000_0000,
-        ValueSyntax = 0b1010_0000_0010_0000_0000_0000_0000
+        CommandLineSyntax = ParserNode | 0b0000_1000_0000_0000_0000_0000_0000,
+        CommandNameSyntax = ParserNode | 0b0000_0100_0000_0000_0000_0000_0000,
+        ArgumentsSectionSyntax = ParserNode | 0b0000_0010_0000_0000_0000_0000_0000,
+        OperandsSectionMarkerSyntax = ParserNode | 0b0000_0001_0000_0000_0000_0000_0000,
+        OptionSyntax = ParserNode | 0b0000_0000_1000_0000_0000_0000_0000,
+        OperandSyntax = ParserNode | 0b0000_0000_0100_0000_0000_0000_0000,
+        ValueSyntax = ParserNode | 0b0000_0000_0010_0000_0000_0000_0000
     }
 }
