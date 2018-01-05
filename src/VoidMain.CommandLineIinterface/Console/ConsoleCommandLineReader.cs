@@ -43,7 +43,7 @@ namespace VoidMain.CommandLineIinterface.Console
         private async Task<string> ReadLineAsync(IPrompt prompt,
             CommandLineViewOptions viewOptions, CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();
+            ThrowIfCancellationRequested(token, hadUserInput: false);
 
             string promptMessage = prompt.GetMessage();
             if (!String.IsNullOrEmpty(promptMessage))
@@ -80,13 +80,25 @@ namespace VoidMain.CommandLineIinterface.Console
                     }
                 }
             }
+            catch (OperationCanceledException)
+            {
+                ThrowIfCancellationRequested(token, hadUserInput: lineView.Length > 0);
+            }
             finally
             {
                 lineViewLifecycle?.EndReadingLine();
             }
 
-            token.ThrowIfCancellationRequested();
+            ThrowIfCancellationRequested(token, hadUserInput: lineView.Length > 0);
             return default(string);
+        }
+
+        private void ThrowIfCancellationRequested(CancellationToken token, bool hadUserInput)
+        {
+            if (token.IsCancellationRequested)
+            {
+                throw new ReadingLineCanceledException(token, hadUserInput);
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace VoidMain.Application.Commands
         public async Task ExecuteCommand(Dictionary<string, object> context)
         {
             var commandLine = (string)context[ContextKey.CommandLine];
-            var token = (CancellationToken)context[ContextKey.CommandCancelled];
+            var token = (CancellationToken)context[ContextKey.CommandCanceled];
             var output = (ICommandLineOutput)context[ContextKey.Output];
 
             bool handled = HandleQuitCommand(context);

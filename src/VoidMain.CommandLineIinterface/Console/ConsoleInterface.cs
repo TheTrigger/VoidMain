@@ -93,15 +93,24 @@ namespace VoidMain.CommandLineIinterface.Console
                     try
                     {
                         _output.LockForRead();
-                        commandLine = await _reader.ReadLineAsync(_prompt, consoleTokenSource.Token).ConfigureAwait(false);
+                        commandLine = await _reader.ReadLineAsync(_prompt, consoleTokenSource.Token)
+                            .ConfigureAwait(false);
                     }
-                    catch (OperationCanceledException)
+                    catch (OperationCanceledException ex)
                     {
                         // Do not throw because this is a normal loop ending.
                         if (loopToken.IsCancellationRequested) break;
 
                         consoleTokenSource.Reset();
                         _console.WriteLine();
+
+                        if (ex is ReadingLineCanceledException rex && rex.HadUserInput)
+                        {
+                            // Do not count this as a first cancellation if there was a user input
+                            // and reset the flag if it was not the first one.
+                            isFirstCancel = true;
+                            continue;
+                        }
 
                         // Exit on double Ctrl+C hotkey.
                         if (!isFirstCancel) break;
