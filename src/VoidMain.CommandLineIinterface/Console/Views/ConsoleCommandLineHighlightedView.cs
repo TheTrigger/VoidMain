@@ -9,8 +9,8 @@ namespace VoidMain.CommandLineIinterface.Console.Views
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
         private readonly ICommandLineParser _parser;
-        private readonly ISyntaxHighlighter<ConsoleColor?> _highlighter;
-        private readonly SyntaxPallete<ConsoleColor?> _pallete;
+        private readonly ISyntaxHighlighter<ConsoleTextStyle> _highlighter;
+        private readonly SyntaxHighlightingPallete<ConsoleTextStyle> _pallete;
         private readonly CommandLineBuilder _lineBuilder;
         private ConsoleColor _background;
         private ConsoleColor _foreground;
@@ -19,7 +19,7 @@ namespace VoidMain.CommandLineIinterface.Console.Views
 
         public ConsoleCommandLineHighlightedView(
             IConsole console, IConsoleCursor cursor, ICommandLineParser parser,
-            ISyntaxHighlighter<ConsoleColor?> highlighter, SyntaxPallete<ConsoleColor?> pallete)
+            ISyntaxHighlighter<ConsoleTextStyle> highlighter, SyntaxHighlightingPallete<ConsoleTextStyle> pallete)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
@@ -134,40 +134,45 @@ namespace VoidMain.CommandLineIinterface.Console.Views
         {
             string commandLine = ToString();
             var syntax = _parser.Parse(commandLine);
-            var coloredSpans = _highlighter.GetColoredSpans(syntax, _pallete);
+            var highlightedSpans = _highlighter.GetHighlightedSpans(syntax, _pallete);
 
             int pos = Position;
             int written = 0;
             _cursor.Move(-pos);
 
-            foreach (var coloredSpan in coloredSpans)
+            foreach (var highlightedSpan in highlightedSpans)
             {
-                var span = coloredSpan.Span;
-                int gap = span.Start - written;
+                var span = highlightedSpan.Span;
+                var style = highlightedSpan.Style;
 
-                if (gap > 0)
-                {
-                    _console.ResetColors();
-                    _console.Write(' ', gap);
-                    written += gap;
-                }
+                int spansGap = WriteBlank(span.Start - written);
+                written += spansGap;
 
-                _console.BackgroundColor = coloredSpan.Background ?? _background;
-                _console.ForegroundColor = coloredSpan.Foreground ?? _foreground;
+                ApplyStyle(style);
                 _console.Write(span.Text);
                 written += span.Length;
             }
 
-            if (written < _prevLength)
-            {
-                _console.ResetColors();
-                int clearSpace = _prevLength - written;
-                _console.Write(' ', clearSpace);
-                written += clearSpace;
-            }
+            int clearSpace = WriteBlank(_prevLength - written);
+            written += clearSpace;
 
             _cursor.Move(pos - written);
             _prevLength = commandLine.Length;
+        }
+
+        private int WriteBlank(int length)
+        {
+            if (length < 1) return 0;
+            _console.BackgroundColor = _background;
+            _console.ForegroundColor = _foreground;
+            _console.Write(' ', length);
+            return length;
+        }
+
+        private void ApplyStyle(ConsoleTextStyle style)
+        {
+            _console.BackgroundColor = style.Background ?? _background;
+            _console.ForegroundColor = style.Foreground ?? _foreground;
         }
 
         #region View Lifecycle

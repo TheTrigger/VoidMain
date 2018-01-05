@@ -2,68 +2,68 @@
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class HighlightingVisitor<TColor>
-        : ICommandLineSyntaxVisitor<HighlightingVisitorParams<TColor>>
+    public class HighlightingVisitor<TStyle>
+        : ICommandLineSyntaxVisitor<HighlightingVisitorParams<TStyle>>
     {
-        private ColoredSpan<TColor> GetColoredSpan(
+        private StyledSpan<TStyle> GetStyledSpan(
             SyntaxClass @class, TextSpan span,
-            SyntaxPallete<TColor> pallete)
+            SyntaxHighlightingPallete<TStyle> pallete)
         {
-            pallete.GetColors(@class, out TColor background, out TColor foreground);
-            return new ColoredSpan<TColor>(span, background, foreground);
+            pallete.GetStyle(@class, out TStyle style);
+            return new StyledSpan<TStyle>(span, style);
         }
 
-        public bool VisitCommandLine(CommandLineSyntax commandLine, HighlightingVisitorParams<TColor> param)
+        public bool VisitCommandLine(CommandLineSyntax commandLine, HighlightingVisitorParams<TStyle> param)
         {
             return true;
         }
 
-        public bool VisitCommandName(CommandNameSyntax commandName, HighlightingVisitorParams<TColor> param)
+        public bool VisitCommandName(CommandNameSyntax commandName, HighlightingVisitorParams<TStyle> param)
         {
             var spans = param.Spans;
             var pallete = param.Pallete;
             foreach (var namePart in commandName.NameParts)
             {
-                spans.Add(GetColoredSpan(SyntaxClass.CommandName, namePart.Span, pallete));
+                spans.Add(GetStyledSpan(SyntaxClass.CommandName, namePart.Span, pallete));
             }
             return false;
         }
 
-        public bool VisitArgumentsSection(ArgumentsSectionSyntax argumentsSection, HighlightingVisitorParams<TColor> param)
+        public bool VisitArgumentsSection(ArgumentsSectionSyntax argumentsSection, HighlightingVisitorParams<TStyle> param)
         {
             return true;
         }
 
-        public bool VisitOption(OptionSyntax option, HighlightingVisitorParams<TColor> param)
+        public bool VisitOption(OptionSyntax option, HighlightingVisitorParams<TStyle> param)
         {
             var spans = param.Spans;
             var pallete = param.Pallete;
-            spans.Add(GetColoredSpan(SyntaxClass.OptionNameMarker, option.NameMarker.Span, pallete));
-            spans.Add(GetColoredSpan(SyntaxClass.OptionName, option.Name.Span, pallete));
+            spans.Add(GetStyledSpan(SyntaxClass.OptionNameMarker, option.NameMarker.Span, pallete));
+            spans.Add(GetStyledSpan(SyntaxClass.OptionName, option.Name.Span, pallete));
             if (option.ValueMarker != null)
             {
-                spans.Add(GetColoredSpan(SyntaxClass.OptionValueMarker, option.ValueMarker.Span, pallete));
+                spans.Add(GetStyledSpan(SyntaxClass.OptionValueMarker, option.ValueMarker.Span, pallete));
             }
             if (option.Value != null)
             {
-                spans.Add(GetColoredSpan(SyntaxClass.OptionValue, option.Value.Span, pallete));
+                spans.Add(GetStyledSpan(SyntaxClass.OptionValue, option.Value.Span, pallete));
             }
             return false;
         }
 
-        public bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax marker, HighlightingVisitorParams<TColor> param)
+        public bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax marker, HighlightingVisitorParams<TStyle> param)
         {
-            param.Spans.Add(GetColoredSpan(SyntaxClass.OperandsSectionMarker, marker.Span, param.Pallete));
+            param.Spans.Add(GetStyledSpan(SyntaxClass.OperandsSectionMarker, marker.Span, param.Pallete));
             return false;
         }
 
-        public bool VisitOperand(OperandSyntax operand, HighlightingVisitorParams<TColor> param)
+        public bool VisitOperand(OperandSyntax operand, HighlightingVisitorParams<TStyle> param)
         {
-            param.Spans.Add(GetColoredSpan(SyntaxClass.Operand, operand.Span, param.Pallete));
+            param.Spans.Add(GetStyledSpan(SyntaxClass.Operand, operand.Span, param.Pallete));
             return false;
         }
 
-        public bool VisitValue(ValueSyntax value, HighlightingVisitorParams<TColor> param)
+        public bool VisitValue(ValueSyntax value, HighlightingVisitorParams<TStyle> param)
         {
             return false;
         }

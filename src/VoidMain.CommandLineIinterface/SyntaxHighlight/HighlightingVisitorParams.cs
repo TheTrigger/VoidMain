@@ -2,12 +2,13 @@
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class HighlightingVisitorParams<TColor>
+    public class HighlightingVisitorParams<TStyle>
     {
-        public List<ColoredSpan<TColor>> Spans { get; }
-        public SyntaxPallete<TColor> Pallete { get; }
+        public List<StyledSpan<TStyle>> Spans { get; }
+        public SyntaxHighlightingPallete<TStyle> Pallete { get; }
 
-        public HighlightingVisitorParams(List<ColoredSpan<TColor>> spans, SyntaxPallete<TColor> pallete)
+        public HighlightingVisitorParams(List<StyledSpan<TStyle>> spans,
+            SyntaxHighlightingPallete<TStyle> pallete)
         {
             Spans = spans;
             Pallete = pallete;

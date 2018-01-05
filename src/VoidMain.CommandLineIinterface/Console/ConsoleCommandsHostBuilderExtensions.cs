@@ -41,8 +41,8 @@ namespace VoidMain.Hosting
                 services.AddSingleton<ISemanticModel, EmptySemanticModel>();
                 services.AddSingleton<SyntaxFactory, SyntaxFactory>();
 
-                services.AddSingleton<ISyntaxHighlighter<ConsoleColor?>, SyntaxHighlighter<ConsoleColor?>>();
-                services.AddSingleton<SyntaxPallete<ConsoleColor?>, DefaultConsoleSyntaxPallete>();
+                services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();
+                services.AddSingleton<SyntaxHighlightingPallete<ConsoleTextStyle>, DefaultConsoleSyntaxHighlightingPallete>();
             });
         }
 

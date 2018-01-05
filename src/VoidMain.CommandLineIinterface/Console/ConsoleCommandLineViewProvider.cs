@@ -10,12 +10,12 @@ namespace VoidMain.CommandLineIinterface.Console
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
         private readonly ICommandLineParser _parser;
-        private readonly ISyntaxHighlighter<ConsoleColor?> _highlighter;
-        private readonly SyntaxPallete<ConsoleColor?> _pallete;
+        private readonly ISyntaxHighlighter<ConsoleTextStyle> _highlighter;
+        private readonly SyntaxHighlightingPallete<ConsoleTextStyle> _pallete;
 
         public ConsoleCommandLineViewProvider(
             IConsole console, IConsoleCursor cursor, ICommandLineParser parser,
-            ISyntaxHighlighter<ConsoleColor?> highlighter, SyntaxPallete<ConsoleColor?> pallete)
+            ISyntaxHighlighter<ConsoleTextStyle> highlighter, SyntaxHighlightingPallete<ConsoleTextStyle> pallete)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));

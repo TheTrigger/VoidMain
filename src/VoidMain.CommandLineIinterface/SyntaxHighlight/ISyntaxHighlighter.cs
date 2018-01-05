@@ -3,8 +3,8 @@ using VoidMain.CommandLineIinterface.Parser.Syntax;
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public interface ISyntaxHighlighter<TColor>
+    public interface ISyntaxHighlighter<TStyle>
     {
-        IReadOnlyList<ColoredSpan<TColor>> GetColoredSpans(CommandLineSyntax syntax, SyntaxPallete<TColor> pallete);
+        IReadOnlyList<StyledSpan<TStyle>> GetHighlightedSpans(CommandLineSyntax syntax, SyntaxHighlightingPallete<TStyle> pallete);
     }
 }
