@@ -1,7 +1,7 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Internal;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
 
-namespace VoidMain.CommandLineIinterface.Console.InputHandlers
+namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 {
     public class TypeCharacterInputHandler : IConsoleInputHandler
     {

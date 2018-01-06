@@ -1,4 +1,5 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
 
 namespace VoidMain.CommandLineIinterface.Console
 {

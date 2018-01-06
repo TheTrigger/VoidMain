@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.Console.ConsoleCursors
+namespace VoidMain.CommandLineIinterface.IO.Console.Internal
 {
     public class CmdCursor : IConsoleCursor
     {

@@ -1,7 +1,9 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Internal;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
+using VoidMain.CommandLineIinterface.IO.Navigation;
+using VoidMain.CommandLineIinterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.Console.InputHandlers
+namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 {
     public class DeleteCharacterInputHandler : IConsoleInputHandler
     {

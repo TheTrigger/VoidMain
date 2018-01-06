@@ -1,14 +1,19 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Runtime.InteropServices;
 using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.Console;
-using VoidMain.CommandLineIinterface.Console.ConsoleCursors;
-using VoidMain.CommandLineIinterface.Console.InputHandlers;
 using VoidMain.CommandLineIinterface.History;
+using VoidMain.CommandLineIinterface.IO;
+using VoidMain.CommandLineIinterface.IO.Console;
+using VoidMain.CommandLineIinterface.IO.Console.InputHandlers;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
+using VoidMain.CommandLineIinterface.IO.Navigation;
+using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.CommandLineIinterface.IO.Views.Console;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
+using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
 
 namespace VoidMain.Hosting
 {
@@ -34,7 +39,7 @@ namespace VoidMain.Hosting
                 services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
 
                 services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
-                services.AddSingleton<ICommandsHistoryStorage, FileCommandsHistoryStorage>();
+                services.AddSingleton<ICommandsHistoryStorage, CommandsHistoryFileStorage>();
 
                 services.AddSingleton<ICommandLineParser, CommandLineParser>();
                 services.AddSingleton<ICommandLineLexer, CommandLineLexer>();

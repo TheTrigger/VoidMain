@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface
+﻿namespace VoidMain.CommandLineIinterface.IO.Views
 {
     public class CommandLineViewOptions
     {

@@ -1,12 +1,13 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.Internal;
 
-namespace VoidMain.CommandLineIinterface.Console.Views
+namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class ConsoleCommandLineHiddenView : ICommandLineView
+    public class CommandLineHiddenView : ICommandLineView
     {
         private readonly CommandLineBuilder _lineBuilder;
 
-        public ConsoleCommandLineHiddenView()
+        public CommandLineHiddenView()
         {
             _lineBuilder = new CommandLineBuilder();
             ViewType = CommandLineViewType.Hidden;

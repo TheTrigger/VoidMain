@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.Console
+﻿namespace VoidMain.CommandLineIinterface.IO
 {
     public class CmdPrompt : IPrompt
     {

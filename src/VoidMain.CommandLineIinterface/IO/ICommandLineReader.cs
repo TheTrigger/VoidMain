@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineIinterface.IO
 {
     public interface ICommandLineReader
     {

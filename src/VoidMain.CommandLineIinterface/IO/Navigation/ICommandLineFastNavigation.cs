@@ -1,4 +1,6 @@
-﻿namespace VoidMain.CommandLineIinterface
+﻿using VoidMain.CommandLineIinterface.IO.Views;
+
+namespace VoidMain.CommandLineIinterface.IO.Navigation
 {
     public interface ICommandLineFastNavigation
     {

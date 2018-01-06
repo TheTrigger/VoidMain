@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using VoidMain.CommandLineIinterface.Console;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 using VoidMain.Hosting;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineIinterface.Internal
 {
     public class ContextCreationHelper
     {

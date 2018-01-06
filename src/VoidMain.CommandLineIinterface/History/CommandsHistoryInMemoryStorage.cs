@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace VoidMain.CommandLineIinterface.History
 {
-    public class InMemoryCommandsHistoryStorage : ICommandsHistoryStorage
+    public class CommandsHistoryInMemoryStorage : ICommandsHistoryStorage
     {
         private string[] _commands;
 
-        public InMemoryCommandsHistoryStorage()
+        public CommandsHistoryInMemoryStorage()
         {
             // TODO: Allow to configure commands.
             _commands = Array.Empty<string>();

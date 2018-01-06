@@ -1,7 +1,7 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.SyntaxHighlight;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface.SyntaxHighlight.Console
 {
     public class DefaultConsoleSyntaxHighlightingPallete : SyntaxHighlightingPallete<ConsoleTextStyle>
     {

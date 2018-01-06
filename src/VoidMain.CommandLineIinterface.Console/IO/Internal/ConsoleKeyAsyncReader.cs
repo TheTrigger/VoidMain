@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface.IO.Console.Internal
 {
     public class ConsoleKeyAsyncReader
     {

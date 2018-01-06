@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace VoidMain.CommandLineIinterface.Parser
+namespace VoidMain.CommandLineIinterface.Internal
 {
     public static class ArgsUtil
     {

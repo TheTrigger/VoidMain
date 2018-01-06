@@ -1,6 +1,8 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.Internal;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
 
-namespace VoidMain.CommandLineIinterface.Console.Views
+namespace VoidMain.CommandLineIinterface.IO.Views.Console
 {
     public class ConsoleCommandLineView : ICommandLineView
     {

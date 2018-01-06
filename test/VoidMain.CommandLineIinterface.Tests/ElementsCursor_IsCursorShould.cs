@@ -1,5 +1,5 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Parser;
+using VoidMain.CommandLineIinterface.Internal;
 using Xunit;
 
 namespace VoidMain.CommandLineIinterface.Tests

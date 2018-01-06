@@ -1,7 +1,8 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.History;
+using VoidMain.CommandLineIinterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.Console.InputHandlers
+namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 {
     class CommandsHistoryInputHandler : IConsoleInputHandler
     {

@@ -1,9 +1,10 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Console.Views;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
+using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface.IO.Views.Console
 {
     public class ConsoleCommandLineViewProvider : ICommandLineViewProvider
     {
@@ -35,7 +36,7 @@ namespace VoidMain.CommandLineIinterface.Console
                 case CommandLineViewType.Masked:
                     return new ConsoleCommandLineMaskedView(_console, _cursor, options.MaskSymbol);
                 case CommandLineViewType.Hidden:
-                    return new ConsoleCommandLineHiddenView();
+                    return new CommandLineHiddenView();
                 default:
                     throw new ArgumentOutOfRangeException("Unknown view type " + options.ViewType);
             }

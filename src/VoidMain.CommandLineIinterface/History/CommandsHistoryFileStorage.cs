@@ -6,12 +6,12 @@ using System.Text;
 
 namespace VoidMain.CommandLineIinterface.History
 {
-    public class FileCommandsHistoryStorage : ICommandsHistoryStorage
+    public class CommandsHistoryFileStorage : ICommandsHistoryStorage
     {
         private readonly string _filePath;
         private readonly Encoding _encoding;
 
-        public FileCommandsHistoryStorage()
+        public CommandsHistoryFileStorage()
         {
             // TODO: Comfigure file path.
             _filePath = Assembly.GetEntryAssembly().Location + ".history";

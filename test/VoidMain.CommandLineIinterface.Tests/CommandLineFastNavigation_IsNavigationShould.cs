@@ -1,4 +1,5 @@
-﻿using VoidMain.CommandLineIinterface.Console.Views;
+﻿using VoidMain.CommandLineIinterface.IO.Navigation;
+using VoidMain.CommandLineIinterface.IO.Views;
 using Xunit;
 
 namespace VoidMain.CommandLineIinterface.Tests
@@ -19,7 +20,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var navigation = new CommandLineFastNavigation();
-            var lineView = new ConsoleCommandLineHiddenView();
+            var lineView = new CommandLineHiddenView();
             lineView.Type(startValue);
             lineView.MoveTo(startPos);
 
@@ -44,7 +45,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var navigation = new CommandLineFastNavigation();
-            var lineView = new ConsoleCommandLineHiddenView();
+            var lineView = new CommandLineHiddenView();
             lineView.Type(startValue);
             lineView.MoveTo(startPos);
 

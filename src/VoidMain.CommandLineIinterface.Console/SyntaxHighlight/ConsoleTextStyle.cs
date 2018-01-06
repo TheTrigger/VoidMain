@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface.SyntaxHighlight.Console
 {
     public class ConsoleTextStyle
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface.IO.Console.Internal
 {
     public sealed class PlatformConsole : IConsole
     {

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using VoidMain.CommandLineIinterface.IO.Console.InputHandlers;
+using VoidMain.CommandLineIinterface.IO.Console.Internal;
+using VoidMain.CommandLineIinterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface.IO.Console
 {
     public class ConsoleCommandLineReader : ICommandLineReader
     {
