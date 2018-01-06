@@ -9,44 +9,51 @@ namespace VoidMain.CommandLineIinterface.History
     public class CommandsHistoryManager : ICommandsHistoryManager, IDisposable
     {
         private readonly ICommandsHistoryStorage _storage;
+        private readonly object _commandsWriteLock;
         private readonly int _savePeriod;
-        private readonly int _maxCount;
         private PushOutCollection<string> _commands;
         private int _isSchedulled = 0;
         private int _current;
 
         public int Count { get { EnsureCommandsLoaded(); return _commands.Count; } }
-        public int MaxCount => _maxCount;
+        public int MaxCount { get; }
 
         public CommandsHistoryManager(ICommandsHistoryStorage storage)
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            _commandsWriteLock = new object();
             _savePeriod = 10_000; // TODO: Configure save period.
-            _maxCount = 10; // TODO: Configure max count.
+            MaxCount = 10; // TODO: Configure max count.
         }
 
         private void EnsureCommandsLoaded()
         {
             if (_commands != null) return;
 
-            var loaded = _storage.Load()
-                .Where(_ => !String.IsNullOrWhiteSpace(_))
-                .ToArray();
-
-            if (loaded.Length > _maxCount)
+            lock (_commandsWriteLock)
             {
-                _commands = new PushOutCollection<string>(loaded.Skip(loaded.Length - _maxCount));
-            }
-            else
-            {
-                _commands = new PushOutCollection<string>(_maxCount);
-                for (int i = 0; i < loaded.Length; i++)
+                string[] loaded = null;
+                lock (_storage)
                 {
-                    _commands.Add(loaded[i]);
+                    loaded = _storage.Load();
                 }
-            }
+                loaded = loaded.Where(_ => !String.IsNullOrWhiteSpace(_)).ToArray();
 
-            _current = _commands.Count;
+                if (loaded.Length > MaxCount)
+                {
+                    _commands = new PushOutCollection<string>(loaded.Skip(loaded.Length - MaxCount));
+                }
+                else
+                {
+                    _commands = new PushOutCollection<string>(MaxCount);
+                    for (int i = 0; i < loaded.Length; i++)
+                    {
+                        _commands.Add(loaded[i]);
+                    }
+                }
+
+                _current = _commands.Count;
+            }
         }
 
         public bool TryGetPrevCommand(out string command)
@@ -93,11 +100,29 @@ namespace VoidMain.CommandLineIinterface.History
                 return;
             }
 
-            lock (_commands)
+            lock (_commandsWriteLock)
             {
                 _commands.Add(command);
+                _current = _commands.Count;
             }
-            _current = _commands.Count;
+
+            ScheduleSaveCommands();
+        }
+
+        public void Clear()
+        {
+            lock (_commandsWriteLock)
+            {
+                if (_commands == null)
+                {
+                    _commands = new PushOutCollection<string>(MaxCount);
+                }
+                else
+                {
+                    _commands.Clear();
+                }
+                _current = 0;
+            }
 
             ScheduleSaveCommands();
         }
@@ -119,7 +144,7 @@ namespace VoidMain.CommandLineIinterface.History
             try
             {
                 string[] commands = null;
-                lock (_commands)
+                lock (_commandsWriteLock)
                 {
                     commands = _commands.ToArray();
                 }

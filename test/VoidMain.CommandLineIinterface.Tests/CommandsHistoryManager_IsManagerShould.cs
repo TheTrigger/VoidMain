@@ -200,5 +200,37 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(1, manager.Count);
         }
+
+        [Fact]
+        public void ClearElements()
+        {
+            // Arrange
+            var mock = new Mock<ICommandsHistoryStorage>();
+            mock.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
+            var manager = new CommandsHistoryManager(mock.Object);
+
+            // Act
+            manager.TryGetPrevCommand(out string _); // Force to load from storage
+            manager.Clear();
+
+            // Assert
+            Assert.Equal(0, manager.Count);
+        }
+
+        [Fact]
+        public void ClearElementsWithoutLoadingFromStorage()
+        {
+            // Arrange
+            var mock = new Mock<ICommandsHistoryStorage>();
+            mock.Setup(s => s.Load()).Returns(Array.Empty<string>());
+            var manager = new CommandsHistoryManager(mock.Object);
+
+            // Act
+            manager.Clear();
+
+            // Assert
+            Assert.Equal(0, manager.Count);
+            mock.Verify(s => s.Load(), Times.Never());
+        }
     }
 }

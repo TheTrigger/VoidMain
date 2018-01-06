@@ -4,7 +4,7 @@ using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 {
-    class CommandsHistoryInputHandler : IConsoleInputHandler
+    public class CommandsHistoryInputHandler : IConsoleInputHandler
     {
         private readonly ICommandsHistoryManager _historyManager;
         private string _temp;

@@ -7,5 +7,6 @@
         bool TryGetPrevCommand(out string command);
         bool TryGetNextCommand(out string command);
         void AddCommand(string command);
+        void Clear();
     }
 }
