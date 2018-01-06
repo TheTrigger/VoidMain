@@ -29,7 +29,7 @@ namespace VoidMain.CommandLineIinterface
             return this;
         }
 
-        public ContextCreationHelper SetOutput(ConsoleLockingOutput output)
+        public ContextCreationHelper SetOutput(ICommandLineOutput output)
         {
             _context[ContextKey.Output] = output;
             return this;

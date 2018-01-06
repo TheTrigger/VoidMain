@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\VoidMain.Application.Commands\VoidMain.Application.Commands.csproj" />
-    <ProjectReference Include="..\..\src\VoidMain.CommandLineIinterface\VoidMain.CommandLineIinterface.csproj" />
+    <ProjectReference Include="..\..\src\VoidMain.CommandLineIinterface.Console\VoidMain.CommandLineIinterface.Console.csproj" />
   </ItemGroup>
 
 </Project>
