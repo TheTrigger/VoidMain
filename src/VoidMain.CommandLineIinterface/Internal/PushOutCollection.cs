@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
+    [DebuggerDisplay("Count = {Count}")]
     public class PushOutCollection<T> : IEnumerable<T>
     {
         private readonly T[] _elements;

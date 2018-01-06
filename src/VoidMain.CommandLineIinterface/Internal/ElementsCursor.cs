@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
+    [DebuggerDisplay("{Peek()} -> {Peek(1)}")]
     public class ElementsCursor<T>
     {
         public int Position { get; private set; }
@@ -44,13 +46,6 @@ namespace VoidMain.CommandLineIinterface.Internal
                 return TerminalElement;
             }
             return Elements[peekPosition];
-        }
-
-        public override string ToString()
-        {
-            var current = Peek();
-            var next = Peek(1);
-            return $"{current} => {next}";
         }
     }
 }

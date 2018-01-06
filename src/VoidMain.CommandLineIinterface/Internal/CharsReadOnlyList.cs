@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
+    [DebuggerDisplay("Count = {Count}")]
     public class CharsReadOnlyList : IReadOnlyList<char>
     {
         private readonly string _value;
