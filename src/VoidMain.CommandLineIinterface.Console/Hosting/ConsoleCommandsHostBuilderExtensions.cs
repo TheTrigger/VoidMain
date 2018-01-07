@@ -46,7 +46,7 @@ namespace VoidMain.Hosting
                 services.AddTransient<ICommandsHistoryEqualityComparer, CommandsHistoryOrdinalIgnoreCaseEqualityComparer>();
 
                 services.AddSingleton<IUndoRedoManager<CommandLineViewSnapshot>, UndoRedoManager<CommandLineViewSnapshot>>();
-                services.AddSingleton<IEqualityComparer<CommandLineViewSnapshot>, CommandLineViewSnapshotWithoutCursorEqualityComparer>();
+                services.AddSingleton<IUndoRedoSnapshotEqualityComparer<CommandLineViewSnapshot>, UndoRedoSnapshotIgnoreCursorEqualityComparer>();
 
                 services.AddSingleton<ICommandLineParser, CommandLineParser>();
                 services.AddSingleton<ICommandLineLexer, CommandLineLexer>();

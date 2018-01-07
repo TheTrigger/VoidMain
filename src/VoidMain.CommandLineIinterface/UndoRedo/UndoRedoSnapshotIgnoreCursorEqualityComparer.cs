@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using VoidMain.CommandLineIinterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.IO.Views
+namespace VoidMain.CommandLineIinterface.UndoRedo
 {
-    public class CommandLineViewSnapshotWithoutCursorEqualityComparer : IEqualityComparer<CommandLineViewSnapshot>
+    public class UndoRedoSnapshotIgnoreCursorEqualityComparer
+        : IUndoRedoSnapshotEqualityComparer<CommandLineViewSnapshot>
     {
         public bool Equals(CommandLineViewSnapshot x, CommandLineViewSnapshot y)
         {

@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using VoidMain.CommandLineIinterface.Internal;
 
 namespace VoidMain.CommandLineIinterface.UndoRedo
 {
     public class UndoRedoManager<TSnapshot> : IUndoRedoManager<TSnapshot>
     {
-        private IEqualityComparer<TSnapshot> _comparer;
+        private readonly IUndoRedoSnapshotEqualityComparer<TSnapshot> _comparer;
         private readonly PushOutCollection<TSnapshot> _snapshots;
         private int _current;
 
         public int Count => _snapshots.Count;
         public int MaxCount { get; }
 
-        public UndoRedoManager(IEqualityComparer<TSnapshot> comparer)
+        public UndoRedoManager(IUndoRedoSnapshotEqualityComparer<TSnapshot> comparer)
         {
             _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             MaxCount = 10; // TODO: Configure max count.

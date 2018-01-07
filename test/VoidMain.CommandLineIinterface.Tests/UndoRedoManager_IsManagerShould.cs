@@ -1,4 +1,5 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.Tests.Tools;
 using VoidMain.CommandLineIinterface.UndoRedo;
 using Xunit;
 
@@ -6,11 +7,14 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class UndoRedoManager_IsManagerShould
     {
+        private static readonly IUndoRedoSnapshotEqualityComparer<string> Comparer
+            = new UndoRedoSnapshotInvariantEqualityComparer();
+
         [Fact]
         public void RequireValidSnapshotsOnUndo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string currentSnapshot = null;
 
             // Assert
@@ -21,7 +25,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void RequireValidSnapshotsOnRedo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string currentSnapshot = null;
 
             // Assert
@@ -32,7 +36,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void RequireValidSnapshotsOnAdd()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string snapshot = null;
 
             // Assert
@@ -43,7 +47,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotUndoWithoutSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string currentSnapshot = "";
 
             for (int i = 0; i < 2; i++)
@@ -61,7 +65,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotRedoWithoutSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string currentSnapshot = "";
 
             for (int i = 0; i < 2; i++)
@@ -79,7 +83,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotUndoMoreThanItHaveSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string secondSnapshot = "snapshot_2";
             manager.TryAddSnapshot(firstSnapshot);
@@ -101,7 +105,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotRedoMoreThanItHaveSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string secondSnapshot = "snapshot_2";
             manager.TryAddSnapshot(firstSnapshot);
@@ -125,7 +129,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void AddNewSnapshot()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string expected = "snapshot_1";
             string undoneSnapshot = "snapshot_2";
             manager.TryAddSnapshot(expected);
@@ -142,7 +146,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotExceedMaxSnapshotsCount()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
 
             // Act
             for (int i = 0; i < manager.MaxCount + 1; i++)
@@ -158,7 +162,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void DeleteAfterCurrent()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string undoneSnapshot = "snapshot_2";
             string newSnapshot = "snapshot_3";
@@ -179,7 +183,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotDeleteAfterCurrentIfCurrentIsLast()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string secondSnapshot = "snapshot_2";
             string newSnapshot = "snapshot_3";
@@ -199,7 +203,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotAddSameLastSnapshot()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string snapshot = "snapshot_1";
             manager.TryAddSnapshot(snapshot);
 
@@ -215,7 +219,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotAddSameCurrentSnapshot()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string secondSnapshot = "snapshot_2";
             manager.TryAddSnapshot(firstSnapshot);
@@ -234,7 +238,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void AddNewSnapshotIfLastOneChangedOnUndo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string secondSnapshot = "snapshot_2";
             manager.TryAddSnapshot(firstSnapshot);
@@ -253,7 +257,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void AddNewSnapshotIfCurrentOneChangedOnUndo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string secondSnapshot = "snapshot_2";
             manager.TryAddSnapshot(firstSnapshot);
@@ -273,7 +277,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void AddNewSnapshotAndNotRedoIfLastOneChangedOnRedo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(StringComparer.InvariantCulture);
+            var manager = new UndoRedoManager<string>(Comparer);
             string firstSnapshot = "snapshot_1";
             string secondSnapshot = "snapshot_2";
             manager.TryAddSnapshot(firstSnapshot);
