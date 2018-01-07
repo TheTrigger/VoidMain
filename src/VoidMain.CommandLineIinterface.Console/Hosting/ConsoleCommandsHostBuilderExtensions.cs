@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.Console;
@@ -14,6 +15,7 @@ using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
 using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
+using VoidMain.CommandLineIinterface.UndoRedo;
 
 namespace VoidMain.Hosting
 {
@@ -35,11 +37,15 @@ namespace VoidMain.Hosting
                 services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
                 services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
                 services.AddTransient<IConsoleInputHandler, CommandsHistoryInputHandler>();
+                services.AddTransient<IConsoleInputHandler, UndoRedoInputHandler>();
 
                 services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
 
                 services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
                 services.AddSingleton<ICommandsHistoryStorage, CommandsHistoryFileStorage>();
+
+                services.AddSingleton<IUndoRedoManager<CommandLineViewSnapshot>, UndoRedoManager<CommandLineViewSnapshot>>();
+                services.AddSingleton<IEqualityComparer<CommandLineViewSnapshot>, CommandLineViewSnapshotWithoutCursorEqualityComparer>();
 
                 services.AddSingleton<ICommandLineParser, CommandLineParser>();
                 services.AddSingleton<ICommandLineLexer, CommandLineLexer>();

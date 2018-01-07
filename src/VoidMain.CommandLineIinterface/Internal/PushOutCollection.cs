@@ -82,6 +82,30 @@ namespace VoidMain.CommandLineIinterface.Internal
             Array.Clear(_elements, 0, _elements.Length);
         }
 
+        public void TrimTo(int count)
+        {
+            if (count == Count) return;
+            if (count == 0) { Clear(); return; }
+
+            if (count < 0 || count > Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count));
+            }
+
+            Count = count;
+            int lastIndex = (_start + Count) % MaxCount;
+
+            if (lastIndex > _start)
+            {
+                Array.Clear(_elements, lastIndex, MaxCount - lastIndex);
+                Array.Clear(_elements, 0, _start);
+            }
+            else
+            {
+                Array.Clear(_elements, lastIndex, _start - lastIndex);
+            }
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)

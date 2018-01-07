@@ -2,14 +2,19 @@
 {
     public static class CommandLineViewExtensions
     {
-        public static void ReplaceWith(this ICommandLineView view, string value)
+        public static void ReplaceWith(this ICommandLineView lineView, string value)
         {
-            view.MoveTo(0);
-            view.TypeOver(value);
-            if (view.Position != view.Length)
+            lineView.MoveTo(0);
+            lineView.TypeOver(value);
+            if (lineView.Position != lineView.Length)
             {
-                view.Delete(view.Length - view.Position);
+                lineView.Delete(lineView.Length - lineView.Position);
             }
+        }
+
+        public static CommandLineViewSnapshot TakeSnapshot(this ICommandLineView lineView)
+        {
+            return new CommandLineViewSnapshot(lineView);
         }
     }
 }

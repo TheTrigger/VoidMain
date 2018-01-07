@@ -94,7 +94,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             }
 
             // Assert
-            Assert.Equal(expected, collection.ToArray());
+            Assert.Equal(expected, collection);
         }
 
         [Theory]
@@ -106,28 +106,36 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var collection = new PushOutCollection<int>(capacity);
-
-            // Act
             for (int i = 0; i < capacity + extraElements; i++)
             {
                 collection.Add(i);
             }
 
+            // Act
+            int actual = collection[index];
+
             // Assert
-            Assert.Equal(expected, collection[index]);
+            Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public void SetWithZeroBasedIndexing()
+        [Theory]
+        [InlineData(3, 0, new[] { -1, 1, 2 })]
+        [InlineData(3, 1, new[] { -1, 2, 3 })]
+        [InlineData(3, 5, new[] { -1, 6, 7 })]
+        public void SetWithZeroBasedIndexing(int capacity, int extraElements, int[] expected)
         {
             // Arrange
-            var collection = new PushOutCollection<int>(new int[] { 0, 1, 2 });
+            var collection = new PushOutCollection<int>(capacity);
+            for (int i = 0; i < capacity + extraElements; i++)
+            {
+                collection.Add(i);
+            }
 
             // Act
             collection[0] = -1;
 
             // Assert
-            Assert.Equal(new int[] { -1, 1, 2 }, collection);
+            Assert.Equal(expected, collection);
         }
 
         [Fact]
@@ -141,6 +149,27 @@ namespace VoidMain.CommandLineIinterface.Tests
 
             // Assert
             Assert.Equal(0, collection.Count);
+        }
+
+        [Theory]
+        [InlineData(5, 0, 0, new int[0])]
+        [InlineData(5, 2, 5, new[] { 2, 3, 4, 5, 6 })]
+        [InlineData(5, 2, 2, new[] { 2, 3 })]
+        [InlineData(5, 3, 4, new[] { 3, 4, 5, 6 })]
+        public void TrimToCount(int capacity, int extraElements, int newCount, int[] expected)
+        {
+            // Arrange
+            var collection = new PushOutCollection<int>(capacity);
+            for (int i = 0; i < capacity + extraElements; i++)
+            {
+                collection.Add(i);
+            }
+
+            // Act
+            collection.TrimTo(newCount);
+
+            // Assert
+            Assert.Equal(expected, collection);
         }
     }
 }
