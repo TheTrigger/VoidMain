@@ -7,6 +7,7 @@ namespace VoidMain.CommandLineIinterface.Internal
     {
         private readonly StringBuilder _builder;
         private int _position;
+        private string _cache;
 
         public int Position => _position;
         public int Length => _builder.Length;
@@ -14,7 +15,11 @@ namespace VoidMain.CommandLineIinterface.Internal
         public char this[int index]
         {
             get => _builder[index];
-            set => _builder[index] = value;
+            set
+            {
+                _builder[index] = value;
+                _cache = null;
+            }
         }
 
         public CommandLineBuilder(int capacity = 256)
@@ -52,6 +57,7 @@ namespace VoidMain.CommandLineIinterface.Internal
                 _builder.Insert(_position, value);
             }
             _position++;
+            _cache = null;
         }
 
         public void Insert(string value)
@@ -68,6 +74,7 @@ namespace VoidMain.CommandLineIinterface.Internal
             }
 
             _position += value.Length;
+            _cache = null;
         }
 
         public void Delete(int count)
@@ -87,12 +94,14 @@ namespace VoidMain.CommandLineIinterface.Internal
             }
 
             _builder.Remove(_position, count);
+            _cache = null;
         }
 
         public void Clear()
         {
             _builder.Clear();
             _position = 0;
+            _cache = null;
         }
 
         public string ToString(int start, int length)
@@ -107,7 +116,7 @@ namespace VoidMain.CommandLineIinterface.Internal
 
         public override string ToString()
         {
-            return _builder.ToString();
+            return _cache ?? (_cache = _builder.ToString());
         }
     }
 }
