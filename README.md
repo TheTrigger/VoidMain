@@ -10,6 +10,7 @@ Almost every part of the framework can be extended or replaced.
     - Async and cancellable **(done)**
     - Masked input **(done)**
     - Hidden input **(done)**
+    - Undo/Redo **(done)**
   - Prompt message provider **(done)**
   - Commands history **(done)**
     - In-memory storage **(done)**
