@@ -7,6 +7,12 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight.Console
         public ConsoleColor? Background { get; }
         public ConsoleColor? Foreground { get; }
 
+        public ConsoleTextStyle(ConsoleColor? foreground)
+        {
+            Background = null;
+            Foreground = foreground;
+        }
+
         public ConsoleTextStyle(
             ConsoleColor? background, ConsoleColor? foreground)
         {

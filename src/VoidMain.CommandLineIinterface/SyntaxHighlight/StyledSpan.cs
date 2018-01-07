@@ -13,6 +13,12 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             Style = style;
         }
 
+        public StyledSpan(string value, TStyle style)
+        {
+            Span = new TextSpan(value);
+            Style = style;
+        }
+
         public override string ToString()
         {
             return $"\"{Span}\" {Style}";

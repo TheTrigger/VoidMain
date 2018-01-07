@@ -4,16 +4,12 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
 {
     public struct TextSpan : IEquatable<TextSpan>, IEquatable<string>
     {
-        private readonly string _source;
-        private readonly int _start;
-        private readonly int _length;
+        public string Source { get; }
+        public int Start { get; }
+        public int Length { get; }
+        public int End => Start + Length;
+        public bool IsEmpty => Length == 0;
         private string _computedValue;
-
-        public string Source => _source;
-        public int Start => _start;
-        public int Length => _length;
-        public int End => _start + _length;
-        public bool IsEmpty => _length == 0;
         public string Text => GetText();
 
         public TextSpan(string source, int start, int length)
@@ -30,25 +26,33 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
             }
-            _source = source;
-            _start = start;
-            _length = length;
+            Source = source;
+            Start = start;
+            Length = length;
             _computedValue = null;
+        }
+
+        public TextSpan(string source)
+        {
+            Source = source ?? throw new ArgumentNullException(nameof(source));
+            Start = 0;
+            Length = source.Length;
+            _computedValue = source;
         }
 
         private string GetText()
         {
             if (IsEmpty) return String.Empty;
-            return _computedValue ?? (_computedValue = _source.Substring(_start, _length));
+            return _computedValue ?? (_computedValue = Source.Substring(Start, Length));
         }
 
         public static TextSpan RangeInclusive(TextSpan start, TextSpan end)
         {
-            if(ReferenceEquals(start.Source, null))
-            if (start._source != end._source)
+            if (start.Source == null || end.Source == null
+                || end.Source != start.Source)
             {
                 throw new ArgumentException(nameof(end),
-                    "Source for end span is not match one for start span.");
+                    "Source for the end span is not match one for the start span.");
             }
 
             return new TextSpan(start.Source, start.Start, end.End - start.Start);
@@ -58,7 +62,7 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
 
         public override int GetHashCode()
         {
-            return _source == null ? 0 : _source.GetHashCode() ^ _start ^ _length;
+            return Source == null ? 0 : Source.GetHashCode() ^ Start ^ Length;
         }
 
         public override bool Equals(object obj)
@@ -74,9 +78,9 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
 
         public bool Equals(TextSpan other, StringComparison comparisonType)
         {
-            if (_source == null || other._source == null) return false;
-            if (_length != other._length) return false;
-            return string.Compare(_source, _start, other._source, other._start, _length, comparisonType) == 0;
+            if (Source == null || other.Source == null) return false;
+            if (Length != other.Length) return false;
+            return string.Compare(Source, Start, other.Source, other.Start, Length, comparisonType) == 0;
         }
 
         public bool Equals(string other)
@@ -87,13 +91,12 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
         public bool Equals(string other, StringComparison comparisonType)
         {
             if (other == null) return false;
-            if (_source == null) return false;
-            if (_length != other.Length) return false;
-            return string.Compare(_source, _start, other, 0, _length, comparisonType) == 0;
+            if (Source == null) return false;
+            if (Length != other.Length) return false;
+            return string.Compare(Source, Start, other, 0, Length, comparisonType) == 0;
         }
 
         public static bool operator ==(TextSpan left, TextSpan right) => left.Equals(right);
-
         public static bool operator !=(TextSpan left, TextSpan right) => !left.Equals(right);
     }
 }
