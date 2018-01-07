@@ -139,11 +139,6 @@ namespace VoidMain.CommandLineIinterface.Parser
             SyntaxToken valueMarker = null;
             ValueSyntax value = null;
 
-            if (!_semanticModel.TryGetOptionType(commandName, name.StringValue, out Type valueType))
-            {
-                errors.Add(_syntaxFactory.UnknownOptionNameError(name.Span));
-            }
-
             if (!HasMoreTokens(cursor))
             {
                 return new OptionSyntax(nameMarker, name, valueMarker, value);
@@ -167,6 +162,8 @@ namespace VoidMain.CommandLineIinterface.Parser
 
                     errors.Add(_syntaxFactory.MissingWhitespaceError(name.TrailingTrivia.Span));
                 }
+
+                _semanticModel.TryGetOptionType(commandName, name.StringValue, out Type valueType);
 
                 if (IsFlag(valueType))
                 {
