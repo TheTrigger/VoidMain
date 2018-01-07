@@ -43,6 +43,7 @@ namespace VoidMain.Hosting
 
                 services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
                 services.AddSingleton<ICommandsHistoryStorage, CommandsHistoryFileStorage>();
+                services.AddTransient<ICommandsHistoryEqualityComparer, CommandsHistoryOrdinalIgnoreCaseEqualityComparer>();
 
                 services.AddSingleton<IUndoRedoManager<CommandLineViewSnapshot>, UndoRedoManager<CommandLineViewSnapshot>>();
                 services.AddSingleton<IEqualityComparer<CommandLineViewSnapshot>, CommandLineViewSnapshotWithoutCursorEqualityComparer>();

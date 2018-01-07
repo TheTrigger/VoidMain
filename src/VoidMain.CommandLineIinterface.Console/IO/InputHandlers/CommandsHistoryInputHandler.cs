@@ -7,7 +7,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
     public class CommandsHistoryInputHandler : IConsoleInputHandler
     {
         private readonly ICommandsHistoryManager _historyManager;
-        private string _temp;
+        private CommandLineViewSnapshot? _temp;
 
         public int Order { get; set; } = 2048;
 
@@ -41,9 +41,9 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
         {
             if (_historyManager.TryGetPrevCommand(out string command))
             {
-                if (_temp == null)
+                if (!_temp.HasValue)
                 {
-                    _temp = args.LineView.ToString();
+                    _temp = args.LineView.TakeSnapshot();
                 }
                 args.LineView.ReplaceWith(command);
                 args.IsHandledHint = true;
@@ -57,9 +57,9 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
                 args.LineView.ReplaceWith(command);
                 args.IsHandledHint = true;
             }
-            else if (_temp != null)
+            else if (_temp.HasValue)
             {
-                args.LineView.ReplaceWith(_temp);
+                _temp.Value.ApplyTo(args.LineView);
                 _temp = null;
                 args.IsHandledHint = true;
             }

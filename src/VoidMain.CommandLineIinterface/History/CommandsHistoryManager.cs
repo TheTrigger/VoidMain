@@ -9,6 +9,7 @@ namespace VoidMain.CommandLineIinterface.History
     public class CommandsHistoryManager : ICommandsHistoryManager, IDisposable
     {
         private readonly ICommandsHistoryStorage _storage;
+        private readonly ICommandsHistoryEqualityComparer _comparer;
         private readonly object _commandsWriteLock;
         private readonly int _savePeriod;
         private PushOutCollection<string> _commands;
@@ -18,9 +19,10 @@ namespace VoidMain.CommandLineIinterface.History
         public int Count { get { EnsureCommandsLoaded(); return _commands.Count; } }
         public int MaxCount { get; }
 
-        public CommandsHistoryManager(ICommandsHistoryStorage storage)
+        public CommandsHistoryManager(ICommandsHistoryStorage storage, ICommandsHistoryEqualityComparer comparer)
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             _commandsWriteLock = new object();
             _savePeriod = 10_000; // TODO: Configure save period.
             MaxCount = 10; // TODO: Configure max count.
@@ -60,7 +62,7 @@ namespace VoidMain.CommandLineIinterface.History
         {
             EnsureCommandsLoaded();
 
-            if (_current > 0)
+            if (HasPrev())
             {
                 _current--;
                 command = _commands[_current];
@@ -94,7 +96,7 @@ namespace VoidMain.CommandLineIinterface.History
             EnsureCommandsLoaded();
 
             if (String.IsNullOrWhiteSpace(command) ||
-                (_commands.Count > 0 && command == _commands[_commands.Count - 1]))
+                IsEqualsToLastCommand(command))
             {
                 _current = _commands.Count;
                 return;
@@ -162,6 +164,17 @@ namespace VoidMain.CommandLineIinterface.History
         public void Dispose()
         {
             SaveCommands();
+        }
+
+        private bool HasPrev()
+        {
+            return _current > 0;
+        }
+
+        private bool IsEqualsToLastCommand(string command)
+        {
+            return _commands.Count > 0
+                && _comparer.Equals(command, _commands[_commands.Count - 1]);
         }
     }
 }
