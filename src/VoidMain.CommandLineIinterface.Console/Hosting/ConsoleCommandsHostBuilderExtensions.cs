@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.Console;
@@ -25,41 +24,19 @@ namespace VoidMain.Hosting
         {
             return hostBuilder.ConfigureServices(services =>
             {
-                services.AddSingleton<IConsole>(_ => PlatformConsole.Instance);
-                services.AddConsoleCursor();
-
+                services.AddConsole();
                 services.AddSingleton<ICommandLineIinterface, ConsoleInterface>();
-
-                services.AddSingleton<ICommandLineReader, ConsoleCommandLineReader>();
-                services.AddSingleton<IPrompt, CmdPrompt>();
-                services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
-                services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
-                services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
-                services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
-                services.AddTransient<IConsoleInputHandler, CommandsHistoryInputHandler>();
-                services.AddTransient<IConsoleInputHandler, UndoRedoInputHandler>();
-
-                services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
-
-                services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
-                services.AddSingleton<ICommandsHistoryStorage, CommandsHistoryFileStorage>();
-                services.AddTransient<ICommandsHistoryEqualityComparer, CommandsHistoryOrdinalIgnoreCaseEqualityComparer>();
-
-                services.AddSingleton<IUndoRedoManager<CommandLineViewSnapshot>, UndoRedoManager<CommandLineViewSnapshot>>();
-                services.AddSingleton<IUndoRedoSnapshotEqualityComparer<CommandLineViewSnapshot>, UndoRedoSnapshotIgnoreCursorEqualityComparer>();
-
-                services.AddSingleton<ICommandLineParser, CommandLineParser>();
-                services.AddSingleton<ICommandLineLexer, CommandLineLexer>();
-                services.AddSingleton<ISemanticModel, EmptySemanticModel>();
-                services.AddSingleton<SyntaxFactory, SyntaxFactory>();
-
-                services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();
-                services.AddSingleton<SyntaxHighlightingPallete<ConsoleTextStyle>, DefaultConsoleSyntaxHighlightingPallete>();
+                services.AddCommandLineReader();
+                services.AddUndoRedo();
+                services.AddCommandsHistory();
+                services.AddParser();
+                services.AddSyntaxHighlight();
             });
         }
 
-        private static void AddConsoleCursor(this IServiceCollection services)
+        private static void AddConsole(this IServiceCollection services)
         {
+            services.AddSingleton<IConsole>(_ => PlatformConsole.Instance);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 services.AddSingleton<IConsoleCursor, CmdCursor>();
@@ -68,6 +45,46 @@ namespace VoidMain.Hosting
             {
                 services.AddSingleton<IConsoleCursor, TerminalCursor>();
             }
+        }
+
+        private static void AddCommandLineReader(this IServiceCollection services)
+        {
+            services.AddSingleton<ICommandLineReader, ConsoleCommandLineReader>();
+            services.AddSingleton<IPrompt, CmdPrompt>();
+            services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
+            services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
+            services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
+            services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
+            services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
+        }
+
+        private static void AddUndoRedo(this IServiceCollection services)
+        {
+            services.AddTransient<IConsoleInputHandler, UndoRedoInputHandler>();
+            services.AddSingleton<IUndoRedoManager<CommandLineViewSnapshot>, UndoRedoManager<CommandLineViewSnapshot>>();
+            services.AddSingleton<IUndoRedoSnapshotEqualityComparer<CommandLineViewSnapshot>, UndoRedoSnapshotIgnoreCursorEqualityComparer>();
+        }
+
+        private static void AddCommandsHistory(this IServiceCollection services)
+        {
+            services.AddTransient<IConsoleInputHandler, CommandsHistoryInputHandler>();
+            services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
+            services.AddSingleton<ICommandsHistoryStorage, CommandsHistoryFileStorage>();
+            services.AddTransient<ICommandsHistoryEqualityComparer, CommandsHistoryOrdinalIgnoreCaseEqualityComparer>();
+        }
+
+        private static void AddParser(this IServiceCollection services)
+        {
+            services.AddSingleton<ICommandLineParser, CommandLineParser>();
+            services.AddSingleton<ICommandLineLexer, CommandLineLexer>();
+            services.AddSingleton<ISemanticModel, EmptySemanticModel>();
+            services.AddSingleton<SyntaxFactory, SyntaxFactory>();
+        }
+
+        private static void AddSyntaxHighlight(this IServiceCollection services)
+        {
+            services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();
+            services.AddSingleton<SyntaxHighlightingPallete<ConsoleTextStyle>, DefaultConsoleSyntaxHighlightingPallete>();
         }
     }
 }
