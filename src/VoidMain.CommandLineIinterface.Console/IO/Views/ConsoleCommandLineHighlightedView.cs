@@ -47,6 +47,8 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
         public string ToString(int start) => _lineBuilder.ToString(start);
         public override string ToString() => _lineBuilder.ToString();
 
+        #region View Operations
+
         public void Move(int offset)
         {
             // Throws if out of range
@@ -133,6 +135,10 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
             _hasChanges = true;
         }
 
+        #endregion
+
+        #region Rendering
+
         private void Render()
         {
             string commandLine = ToString();
@@ -177,6 +183,8 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
             _console.BackgroundColor = style.Background ?? _background;
             _console.ForegroundColor = style.Foreground ?? _foreground;
         }
+
+        #endregion
 
         #region View Lifecycle
 

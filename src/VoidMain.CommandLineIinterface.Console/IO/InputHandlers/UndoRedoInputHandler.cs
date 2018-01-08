@@ -17,6 +17,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
         public UndoRedoInputHandler(IUndoRedoManager<CommandLineViewSnapshot> undoRedoManager)
         {
             _undoRedoManager = undoRedoManager ?? throw new ArgumentNullException(nameof(undoRedoManager));
+            // Time to accumulate changes
             _minSnapshotTime = TimeSpan.FromSeconds(1.5);
             _lastSnapshotTime = DateTime.MinValue;
         }
