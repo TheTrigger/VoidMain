@@ -62,8 +62,7 @@ namespace VoidMain.Hosting
         private static void AddUndoRedo(this IServiceCollection services)
         {
             services.AddTransient<IConsoleInputHandler, UndoRedoInputHandler>();
-            services.AddSingleton<IUndoRedoManager<CommandLineViewSnapshot>, UndoRedoManager<CommandLineViewSnapshot>>();
-            services.AddSingleton<IUndoRedoSnapshotEqualityComparer<CommandLineViewSnapshot>, UndoRedoSnapshotIgnoreCursorEqualityComparer>();
+            services.AddSingleton<IUndoRedoManager, UndoRedoManager>();
         }
 
         private static void AddCommandsHistory(this IServiceCollection services)

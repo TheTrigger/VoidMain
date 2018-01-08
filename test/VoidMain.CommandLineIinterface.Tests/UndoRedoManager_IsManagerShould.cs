@@ -1,5 +1,5 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Tests.Tools;
+using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.UndoRedo;
 using Xunit;
 
@@ -7,37 +7,47 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class UndoRedoManager_IsManagerShould
     {
-        private static readonly IUndoRedoSnapshotEqualityComparer<string> Comparer
-            = new UndoRedoSnapshotInvariantEqualityComparer();
+        private static CommandLineViewSnapshot S(string value)
+        {
+            return new CommandLineViewSnapshot(value, 0);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void HaveValidMaxCount(int maxCount)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new UndoRedoManager(new UndoRedoOptions { MaxCount = maxCount}));
+        }
 
         [Fact]
         public void RequireValidSnapshotsOnUndo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string currentSnapshot = null;
+            var manager = new UndoRedoManager();
+            var currentSnapshot = S(null);
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() => manager.TryUndo(currentSnapshot, out string _));
+            Assert.Throws<ArgumentNullException>(() => manager.TryUndo(currentSnapshot, out var _));
         }
 
         [Fact]
         public void RequireValidSnapshotsOnRedo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string currentSnapshot = null;
+            var manager = new UndoRedoManager();
+            var currentSnapshot = S(null);
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() => manager.TryUndo(currentSnapshot, out string _));
+            Assert.Throws<ArgumentNullException>(() => manager.TryUndo(currentSnapshot, out var _));
         }
 
         [Fact]
         public void RequireValidSnapshotsOnAdd()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string snapshot = null;
+            var manager = new UndoRedoManager();
+            var snapshot = S(null);
 
             // Assert
             Assert.Throws<ArgumentNullException>(() => manager.TryAddSnapshot(snapshot));
@@ -47,17 +57,16 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotUndoWithoutSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string currentSnapshot = "";
+            var manager = new UndoRedoManager();
+            var currentSnapshot = S("");
 
             for (int i = 0; i < 2; i++)
             {
                 // Act
-                bool done = manager.TryUndo(currentSnapshot, out string prevSnaoshot);
+                bool done = manager.TryUndo(currentSnapshot, out var prevSnaoshot);
 
                 // Assert
                 Assert.Equal(false, done);
-                Assert.Null(prevSnaoshot);
             }
         }
 
@@ -65,17 +74,16 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotRedoWithoutSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string currentSnapshot = "";
+            var manager = new UndoRedoManager();
+            var currentSnapshot = S("");
 
             for (int i = 0; i < 2; i++)
             {
                 // Act
-                bool done = manager.TryRedo(currentSnapshot, out string nextSnaoshot);
+                bool done = manager.TryRedo(currentSnapshot, out var nextSnaoshot);
 
                 // Assert
                 Assert.Equal(false, done);
-                Assert.Null(nextSnaoshot);
             }
         }
 
@@ -83,13 +91,13 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotUndoMoreThanItHaveSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string secondSnapshot = "snapshot_2";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
-            string currentSnapshot = secondSnapshot;
-            string prevSnapshot = null;
+            var currentSnapshot = secondSnapshot;
+            var prevSnapshot = S(null);
 
             // Act
             bool done = manager.TryUndo(currentSnapshot, out prevSnapshot);
@@ -98,21 +106,20 @@ namespace VoidMain.CommandLineIinterface.Tests
 
             // Assert
             Assert.Equal(false, done);
-            Assert.Null(prevSnapshot);
         }
 
         [Fact]
         public void NotRedoMoreThanItHaveSnapshots()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string secondSnapshot = "snapshot_2";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
-            string currentSnapshot = secondSnapshot;
-            string nextSnapshot = null;
-            manager.TryUndo(currentSnapshot, out string prevSnaoshot);
+            var currentSnapshot = secondSnapshot;
+            var nextSnapshot = S(null);
+            manager.TryUndo(currentSnapshot, out var prevSnaoshot);
             currentSnapshot = prevSnaoshot;
 
             // Act
@@ -122,36 +129,35 @@ namespace VoidMain.CommandLineIinterface.Tests
 
             // Assert
             Assert.Equal(false, done);
-            Assert.Null(nextSnapshot);
         }
 
         [Fact]
         public void AddNewSnapshot()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string expected = "snapshot_1";
-            string undoneSnapshot = "snapshot_2";
+            var manager = new UndoRedoManager();
+            var expected = S("snapshot_1");
+            var undoneSnapshot = S("snapshot_2");
             manager.TryAddSnapshot(expected);
 
             // Act
             manager.TryAddSnapshot(undoneSnapshot);
-            manager.TryUndo(undoneSnapshot, out string prevSnapshot);
+            manager.TryUndo(undoneSnapshot, out var prevSnapshot);
 
             // Assert
-            Assert.Equal(expected, prevSnapshot);
+            Assert.Equal(expected, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
         public void NotExceedMaxSnapshotsCount()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
+            var manager = new UndoRedoManager();
 
             // Act
             for (int i = 0; i < manager.MaxCount + 1; i++)
             {
-                manager.TryAddSnapshot("snapshot_" + i);
+                manager.TryAddSnapshot(S("snapshot_" + i));
             }
 
             // Assert
@@ -162,49 +168,49 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void DeleteAfterCurrent()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string undoneSnapshot = "snapshot_2";
-            string newSnapshot = "snapshot_3";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var undoneSnapshot = S("snapshot_2");
+            var newSnapshot = S("snapshot_3");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(undoneSnapshot);
-            manager.TryUndo(undoneSnapshot, out string _);
+            manager.TryUndo(undoneSnapshot, out var _);
 
             // Act
             manager.TryAddSnapshot(newSnapshot, deleteAfter: true);
-            manager.TryUndo(newSnapshot, out string prevSnapshot);
+            manager.TryUndo(newSnapshot, out var prevSnapshot);
 
             // Assert
             Assert.Equal(2, manager.Count);
-            Assert.Equal(firstSnapshot, prevSnapshot);
+            Assert.Equal(firstSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
         public void NotDeleteAfterCurrentIfCurrentIsLast()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string secondSnapshot = "snapshot_2";
-            string newSnapshot = "snapshot_3";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
+            var newSnapshot = S("snapshot_3");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
 
             // Act
             manager.TryAddSnapshot(newSnapshot, deleteAfter: true);
-            manager.TryUndo(newSnapshot, out string prevSnapshot);
+            manager.TryUndo(newSnapshot, out var prevSnapshot);
 
             // Assert
             Assert.Equal(3, manager.Count);
-            Assert.Equal(secondSnapshot, prevSnapshot);
+            Assert.Equal(secondSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
         public void NotAddSameLastSnapshot()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string snapshot = "snapshot_1";
+            var manager = new UndoRedoManager();
+            var snapshot = S("snapshot_1");
             manager.TryAddSnapshot(snapshot);
 
             // Act
@@ -219,12 +225,12 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotAddSameCurrentSnapshot()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string secondSnapshot = "snapshot_2";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
-            manager.TryUndo(secondSnapshot, out string _);
+            manager.TryUndo(secondSnapshot, out var _);
 
             // Act
             bool added = manager.TryAddSnapshot(firstSnapshot);
@@ -238,55 +244,55 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void AddNewSnapshotIfLastOneChangedOnUndo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string secondSnapshot = "snapshot_2";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
-            string changedSnapshot = "snapshot_3";
+            var changedSnapshot = S("snapshot_3");
 
             // Act
-            manager.TryUndo(changedSnapshot, out string prevSnapshot);
+            manager.TryUndo(changedSnapshot, out var prevSnapshot);
 
             // Assert
-            Assert.Equal(secondSnapshot, prevSnapshot);
             Assert.Equal(3, manager.Count);
+            Assert.Equal(secondSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
         public void AddNewSnapshotIfCurrentOneChangedOnUndo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string secondSnapshot = "snapshot_2";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
-            manager.TryUndo(secondSnapshot, out string _);
-            string changedSnapshot = "snapshot_3";
+            manager.TryUndo(secondSnapshot, out var _);
+            var changedSnapshot = S("snapshot_3");
 
             // Act
-            manager.TryUndo(changedSnapshot, out string prevSnapshot);
+            manager.TryUndo(changedSnapshot, out var prevSnapshot);
 
             // Assert
-            Assert.Equal(firstSnapshot, prevSnapshot);
             Assert.Equal(2, manager.Count);
+            Assert.Equal(firstSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
         public void AddNewSnapshotAndNotRedoIfLastOneChangedOnRedo()
         {
             // Arrange
-            var manager = new UndoRedoManager<string>(Comparer);
-            string firstSnapshot = "snapshot_1";
-            string secondSnapshot = "snapshot_2";
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
-            manager.TryUndo(secondSnapshot, out string _);
-            string changedSnapshot = "snapshot_3";
+            manager.TryUndo(secondSnapshot, out var _);
+            var changedSnapshot = S("snapshot_3");
 
             // Act
-            bool done = manager.TryRedo(changedSnapshot, out string prevSnapshot);
+            bool done = manager.TryRedo(changedSnapshot, out var prevSnapshot);
 
             // Assert
             Assert.Equal(false, done);

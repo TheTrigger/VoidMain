@@ -7,14 +7,14 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 {
     public class UndoRedoInputHandler : IConsoleInputHandler
     {
-        private readonly IUndoRedoManager<CommandLineViewSnapshot> _undoRedoManager;
+        private readonly IUndoRedoManager _undoRedoManager;
         private readonly TimeSpan _minSnapshotTime;
         private DateTime _lastSnapshotTime;
 
         // We need to capture command line state before any modifications.
         public int Order => Int32.MinValue;
 
-        public UndoRedoInputHandler(IUndoRedoManager<CommandLineViewSnapshot> undoRedoManager)
+        public UndoRedoInputHandler(IUndoRedoManager undoRedoManager)
         {
             _undoRedoManager = undoRedoManager ?? throw new ArgumentNullException(nameof(undoRedoManager));
             // Time to accumulate changes

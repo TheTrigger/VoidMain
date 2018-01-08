@@ -1,28 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using VoidMain.CommandLineIinterface.Internal;
+using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.UndoRedo
 {
-    public class UndoRedoManager<TSnapshot> : IUndoRedoManager<TSnapshot>
+    public class UndoRedoOptions
     {
-        private readonly IUndoRedoSnapshotEqualityComparer<TSnapshot> _comparer;
-        private readonly PushOutCollection<TSnapshot> _snapshots;
+        public int? MaxCount { get; set; }
+        public IEqualityComparer<CommandLineViewSnapshot> SnapshotsComparer { get; set; }
+    }
+
+    public class UndoRedoManager : IUndoRedoManager
+    {
+        private readonly IEqualityComparer<CommandLineViewSnapshot> _comparer;
+        private readonly PushOutCollection<CommandLineViewSnapshot> _snapshots;
         private int _current;
 
-        public int Count => _snapshots.Count;
         public int MaxCount { get; }
+        public int Count => _snapshots.Count;
 
-        public UndoRedoManager(IUndoRedoSnapshotEqualityComparer<TSnapshot> comparer)
+        public UndoRedoManager(UndoRedoOptions options = null)
         {
-            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
-            MaxCount = 10; // TODO: Configure max count.
-            _snapshots = new PushOutCollection<TSnapshot>(MaxCount);
+            _comparer = options?.SnapshotsComparer ?? CommandLineViewSnapshotComparer.IgnoreCursor;
+            MaxCount = options?.MaxCount ?? 10;
+            if (MaxCount < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(MaxCount));
+            }
+            _snapshots = new PushOutCollection<CommandLineViewSnapshot>(MaxCount);
             _current = 0;
         }
 
-        public bool TryUndo(TSnapshot currentSnapshot, out TSnapshot prevSnapshot)
+        public bool TryUndo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot prevSnapshot)
         {
-            if (_comparer.Equals(currentSnapshot, default(TSnapshot)))
+            if (_comparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
             {
                 throw new ArgumentNullException(nameof(currentSnapshot));
             }
@@ -43,13 +55,13 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
                 return true;
             }
 
-            prevSnapshot = default(TSnapshot);
+            prevSnapshot = default(CommandLineViewSnapshot);
             return false;
         }
 
-        public bool TryRedo(TSnapshot currentSnapshot, out TSnapshot nextSnapshot)
+        public bool TryRedo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot nextSnapshot)
         {
-            if (_comparer.Equals(currentSnapshot, default(TSnapshot)))
+            if (_comparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
             {
                 throw new ArgumentNullException(nameof(currentSnapshot));
             }
@@ -66,13 +78,13 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
                 return true;
             }
 
-            nextSnapshot = default(TSnapshot);
+            nextSnapshot = default(CommandLineViewSnapshot);
             return false;
         }
 
-        public bool TryAddSnapshot(TSnapshot snapshot, bool deleteAfter = true)
+        public bool TryAddSnapshot(CommandLineViewSnapshot snapshot, bool deleteAfter = true)
         {
-            if (_comparer.Equals(snapshot, default(TSnapshot)))
+            if (_comparer.Equals(snapshot, default(CommandLineViewSnapshot)))
             {
                 throw new ArgumentNullException(nameof(snapshot));
             }
@@ -114,13 +126,13 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
             return _current > 0;
         }
 
-        private bool IsEqualsToLastSnapshot(TSnapshot snapshot)
+        private bool IsEqualsToLastSnapshot(CommandLineViewSnapshot snapshot)
         {
             return _snapshots.Count > 0
                 && _comparer.Equals(snapshot, _snapshots[_snapshots.Count - 1]);
         }
 
-        private bool IsEqualsToCurrentSnapshot(TSnapshot snapshot)
+        private bool IsEqualsToCurrentSnapshot(CommandLineViewSnapshot snapshot)
         {
             return _current >= 0 && _current < _snapshots.Count
                 && _comparer.Equals(snapshot, _snapshots[_current]);

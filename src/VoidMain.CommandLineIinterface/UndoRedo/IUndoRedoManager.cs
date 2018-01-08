@@ -1,12 +1,13 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.UndoRedo
 {
-    public interface IUndoRedoManager<TSnapshot>
+    public interface IUndoRedoManager
     {
-        bool TryUndo(TSnapshot currentSnapshot, out TSnapshot prevSnapshot);
-        bool TryRedo(TSnapshot currentSnapshot, out TSnapshot nextSnapshot);
-        bool TryAddSnapshot(TSnapshot snapshot, bool deleteAfter = true);
+        bool TryUndo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot prevSnapshot);
+        bool TryRedo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot nextSnapshot);
+        bool TryAddSnapshot(CommandLineViewSnapshot snapshot, bool deleteAfter = true);
         void Clear();
     }
 }
