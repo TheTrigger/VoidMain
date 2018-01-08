@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.Console;
 using VoidMain.CommandLineIinterface.History;
+using VoidMain.CommandLineIinterface.History.Console;
 using VoidMain.CommandLineIinterface.IO;
 using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.IO.Console.InputHandlers;

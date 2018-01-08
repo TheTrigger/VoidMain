@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace VoidMain.CommandLineIinterface.History
 {
-    public class CommandsHistoryEqualityComparer : IEqualityComparer<string>
+    public class CommandsHistoryComparer : IEqualityComparer<string>
     {
-        public static CommandsHistoryEqualityComparer Ordinal
-            => new CommandsHistoryEqualityComparer(StringComparer.Ordinal);
-        public static CommandsHistoryEqualityComparer OrdinalIgnoreCase
-            => new CommandsHistoryEqualityComparer(StringComparer.OrdinalIgnoreCase);
-        public static CommandsHistoryEqualityComparer CurrentCulture
-            => new CommandsHistoryEqualityComparer(StringComparer.CurrentCulture);
-        public static CommandsHistoryEqualityComparer CurrentCultureIgnoreCase
-            => new CommandsHistoryEqualityComparer(StringComparer.CurrentCultureIgnoreCase);
+        public static CommandsHistoryComparer Ordinal
+            => new CommandsHistoryComparer(StringComparer.Ordinal);
+        public static CommandsHistoryComparer OrdinalIgnoreCase
+            => new CommandsHistoryComparer(StringComparer.OrdinalIgnoreCase);
+        public static CommandsHistoryComparer CurrentCulture
+            => new CommandsHistoryComparer(StringComparer.CurrentCulture);
+        public static CommandsHistoryComparer CurrentCultureIgnoreCase
+            => new CommandsHistoryComparer(StringComparer.CurrentCultureIgnoreCase);
 
         private readonly StringComparer _comparer;
 
-        protected CommandsHistoryEqualityComparer(StringComparer comparer)
+        protected CommandsHistoryComparer(StringComparer comparer)
         {
             _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
         }

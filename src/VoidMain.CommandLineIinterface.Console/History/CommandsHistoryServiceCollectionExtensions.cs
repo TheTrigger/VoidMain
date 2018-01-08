@@ -1,5 +1,6 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.History;
+using VoidMain.CommandLineIinterface.History.Console;
 using VoidMain.CommandLineIinterface.IO.Console.InputHandlers;
 
 namespace Microsoft.Extensions.DependencyInjection
