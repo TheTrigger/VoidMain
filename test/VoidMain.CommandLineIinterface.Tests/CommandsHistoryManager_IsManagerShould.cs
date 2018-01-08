@@ -14,6 +14,26 @@ namespace VoidMain.CommandLineIinterface.Tests
         }
 
         [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void HaveValidSavePeriod(int savePeriod)
+        {
+            var mock = new Mock<ICommandsHistoryStorage>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CommandsHistoryManager(mock.Object,
+                new CommandsHistoryOptions { SavePeriod = TimeSpan.FromSeconds(savePeriod) }));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void HaveValidMaxCounts(int maxCounts)
+        {
+            var mock = new Mock<ICommandsHistoryStorage>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CommandsHistoryManager(mock.Object,
+                new CommandsHistoryOptions { MaxCount = maxCounts }));
+        }
+
+        [Theory]
         [InlineData("prev")]
         [InlineData("next")]
         [InlineData("add")]

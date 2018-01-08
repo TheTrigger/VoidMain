@@ -11,12 +11,13 @@ namespace VoidMain.CommandLineIinterface.History
     {
         private readonly ICommandsHistoryStorage _storage;
         private readonly IEqualityComparer<string> _comparer;
-        private readonly TimeSpan _savePeriod;
         private readonly object _commandsWriteLock;
         private PushOutCollection<string> _commands;
         private int _isSchedulled = 0;
         private int _current;
 
+        private TimeSpan SavePeriod { get; }
+        public int MaxCount { get; }
         public int Count
         {
             get
@@ -25,7 +26,6 @@ namespace VoidMain.CommandLineIinterface.History
                 return _commands.Count;
             }
         }
-        public int MaxCount { get; }
 
         public CommandsHistoryManager(
             ICommandsHistoryStorage storage, CommandsHistoryOptions options = null)
@@ -33,8 +33,16 @@ namespace VoidMain.CommandLineIinterface.History
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
             _commandsWriteLock = new object();
             _comparer = options?.CommandsComparer ?? CommandsHistoryComparer.OrdinalIgnoreCase;
-            _savePeriod = options?.SavePeriod ?? TimeSpan.FromSeconds(10.0);
+            SavePeriod = options?.SavePeriod ?? TimeSpan.FromSeconds(10.0);
             MaxCount = options?.MaxCount ?? 10;
+            if (SavePeriod.TotalMilliseconds < 1.0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(SavePeriod));
+            }
+            if (MaxCount < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(MaxCount));
+            }
         }
 
         private void EnsureCommandsLoaded()
@@ -142,7 +150,7 @@ namespace VoidMain.CommandLineIinterface.History
         {
             if (Interlocked.CompareExchange(ref _isSchedulled, 1, 0) == 0)
             {
-                Task.Delay(_savePeriod).ContinueWith(task =>
+                Task.Delay(SavePeriod).ContinueWith(task =>
                 {
                     Interlocked.CompareExchange(ref _isSchedulled, 0, 1);
                     SaveCommands();
