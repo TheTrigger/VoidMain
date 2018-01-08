@@ -29,13 +29,13 @@ namespace VoidMain.CommandLineIinterface.IO.Console
             _keyReader = new ConsoleKeyAsyncReader(_console, 100, 1000);
         }
 
-        public Task<string> ReadLineAsync(IPrompt prompt, CancellationToken token)
+        public Task<string> ReadLineAsync(ICommandLinePrompt prompt, CancellationToken token)
         {
             var viewOptions = CommandLineViewOptions.Normal;
             return ReadLineAsync(prompt, viewOptions, token);
         }
 
-        public Task<string> ReadLineAsync(IPrompt prompt, char? mask, CancellationToken token)
+        public Task<string> ReadLineAsync(ICommandLinePrompt prompt, char? mask, CancellationToken token)
         {
             var viewOptions = mask.HasValue
                 ? CommandLineViewOptions.Masked(mask.Value)
@@ -43,7 +43,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console
             return ReadLineAsync(prompt, viewOptions, token);
         }
 
-        private async Task<string> ReadLineAsync(IPrompt prompt,
+        private async Task<string> ReadLineAsync(ICommandLinePrompt prompt,
             CommandLineViewOptions viewOptions, CancellationToken token)
         {
             ThrowIfCancellationRequested(token, hadUserInput: false);

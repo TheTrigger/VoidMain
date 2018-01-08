@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.CommandLineIinterface.IO
 {
-    public interface IPrompt
+    public interface ICommandLinePrompt
     {
         string GetMessage();
     }

@@ -5,11 +5,12 @@ using VoidMain.CommandLineIinterface.UndoRedo.Console;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class UndoRedoServiceCollectionExtensions
+    public static class UndoRedoConsoleInterfaceBuilderExtensions
     {
-        public static IServiceCollection AddUndoRedo(
-               this IServiceCollection services, Action<UndoRedoOptions> options = null)
+        public static ConsoleInterfaceBuilder AddUndoRedo(
+               this ConsoleInterfaceBuilder builer, Action<UndoRedoOptions> options = null)
         {
+            var services = builer.Services;
             services.AddTransient<IConsoleInputHandler, UndoRedoInputHandler>();
             services.AddSingleton<IUndoRedoManager, UndoRedoManager>();
 
@@ -17,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 services.Configure(options);
             }
-            return services;
+            return builer;
         }
     }
 }

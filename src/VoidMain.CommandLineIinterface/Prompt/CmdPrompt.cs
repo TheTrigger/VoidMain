@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.CommandLineIinterface.IO
 {
-    public class CmdPrompt : IPrompt
+    public class CmdPrompt : ICommandLinePrompt
     {
         public string GetMessage() => "CMD> ";
     }

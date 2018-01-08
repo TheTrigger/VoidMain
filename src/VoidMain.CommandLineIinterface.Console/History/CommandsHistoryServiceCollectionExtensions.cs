@@ -5,11 +5,12 @@ using VoidMain.CommandLineIinterface.IO.Console.InputHandlers;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class CommandsHistoryServiceCollectionExtensions
+    public static class CommandsHistoryConsoleInterfaceBuilderExtensions
     {
         public static CommandsHistoryBuilder AddCommandsHistory(
-            this IServiceCollection services, Action<CommandsHistoryOptions> options = null)
+            this ConsoleInterfaceBuilder builder, Action<CommandsHistoryOptions> options = null)
         {
+            var services = builder.Services;
             services.AddTransient<IConsoleInputHandler, CommandsHistoryInputHandler>();
             services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
             if (options != null)

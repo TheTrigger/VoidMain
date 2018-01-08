@@ -14,7 +14,7 @@ namespace VoidMain.CommandLineIinterface.Console
     public class ConsoleInterface : ICommandLineIinterface
     {
         private readonly IConsole _console;
-        private readonly IPrompt _prompt;
+        private readonly ICommandLinePrompt _prompt;
         private readonly ICommandLineReader _reader;
         private readonly ICommandLineParser _parser;
         private readonly ConsoleLockingOutput _output;
@@ -23,7 +23,7 @@ namespace VoidMain.CommandLineIinterface.Console
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
 
-        public ConsoleInterface(IConsole console, IPrompt prompt,
+        public ConsoleInterface(IConsole console, ICommandLinePrompt prompt,
             ICommandLineReader reader, ICommandLineParser parser)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));

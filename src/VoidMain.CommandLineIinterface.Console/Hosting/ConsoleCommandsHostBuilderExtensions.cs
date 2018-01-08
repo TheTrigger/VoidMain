@@ -52,7 +52,7 @@ namespace VoidMain.Hosting
         private static void AddCommandLineReader(this IServiceCollection services)
         {
             services.AddSingleton<ICommandLineReader, ConsoleCommandLineReader>();
-            services.AddSingleton<IPrompt, CmdPrompt>();
+            services.AddSingleton<ICommandLinePrompt, CmdPrompt>();
             services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
             services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
             services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
