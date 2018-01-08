@@ -7,10 +7,10 @@ namespace VoidMain.CommandLineIinterface.History
     {
         private string[] _commands;
 
-        public CommandsHistoryInMemoryStorage()
+        public CommandsHistoryInMemoryStorage(
+            CommandsHistoryInMemoryStorageOptions options = null)
         {
-            // TODO: Allow to configure commands.
-            _commands = Array.Empty<string>();
+            _commands = options?.Commands ?? Array.Empty<string>();
         }
 
         public string[] Load()

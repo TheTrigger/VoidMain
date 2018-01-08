@@ -70,7 +70,6 @@ namespace VoidMain.Hosting
             services.AddTransient<IConsoleInputHandler, CommandsHistoryInputHandler>();
             services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
             services.AddSingleton<ICommandsHistoryStorage, CommandsHistoryFileStorage>();
-            services.AddTransient<ICommandsHistoryEqualityComparer, CommandsHistoryOrdinalIgnoreCaseEqualityComparer>();
         }
 
         private static void AddParser(this IServiceCollection services)

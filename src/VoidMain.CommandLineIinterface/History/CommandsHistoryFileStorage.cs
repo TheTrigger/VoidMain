@@ -11,12 +11,19 @@ namespace VoidMain.CommandLineIinterface.History
         private readonly string _filePath;
         private readonly Encoding _encoding;
 
-        public CommandsHistoryFileStorage()
+        public CommandsHistoryFileStorage(
+            CommandsHistoryFileStorageOptions options = null)
         {
-            // TODO: Comfigure file path.
-            _filePath = Assembly.GetEntryAssembly().Location + ".history";
-            // TODO: Configure encoding.
-            _encoding = Encoding.UTF8;
+            _filePath = options?.FilePath;
+            if (_filePath == null)
+            {
+                _filePath = Assembly.GetEntryAssembly().Location + ".history";
+            }
+            else if (!Path.IsPathRooted(_filePath))
+            {
+                _filePath = Path.GetFullPath(_filePath);
+            }
+            _encoding = options?.Encoding ?? Encoding.UTF8;
         }
 
         public string[] Load()

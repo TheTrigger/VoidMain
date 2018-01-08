@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,23 +10,31 @@ namespace VoidMain.CommandLineIinterface.History
     public class CommandsHistoryManager : ICommandsHistoryManager, IDisposable
     {
         private readonly ICommandsHistoryStorage _storage;
-        private readonly ICommandsHistoryEqualityComparer _comparer;
+        private readonly IEqualityComparer<string> _comparer;
+        private readonly TimeSpan _savePeriod;
         private readonly object _commandsWriteLock;
-        private readonly int _savePeriod;
         private PushOutCollection<string> _commands;
         private int _isSchedulled = 0;
         private int _current;
 
-        public int Count { get { EnsureCommandsLoaded(); return _commands.Count; } }
+        public int Count
+        {
+            get
+            {
+                EnsureCommandsLoaded();
+                return _commands.Count;
+            }
+        }
         public int MaxCount { get; }
 
-        public CommandsHistoryManager(ICommandsHistoryStorage storage, ICommandsHistoryEqualityComparer comparer)
+        public CommandsHistoryManager(
+            ICommandsHistoryStorage storage, CommandsHistoryOptions options = null)
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
-            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             _commandsWriteLock = new object();
-            _savePeriod = 10_000; // TODO: Configure save period.
-            MaxCount = 10; // TODO: Configure max count.
+            _comparer = options?.CommandsComparer ?? CommandsHistoryEqualityComparer.OrdinalIgnoreCase;
+            _savePeriod = options?.SavePeriod ?? TimeSpan.FromSeconds(10.0);
+            MaxCount = options?.MaxCount ?? 10;
         }
 
         private void EnsureCommandsLoaded()
