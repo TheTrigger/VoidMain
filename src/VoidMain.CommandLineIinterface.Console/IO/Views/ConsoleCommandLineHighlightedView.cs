@@ -139,7 +139,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
 
         #region Rendering
 
-        private void Render()
+        private void RenderHighlightedLine()
         {
             string commandLine = ToString();
             var syntax = _parser.Parse(commandLine);
@@ -200,14 +200,15 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
             _console.ForegroundColor = _foreground;
         }
 
-        public void BeginHandlingInput()
+        public void BeginHandlingInput(bool isNextKeyAvailable)
         {
-            _hasChanges = false;
         }
 
-        public void EndHandlingInput()
+        public void EndHandlingInput(bool isNextKeyAvailable)
         {
-            if (_hasChanges) Render();
+            if (!_hasChanges || isNextKeyAvailable) return;
+            RenderHighlightedLine();
+            _hasChanges = false;
         }
 
         #endregion

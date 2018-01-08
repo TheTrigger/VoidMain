@@ -7,6 +7,8 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
     {
         public ConsoleKeyInfo Input { get; set; }
 
+        public bool IsNextKeyAvailable { get; set; }
+
         /// <summary>
         /// This flag can hint the following input handlers to omit handling.
         /// It can be ignored if you want to handle input anyway.

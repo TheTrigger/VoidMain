@@ -6,7 +6,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.Internal
 {
     public class ConsoleKeyAsyncReader
     {
-        private const int FAST_POLLING_TIME = 10;
+        private const int FAST_POLLING_TIME = 15;
         private const int FAST_POLLING_DURATION = 500;
         private const int NORMAL_POLLING_DURATION = 10_000;
 
@@ -39,7 +39,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.Internal
             _slowPollingTime = maxPollingTime;
         }
 
-        public async Task<ConsoleKeyInfo> ReadKeyAsync(CancellationToken token, bool intercept = false)
+        public async Task<AdvancedConsoleKeyInfo> ReadKeyAsync(CancellationToken token, bool intercept = false)
         {
             int pollingTime = _fastPollingTime;
             int attempts = 0;
@@ -48,7 +48,9 @@ namespace VoidMain.CommandLineIinterface.IO.Console.Internal
             {
                 if (_console.KeyAvailable)
                 {
-                    return _console.ReadKey(intercept);
+                    var keyInfo =_console.ReadKey(intercept);
+                    bool isNextKeyAvailable = _console.KeyAvailable;
+                    return new AdvancedConsoleKeyInfo(keyInfo, isNextKeyAvailable);
                 }
 
                 await Task.Delay(pollingTime, token);
@@ -69,7 +71,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.Internal
             }
 
             token.ThrowIfCancellationRequested();
-            return default(ConsoleKeyInfo);
+            return default(AdvancedConsoleKeyInfo);
         }
     }
 }

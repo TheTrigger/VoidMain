@@ -5,7 +5,7 @@
         void BeginReadingLine();
         void EndReadingLine();
 
-        void BeginHandlingInput();
-        void EndHandlingInput();
+        void BeginHandlingInput(bool isNextKeyAvailable);
+        void EndHandlingInput(bool isNextKeyAvailable);
     }
 }

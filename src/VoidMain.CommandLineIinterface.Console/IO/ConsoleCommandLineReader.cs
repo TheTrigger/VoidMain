@@ -63,18 +63,21 @@ namespace VoidMain.CommandLineIinterface.IO.Console
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var keyInfo = await _keyReader.ReadKeyAsync(token, intercept: true).ConfigureAwait(false);
+                    var key = await _keyReader.ReadKeyAsync(token, intercept: true).ConfigureAwait(false);
+                    var keyInfo = key.KeyInfo;
+                    bool isNextKeyAvailable = key.IsNextKeyAvailable;
 
                     eventArgs.LineView = lineView;
                     eventArgs.Input = keyInfo;
+                    eventArgs.IsNextKeyAvailable = isNextKeyAvailable;
                     eventArgs.IsHandledHint = false;
 
-                    lineViewLifecycle?.BeginHandlingInput();
+                    lineViewLifecycle?.BeginHandlingInput(isNextKeyAvailable);
                     for (int i = 0; i < _inputHandlers.Length; i++)
                     {
                         _inputHandlers[i].Handle(eventArgs);
                     }
-                    lineViewLifecycle?.EndHandlingInput();
+                    lineViewLifecycle?.EndHandlingInput(isNextKeyAvailable);
 
                     if (keyInfo.Key == ConsoleKey.Enter)
                     {
