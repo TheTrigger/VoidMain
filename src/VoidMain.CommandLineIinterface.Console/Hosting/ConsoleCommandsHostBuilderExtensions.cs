@@ -16,6 +16,7 @@ using VoidMain.CommandLineIinterface.Parser.Syntax;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
 using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
 using VoidMain.CommandLineIinterface.UndoRedo;
+using VoidMain.CommandLineIinterface.UndoRedo.Console;
 
 namespace VoidMain.Hosting
 {
