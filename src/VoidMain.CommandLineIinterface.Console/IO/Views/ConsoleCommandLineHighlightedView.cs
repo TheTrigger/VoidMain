@@ -152,7 +152,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
             foreach (var highlightedSpan in highlightedSpans)
             {
                 var span = highlightedSpan.Span;
-                var style = highlightedSpan.Style;
+                var style = highlightedSpan.Style ?? ConsoleTextStyle.Default;
 
                 int spansGap = WriteBlank(span.Start - written);
                 written += spansGap;

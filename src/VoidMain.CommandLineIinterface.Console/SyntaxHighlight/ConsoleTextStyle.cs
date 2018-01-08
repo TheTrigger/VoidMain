@@ -4,25 +4,23 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight.Console
 {
     public class ConsoleTextStyle
     {
-        public ConsoleColor? Background { get; }
+        public static ConsoleTextStyle Default { get; } = new ConsoleTextStyle(null);
+
         public ConsoleColor? Foreground { get; }
+        public ConsoleColor? Background { get; }
 
-        public ConsoleTextStyle(ConsoleColor? foreground)
+        public ConsoleTextStyle(ConsoleColor? foreground,
+            ConsoleColor? background = null)
         {
-            Background = null;
             Foreground = foreground;
-        }
-
-        public ConsoleTextStyle(
-            ConsoleColor? background, ConsoleColor? foreground)
-        {
             Background = background;
-            Foreground = foreground;
         }
 
         public override string ToString()
         {
-            return $"{{{Background}, {Foreground}}}";
+            return Background == null
+                ? $"{{{Foreground}}}"
+                : $"{{{Foreground}, {Background}}}";
         }
     }
 }

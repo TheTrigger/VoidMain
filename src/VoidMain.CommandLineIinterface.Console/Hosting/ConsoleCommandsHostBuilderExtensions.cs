@@ -84,7 +84,7 @@ namespace VoidMain.Hosting
         private static void AddSyntaxHighlight(this IServiceCollection services)
         {
             services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();
-            services.AddSingleton<SyntaxHighlightingPallete<ConsoleTextStyle>, DefaultConsoleSyntaxHighlightingPallete>();
+            services.AddSingleton<SyntaxHighlightingPallete<ConsoleTextStyle>>(s => ConsoleSyntaxHighlightingPallete.Default);
         }
     }
 }
