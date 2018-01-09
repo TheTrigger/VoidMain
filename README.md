@@ -45,7 +45,7 @@ class Program : IStartup
     static void Main(string[] args)
     {
         var host = new CommandsHostBuilder()
-            .UseConsole()
+            .UseAdvancedConsole()
             .UseStartup<Program>()
             .Build();
 
