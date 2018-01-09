@@ -19,9 +19,4 @@ namespace VoidMain.Application.Commands
 
         public override string ToString() => Name;
     }
-
-    [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-    public class NonCommandAttribute : Attribute
-    {
-    }
 }

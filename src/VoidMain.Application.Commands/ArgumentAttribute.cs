@@ -4,23 +4,6 @@ using System.Text;
 namespace VoidMain.Application.Commands
 {
     [AttributeUsage(AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
-    public abstract class ParameterAttribute : Attribute
-    {
-        protected bool? _optional;
-        public bool Optional
-        {
-            get => _optional ?? false;
-            set => _optional = value;
-        }
-        public bool IsOptionalSet { get => _optional.HasValue; }
-    }
-
-    [AttributeUsage(AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
-    public sealed class ServiceAttribute : ParameterAttribute
-    {
-    }
-
-    [AttributeUsage(AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
     public abstract class ArgumentAttribute : ParameterAttribute
     {
         public string Name { get; set; }
@@ -48,19 +31,5 @@ namespace VoidMain.Application.Commands
             }
             return sb.ToString();
         }
-    }
-
-    [AttributeUsage(AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
-    public sealed class OptionAttribute : ArgumentAttribute
-    {
-        public OptionAttribute() { }
-        public OptionAttribute(string name) => Name = name;
-    }
-
-    [AttributeUsage(AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
-    public sealed class OperandAttribute : ArgumentAttribute
-    {
-        public OperandAttribute() { }
-        public OperandAttribute(string name) => Name = name;
     }
 }
