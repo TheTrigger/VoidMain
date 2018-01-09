@@ -38,7 +38,10 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
         {
             var spans = param.Spans;
             var pallete = param.Pallete;
-            spans.Add(GetStyledSpan(SyntaxClass.OptionNameMarker, option.NameMarker.Span, pallete));
+            if (option.NameMarker != null)
+            {
+                spans.Add(GetStyledSpan(SyntaxClass.OptionNameMarker, option.NameMarker.Span, pallete));
+            }
             spans.Add(GetStyledSpan(SyntaxClass.OptionName, option.Name.Span, pallete));
             if (option.ValueMarker != null)
             {

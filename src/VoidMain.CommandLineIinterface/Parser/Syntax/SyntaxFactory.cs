@@ -66,6 +66,14 @@
                 new TextSpan(input, position, length), stringValue, missing);
         }
 
+        public void IdentifierToken(SyntaxTokenBuilder builder,
+            string input, int position, int length, string stringValue,
+            bool missing = false)
+        {
+            builder.InitializeWith(SyntaxKind.IdentifierToken,
+                new TextSpan(input, position, length), stringValue, missing);
+        }
+
         public void LiteralToken(SyntaxTokenBuilder builder,
             string input, int position, int length, string stringValue,
             bool quoted = false, bool missing = false)
@@ -92,6 +100,11 @@
         public SyntaxError MissingOptionValueError(TextSpan span)
         {
             return new SyntaxError(span, "WM0004", "Option value is missing");
+        }
+
+        public SyntaxError InvalidOptionNameError(TextSpan span)
+        {
+            return new SyntaxError(span, "WM0005", "Invalid option name");
         }
     }
 }

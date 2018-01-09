@@ -116,8 +116,16 @@ namespace VoidMain.CommandLineIinterface.Parser
                     var nameMarker = token;
                     var name = cursor.Peek(1);
                     cursor.MoveNext(2);
-                    var option = ScanOption(cursor, errors, nameMarker, name, commandName);
-                    arguments.Add(option);
+                    if (IsStackedOption(nameMarker, name))
+                    {
+                        var stackedOptions = ScanStackedOptions(cursor, errors, nameMarker, name, commandName);
+                        arguments.AddRange(stackedOptions);
+                    }
+                    else
+                    {
+                        var option = ScanOption(cursor, errors, nameMarker, name, commandName);
+                        arguments.Add(option);
+                    }
                 }
                 else
                 {
@@ -132,7 +140,53 @@ namespace VoidMain.CommandLineIinterface.Parser
             return new ArgumentsSectionSyntax(arguments);
         }
 
-        // TODO: Add support for stacked short options.
+        private IEnumerable<OptionSyntax> ScanStackedOptions(
+            ElementsCursor<SyntaxToken> cursor, List<SyntaxError> errors,
+            SyntaxToken nameMarker, SyntaxToken name, IReadOnlyList<string> commandName)
+        {
+            var builder = new SyntaxTokenBuilder();
+            var optionsSpan = name.Span;
+            string optionNames = name.StringValue;
+            int optionsCount = optionNames.Length;
+
+            GetShortOptionName(errors, builder, optionsSpan, optionNames, 0);
+            var shortName = builder.Build();
+            yield return new OptionSyntax(nameMarker, shortName, valueMarker: null, value: null);
+            nameMarker = null;
+
+            for (int i = 1; i < optionsCount - 1; i++)
+            {
+                GetShortOptionName(errors, builder, optionsSpan, optionNames, i);
+                shortName = builder.Build();
+                yield return new OptionSyntax(nameMarker, shortName, valueMarker: null, value: null);
+            }
+
+            GetShortOptionName(errors, builder, optionsSpan, optionNames, optionsCount-1);
+            if (name.HasTrailingTrivia)
+            {
+                builder.TrailingTrivia = name.TrailingTrivia;
+            }
+            name = builder.Build();
+
+            yield return ScanOption(cursor, errors, nameMarker, name, commandName);
+        }
+
+        private void GetShortOptionName(
+            List<SyntaxError> errors, SyntaxTokenBuilder builder,
+            TextSpan optionsSpan, string optionNames, int optionIndex)
+        {
+            char optionName = optionNames[optionIndex];
+
+            if (!Char.IsLetter(optionName))
+            {
+                errors.Add(_syntaxFactory.InvalidOptionNameError(
+                    new TextSpan(optionsSpan.Source, optionsSpan.Start + optionIndex, 1)));
+            }
+
+            _syntaxFactory.IdentifierToken(builder,
+                optionsSpan.Source, optionsSpan.Start + optionIndex, 1, optionName.ToString());
+        }
+
         private OptionSyntax ScanOption(ElementsCursor<SyntaxToken> cursor, List<SyntaxError> errors,
             SyntaxToken nameMarker, SyntaxToken name, IReadOnlyList<string> commandName)
         {
@@ -336,6 +390,12 @@ namespace VoidMain.CommandLineIinterface.Parser
             if (HasSpaceAfterOrEnd(nameMarker, () => name)) return false;
 
             return IsIdentifier(name);
+        }
+
+        private bool IsStackedOption(SyntaxToken nameMarker, SyntaxToken name)
+        {
+            if (nameMarker.Kind != SyntaxKind.DashToken) return false;
+            return name.StringValue.Length > 1;
         }
 
         private bool IsOptionNameOrSectionMarker(SyntaxToken token, Func<SyntaxToken> getNextToken)

@@ -172,16 +172,16 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
         private int WriteBlank(int length)
         {
             if (length < 1) return 0;
-            _console.BackgroundColor = _background;
             _console.ForegroundColor = _foreground;
+            _console.BackgroundColor = _background;
             _console.Write(' ', length);
             return length;
         }
 
         private void ApplyStyle(ConsoleTextStyle style)
         {
-            _console.BackgroundColor = style.Background ?? _background;
             _console.ForegroundColor = style.Foreground ?? _foreground;
+            _console.BackgroundColor = style.Background ?? _background;
         }
 
         #endregion
@@ -190,14 +190,14 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
 
         public void BeginReadingLine()
         {
-            _background = _console.BackgroundColor;
             _foreground = _console.ForegroundColor;
+            _background = _console.BackgroundColor;
         }
 
         public void EndReadingLine()
         {
-            _console.BackgroundColor = _background;
             _console.ForegroundColor = _foreground;
+            _console.BackgroundColor = _background;
         }
 
         public void BeginHandlingInput(bool isNextKeyAvailable)
