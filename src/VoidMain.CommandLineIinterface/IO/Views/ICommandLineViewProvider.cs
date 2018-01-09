@@ -2,6 +2,7 @@
 {
     public interface ICommandLineViewProvider
     {
+        CommandLineViewType ViewType { get; }
         ICommandLineView GetView(CommandLineViewOptions options);
     }
 }

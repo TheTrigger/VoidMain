@@ -12,7 +12,7 @@ namespace SimpleApp
             PrintDevelopmentNote();
 
             var host = new CommandsHostBuilder()
-                .UseConsole()
+                .UseAdvancedConsole()
                 .UseStartup<Program>()
                 .Build();
 

@@ -3,14 +3,14 @@ using VoidMain.CommandLineIinterface.IO.Console.Internal;
 
 namespace VoidMain.CommandLineIinterface.IO.Views.Console
 {
-    public class ConsoleCommandLineViewProvider : ICommandLineViewProvider
+    public class ConsoleCommandLineMaskedViewProvider : ICommandLineViewProvider
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
 
-        public CommandLineViewType ViewType { get; } = CommandLineViewType.Normal;
+        public CommandLineViewType ViewType { get; } = CommandLineViewType.Masked;
 
-        public ConsoleCommandLineViewProvider(
+        public ConsoleCommandLineMaskedViewProvider(
             IConsole console, IConsoleCursor cursor)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
@@ -19,7 +19,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
 
         public ICommandLineView GetView(CommandLineViewOptions options)
         {
-            return new ConsoleCommandLineView(_console, _cursor);
+            return new ConsoleCommandLineMaskedView(_console, _cursor, options.MaskSymbol);
         }
     }
 }

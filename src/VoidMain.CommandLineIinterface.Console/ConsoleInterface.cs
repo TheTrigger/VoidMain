@@ -23,13 +23,13 @@ namespace VoidMain.CommandLineIinterface.Console
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
 
-        public ConsoleInterface(IConsole console, ICommandLinePrompt prompt,
-            ICommandLineReader reader, ICommandLineParser parser)
+        public ConsoleInterface(IConsole console, ICommandLineReader reader,
+            ICommandLineParser parser, ICommandLinePrompt prompt = null)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _prompt = prompt ?? throw new ArgumentNullException(nameof(prompt));
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
+            _prompt = prompt;
             _output = new ConsoleLockingOutput(console);
             _contextHelper = new ContextCreationHelper();
             _cliLoopTokenSource = new CancellationTokenSource();

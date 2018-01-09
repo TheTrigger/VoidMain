@@ -33,7 +33,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
 
+            services.AddSingleton<ICommandLineViewSelector, CommandLineViewSelector>();
             services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
+            services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineMaskedViewProvider>();
+            services.AddSingleton<ICommandLineViewProvider, CommandLineHiddenViewProvider>();
 
             services.AddSingleton<ICommandLineParser, CommandLineParser>();
             services.AddSingleton<ICommandLineLexer, CommandLineLexer>();

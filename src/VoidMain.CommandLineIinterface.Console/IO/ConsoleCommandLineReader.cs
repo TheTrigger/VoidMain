@@ -12,15 +12,15 @@ namespace VoidMain.CommandLineIinterface.IO.Console
     public class ConsoleCommandLineReader : ICommandLineReader
     {
         private readonly IConsole _console;
-        private readonly ICommandLineViewProvider _viewProvider;
+        private readonly ICommandLineViewSelector _viewSelector;
         private readonly IConsoleInputHandler[] _inputHandlers;
         private readonly ConsoleKeyAsyncReader _keyReader;
 
         public ConsoleCommandLineReader(IConsole console,
-            ICommandLineViewProvider viewProvider, IEnumerable<IConsoleInputHandler> inputHandlers)
+            ICommandLineViewSelector viewSelector, IEnumerable<IConsoleInputHandler> inputHandlers)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _viewProvider = viewProvider ?? throw new ArgumentNullException(nameof(viewProvider));
+            _viewSelector = viewSelector ?? throw new ArgumentNullException(nameof(viewSelector));
             if (inputHandlers == null)
             {
                 throw new ArgumentNullException(nameof(inputHandlers));
@@ -29,13 +29,25 @@ namespace VoidMain.CommandLineIinterface.IO.Console
             _keyReader = new ConsoleKeyAsyncReader(_console, 100, 1000);
         }
 
-        public Task<string> ReadLineAsync(ICommandLinePrompt prompt, CancellationToken token)
+        public Task<string> ReadLineAsync(CancellationToken token = default(CancellationToken))
+        {
+            return ReadLineAsync(prompt: null, token: token);
+        }
+
+        public Task<string> ReadLineAsync(char? mask, CancellationToken token = default(CancellationToken))
+        {
+            return ReadLineAsync(prompt: null, mask: mask, token: token);
+        }
+
+        public Task<string> ReadLineAsync(ICommandLinePrompt prompt,
+            CancellationToken token = default(CancellationToken))
         {
             var viewOptions = CommandLineViewOptions.Normal;
             return ReadLineAsync(prompt, viewOptions, token);
         }
 
-        public Task<string> ReadLineAsync(ICommandLinePrompt prompt, char? mask, CancellationToken token)
+        public Task<string> ReadLineAsync(ICommandLinePrompt prompt, char? mask,
+            CancellationToken token = default(CancellationToken))
         {
             var viewOptions = mask.HasValue
                 ? CommandLineViewOptions.Masked(mask.Value)
@@ -48,13 +60,13 @@ namespace VoidMain.CommandLineIinterface.IO.Console
         {
             ThrowIfCancellationRequested(token, hadUserInput: false);
 
-            string promptMessage = prompt.GetMessage();
+            string promptMessage = prompt?.GetMessage();
             if (!String.IsNullOrEmpty(promptMessage))
             {
                 _console.Write(promptMessage);
             }
 
-            var lineView = _viewProvider.GetView(viewOptions);
+            var lineView = _viewSelector.SelectView(viewOptions);
             var lineViewLifecycle = lineView as ICommandLineViewLifecycle;
             var eventArgs = new ConsoleInputEventArgs();
 

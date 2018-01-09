@@ -80,7 +80,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
 
         public void ClearAll()
         {
-            _cursor.Move(-_lineBuilder.Length);
+            _cursor.Move(-_lineBuilder.Position);
             _lineBuilder.Clear();
             _hasChanges = true;
         }
