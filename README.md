@@ -45,7 +45,6 @@ class Program : IStartup
     static void Main(string[] args)
     {
         var host = new CommandsHostBuilder()
-            .UseAdvancedConsole()
             .UseStartup<Program>()
             .Build();
 
@@ -54,6 +53,8 @@ class Program : IStartup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Advanced console interface includes all features.
+        services.AddAdvancedConsoleInterface();
         services.AddCommands();
     }
 
@@ -80,6 +81,47 @@ CMD> greetings hello world
 You can get rid of `greetings` if you set module name to `null` like this: `[Module(Name = null)]`
 ```
 CMD> hello world
+```
+
+**More advanced configuration**
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    var interfaceBuilder = services
+        .AddConsoleInterface()
+        .AddCmdPrompt()
+        .AddUndoRedo(options =>
+        {
+            options.MaxCount = 10;
+            options.SnapshotsComparer = CommandLineViewSnapshotComparer.IgnoreCursor;
+        })
+        .AddSyntaxHighlighting(options =>
+        {
+            options.Pallete = new ConsoleSyntaxHighlightingPallete()
+                {
+                    { SyntaxClass.CommandName, ConsoleColor.Yellow },
+                    { SyntaxClass.OptionName, ConsoleColor.Blue, ConsoleColor.Yellow },
+                    { SyntaxClass.Operand, new ConsoleTextStyle(ConsoleColor.DarkCyan) }
+                };
+            // or
+            options.Pallete = ConsoleSyntaxHighlightingPallete.Default;
+        });
+
+    interfaceBuilder
+        .AddCommandsHistory(options =>
+        {
+            options.MaxCount = 10;
+            options.SavePeriod = TimeSpan.FromSeconds(10);
+            options.CommandsComparer = CommandsHistoryComparer.OrdinalIgnoreCase;
+        })
+        .AddFileStorage(options =>
+        {
+            options.FilePath = "history.txt";
+            options.Encoding = Encoding.UTF8;
+        });
+
+    services.AddCommands();
+}
 ```
 
 ## License
