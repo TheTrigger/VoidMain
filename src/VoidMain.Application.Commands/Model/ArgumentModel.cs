@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-namespace VoidMain.Application.Commands.ApplicationModel
+namespace VoidMain.Application.Commands.Model
 {
     public class ArgumentModel
     {

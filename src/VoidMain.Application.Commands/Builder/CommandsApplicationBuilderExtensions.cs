@@ -1,14 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using VoidMain.Application.Commands;
+using System;
+using VoidMain.Application.Builder;
 
-namespace VoidMain.Application.Builder
+namespace VoidMain.Application.Commands.Builder
 {
     public static class CommandsApplicationBuilderExtensions
     {
-        public static void RunCommands(this IApplicationBuilder app)
+        public static void RunCommands(
+            this IApplicationBuilder app, Action<ICommandsApplicationBuilder> configure)
         {
-            var cmdApp = app.Services.GetRequiredService<ICommandsApplication>();
-            app.Run(cmdApp.ExecuteCommand);
+            var builder = app.Services.GetRequiredService<ICommandsApplicationBuilder>();
+            configure(builder);
+            var commandsApplication = builder.Build();
+            app.Run(commandsApplication.ExecuteCommand);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.Application.Commands.ApplicationModel
+namespace VoidMain.Application.Commands.Model
 {
     public class ModuleModel
     {

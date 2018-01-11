@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace VoidMain.Application.Commands.ApplicationModel
+namespace VoidMain.Application.Commands.Model
 {
     public class CommandModel
     {
         public MethodInfo Method { get; set; }
-        public List<ArgumentModel> Arguments { get; set; }
+        public IReadOnlyList<ArgumentModel> Arguments { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public ModuleModel Module { get; set; }

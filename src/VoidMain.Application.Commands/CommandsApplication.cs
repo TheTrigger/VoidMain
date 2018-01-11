@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using VoidMain.Application.Commands.Model;
 using VoidMain.CommandLineIinterface;
 using VoidMain.Hosting;
 
@@ -12,11 +13,13 @@ namespace VoidMain.Application.Commands
     public class CommandsApplication : ICommandsApplication
     {
         private readonly IServiceProvider _services;
+        private readonly ApplicationModel _appModel;
         private readonly StringComparer _comparerComparer;
 
-        public CommandsApplication(IServiceProvider services)
+        public CommandsApplication(IServiceProvider services, ApplicationModel appModel)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
+            _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
             _comparerComparer = StringComparer.OrdinalIgnoreCase;
         }
 

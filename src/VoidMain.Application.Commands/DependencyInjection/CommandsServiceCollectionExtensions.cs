@@ -1,4 +1,4 @@
-﻿using VoidMain.Application.Commands;
+﻿using VoidMain.Application.Commands.Builder;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -6,7 +6,10 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddCommands(this IServiceCollection services)
         {
-            services.AddTransient<ICommandsApplication, CommandsApplication>();
+            services.AddTransient<ICommandsApplicationBuilder, CommandsApplicationBuilder>();
+            services.AddTransient<IModuleModelConstructor, ModuleModelConstructor>();
+            services.AddTransient<ICommandModelConstructor, CommandModelConstructor>();
+            services.AddTransient<IArgumentModelConstructor, ArgumentModelConstructor>();
             return services;
         }
     }

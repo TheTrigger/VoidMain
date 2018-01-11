@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using VoidMain.Application.Builder;
+using VoidMain.Application.Commands.Builder;
 using VoidMain.Hosting;
 
 namespace SimpleApp
@@ -26,7 +27,10 @@ namespace SimpleApp
 
         public void ConfigureApplication(IApplicationBuilder app)
         {
-            app.RunCommands();
+            app.RunCommands(commands =>
+            {
+                commands.AddModule<GreetingsModule>();
+            });
         }
 
         private static void PrintDevelopmentNote()
@@ -37,6 +41,14 @@ namespace SimpleApp
             Console.WriteLine("Type 'quit' or press Ctrl+C twice to close application.");
             Console.WriteLine("=======================================================");
             Console.WriteLine();
+        }
+    }
+
+    public class GreetingsModule
+    {
+        public void Hello(string name)
+        {
+            Console.WriteLine($"Hello, {name}!");
         }
     }
 }

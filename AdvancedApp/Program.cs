@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using VoidMain.Application.Builder;
+using VoidMain.Application.Commands.Builder;
 using VoidMain.CommandLineIinterface.History;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
@@ -67,7 +68,10 @@ namespace AdvancedApp
 
         public void ConfigureApplication(IApplicationBuilder app)
         {
-            app.RunCommands();
+            app.RunCommands(commands =>
+            {
+                commands.AddModule<GreetingsModule>();
+            });
         }
 
         private static void PrintDevelopmentNote()
@@ -78,6 +82,14 @@ namespace AdvancedApp
             Console.WriteLine("Type 'quit' or press Ctrl+C twice to close application.");
             Console.WriteLine("=======================================================");
             Console.WriteLine();
+        }
+    }
+
+    public class GreetingsModule
+    {
+        public void Hello(string name)
+        {
+            Console.WriteLine($"Hello, {name}!");
         }
     }
 }

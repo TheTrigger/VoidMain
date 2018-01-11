@@ -1,4 +1,4 @@
-﻿namespace VoidMain.Application.Commands.ApplicationModel
+﻿namespace VoidMain.Application.Commands.Model
 {
     public enum ArgumentKind
     {

@@ -23,8 +23,8 @@ Almost every part of the framework can be extended or replaced.
     - Enum value provider
     - File path provider
 - Easy configuration with
-  - Method signature
-  - Attributes
+  - Method signature **(done)**
+  - Attributes **(done)**
   - Expression trees
 - Commands execution
   - Command resolver
