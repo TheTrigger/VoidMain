@@ -66,7 +66,7 @@ namespace VoidMain.CommandLineIinterface.Tests
                 bool done = manager.TryUndo(currentSnapshot, out var prevSnaoshot);
 
                 // Assert
-                Assert.Equal(false, done);
+                Assert.False(done);
             }
         }
 
@@ -83,7 +83,7 @@ namespace VoidMain.CommandLineIinterface.Tests
                 bool done = manager.TryRedo(currentSnapshot, out var nextSnaoshot);
 
                 // Assert
-                Assert.Equal(false, done);
+                Assert.False(done);
             }
         }
 
@@ -105,7 +105,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             done = manager.TryUndo(currentSnapshot, out prevSnapshot);
 
             // Assert
-            Assert.Equal(false, done);
+            Assert.False(done);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             done = manager.TryRedo(currentSnapshot, out nextSnapshot);
 
             // Assert
-            Assert.Equal(false, done);
+            Assert.False(done);
         }
 
         [Fact]
@@ -217,7 +217,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             bool added = manager.TryAddSnapshot(snapshot);
 
             // Assert
-            Assert.Equal(false, added);
+            Assert.False(added);
             Assert.Equal(1, manager.Count);
         }
 
@@ -236,7 +236,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             bool added = manager.TryAddSnapshot(firstSnapshot);
 
             // Assert
-            Assert.Equal(false, added);
+            Assert.False(added);
             Assert.Equal(1, manager.Count);
         }
 
@@ -295,7 +295,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             bool done = manager.TryRedo(changedSnapshot, out var prevSnapshot);
 
             // Assert
-            Assert.Equal(false, done);
+            Assert.False(done);
             Assert.Equal(2, manager.Count);
         }
     }

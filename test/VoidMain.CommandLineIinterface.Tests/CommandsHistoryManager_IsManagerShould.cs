@@ -28,8 +28,8 @@ namespace VoidMain.CommandLineIinterface.Tests
         [InlineData(-1)]
         public void HaveValidMaxCounts(int maxCounts)
         {
-            var mock = new Mock<ICommandsHistoryStorage>();
-            Assert.Throws<ArgumentOutOfRangeException>(() => new CommandsHistoryManager(mock.Object,
+            var storage = new Mock<ICommandsHistoryStorage>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CommandsHistoryManager(storage.Object,
                 new CommandsHistoryOptions { MaxCount = maxCounts }));
         }
 
@@ -40,9 +40,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void LoadCommandsBeforeUse(string command)
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(Array.Empty<string>());
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(Array.Empty<string>());
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             switch (command)
@@ -59,7 +59,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             }
 
             // Assert
-            mock.Verify(s => s.Load(), Times.Once());
+            storage.Verify(s => s.Load(), Times.Once());
         }
 
         [Theory]
@@ -68,9 +68,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void GetPrevCommand(int times, string expected)
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             string command = null;
@@ -89,9 +89,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void GetNextCommand(int times, string expected)
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
+            var manager = new CommandsHistoryManager(storage.Object);
             while (manager.TryGetPrevCommand(out string _)) { }
 
             // Act
@@ -109,9 +109,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void StopAtFirstCommand()
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             int count = 0;
@@ -132,9 +132,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void StopAfterLastCommand()
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
+            var manager = new CommandsHistoryManager(storage.Object);
             while (manager.TryGetPrevCommand(out string _)) { }
 
             // Act
@@ -156,9 +156,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void AddNewCommand()
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(Array.Empty<string>());
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(Array.Empty<string>());
+            var manager = new CommandsHistoryManager(storage.Object);
             var expected = "command";
 
             // Act
@@ -173,9 +173,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotExceedMaxCommandsCount()
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(Array.Empty<string>());
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(Array.Empty<string>());
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             for (int i = 0; i < manager.MaxCount + 1; i++)
@@ -194,9 +194,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotAddEmptyCommand(string command)
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(Array.Empty<string>());
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(Array.Empty<string>());
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             manager.AddCommand(command);
@@ -209,9 +209,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void NotAddSameLastCommand()
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(Array.Empty<string>());
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(Array.Empty<string>());
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             manager.AddCommand("command");
@@ -225,9 +225,9 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void ClearElements()
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             manager.TryGetPrevCommand(out string _); // Force to load from storage
@@ -241,16 +241,16 @@ namespace VoidMain.CommandLineIinterface.Tests
         public void ClearElementsWithoutLoadingFromStorage()
         {
             // Arrange
-            var mock = new Mock<ICommandsHistoryStorage>();
-            mock.Setup(s => s.Load()).Returns(Array.Empty<string>());
-            var manager = new CommandsHistoryManager(mock.Object);
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(Array.Empty<string>());
+            var manager = new CommandsHistoryManager(storage.Object);
 
             // Act
             manager.Clear();
 
             // Assert
             Assert.Equal(0, manager.Count);
-            mock.Verify(s => s.Load(), Times.Never());
+            storage.Verify(s => s.Load(), Times.Never());
         }
     }
 }
