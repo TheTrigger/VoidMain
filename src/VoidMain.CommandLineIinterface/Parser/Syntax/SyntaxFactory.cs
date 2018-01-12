@@ -84,27 +84,32 @@
 
         public SyntaxError UnrecognizedInputError(TextSpan span)
         {
-            return new SyntaxError(span, "WM0001", "Unrecognized input");
+            return new SyntaxError(span, "WM1001", "Unrecognized input");
         }
 
         public SyntaxError MissingEndOfInputError(TextSpan span)
         {
-            return new SyntaxError(span, "WM0002", "End of input is missing");
+            return new SyntaxError(span, "WM2001", "End of input is missing");
         }
 
         public SyntaxError MissingWhitespaceError(TextSpan span)
         {
-            return new SyntaxError(span, "WM0003", "Whitespace is missing");
+            return new SyntaxError(span, "WM2002", "Whitespace is missing");
         }
 
         public SyntaxError MissingOptionValueError(TextSpan span)
         {
-            return new SyntaxError(span, "WM0004", "Option value is missing");
+            return new SyntaxError(span, "WM2003", "Option value is missing");
+        }
+
+        public SyntaxError MissingClosingQuoteError(TextSpan span)
+        {
+            return new SyntaxError(span, "WM2004", "Closing quotation mark is missing");
         }
 
         public SyntaxError InvalidOptionNameError(TextSpan span)
         {
-            return new SyntaxError(span, "WM0005", "Invalid option name");
+            return new SyntaxError(span, "WM3001", "Invalid option name");
         }
     }
 }

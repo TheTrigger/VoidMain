@@ -161,7 +161,7 @@ namespace VoidMain.CommandLineIinterface.Parser
                 yield return new OptionSyntax(nameMarker, shortName, valueMarker: null, value: null);
             }
 
-            GetShortOptionName(errors, builder, optionsSpan, optionNames, optionsCount-1);
+            GetShortOptionName(errors, builder, optionsSpan, optionNames, optionsCount - 1);
             if (name.HasTrailingTrivia)
             {
                 builder.TrailingTrivia = name.TrailingTrivia;
@@ -294,10 +294,35 @@ namespace VoidMain.CommandLineIinterface.Parser
                     errors.Add(_syntaxFactory.MissingWhitespaceError(token.TrailingTrivia.Span));
                 }
 
+                if (token.Kind == SyntaxKind.QuotedLiteralToken
+                    && !HasClosingQuote(token))
+                {
+                    var span = token.Span;
+                    errors.Add(_syntaxFactory.MissingClosingQuoteError(
+                        new TextSpan(span.Source, span.End, 0)));
+                }
+
                 return new ValueSyntax(token);
             }
 
             return ScanMultiTokenValue(cursor, errors, token);
+        }
+
+        private bool HasClosingQuote(SyntaxToken token)
+        {
+            var span = token.Span;
+            if (span.Length < 2) return false;
+
+            char quote = span.Source[span.Start];
+            if (span.Source[span.End - 1] != quote) return false;
+
+            bool isDoubleQuote = span.Length > 2 &&
+                span.Source[span.End - 2] == quote;
+            if (!isDoubleQuote) return true;
+
+            bool isTripleQuote = span.Length > 3 &&
+                span.Source[span.End - 3] == quote;
+            return isTripleQuote;
         }
 
         private ValueSyntax ScanMultiTokenValue(
