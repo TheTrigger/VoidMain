@@ -37,11 +37,12 @@ namespace AdvancedApp
                 .AddSyntaxHighlighting(options =>
                 {
                     options.Pallete = new ConsoleSyntaxHighlightingPallete()
-                     {
-                         { SyntaxClass.CommandName, ConsoleColor.Yellow },
-                         { SyntaxClass.OptionName, ConsoleColor.Blue, ConsoleColor.Yellow },
-                         { SyntaxClass.Operand, new ConsoleTextStyle(ConsoleColor.DarkCyan) }
-                     };
+                    {
+                        { SyntaxClass.CommandName, ConsoleColor.Yellow },
+                        { SyntaxClass.OptionName, ConsoleColor.Blue, ConsoleColor.Yellow },
+                        { SyntaxClass.Operand, new ConsoleTextStyle(ConsoleColor.DarkCyan) }
+                        // OptionNameMarker, OptionValueMarker, OptionValue, OperandsSectionMarker
+                    };
                     // or
                     options.Pallete = ConsoleSyntaxHighlightingPallete.Default;
                 });
@@ -70,7 +71,13 @@ namespace AdvancedApp
         {
             app.RunCommands(commands =>
             {
-                commands.AddModule<GreetingsModule>();
+                commands.AddModule<GreetingsModule>(module =>
+                {
+                    module.Name = "";
+                    module.Description = "";
+
+                    module.RemoveCommand(m => m.RemovedCommand());
+                });
             });
         }
 
@@ -91,5 +98,7 @@ namespace AdvancedApp
         {
             Console.WriteLine($"Hello, {name}!");
         }
+
+        public void RemovedCommand() { }
     }
 }

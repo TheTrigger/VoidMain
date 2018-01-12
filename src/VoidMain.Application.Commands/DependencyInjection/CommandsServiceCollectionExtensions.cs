@@ -10,6 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IModuleModelConstructor, ModuleModelConstructor>();
             services.AddTransient<ICommandModelConstructor, CommandModelConstructor>();
             services.AddTransient<IArgumentModelConstructor, ArgumentModelConstructor>();
+            services.AddTransient<IModuleConfigurationFactory, ModuleConfigurationFactory>();
             return services;
         }
     }

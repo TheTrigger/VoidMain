@@ -60,7 +60,10 @@ class Program : IStartup
 
     public void ConfigureApplication(IApplicationBuilder app)
     {
-        app.RunCommands();
+        app.RunCommands(commands =>
+        {
+            commands.AddModule<GreetingsModule>();
+        });
     }
 }
 
@@ -78,7 +81,7 @@ public class GreetingsModule : Module
 CMD> greetings hello world
 ```
 
-You can get rid of `greetings` if you set module name to `null` like this: `[Module(Name = null)]`
+You can get rid of `greetings` if you set module name to an empty string like this: `[Module(Name = "")]`
 ```
 CMD> hello world
 ```
@@ -98,11 +101,12 @@ public void ConfigureServices(IServiceCollection services)
         .AddSyntaxHighlighting(options =>
         {
             options.Pallete = new ConsoleSyntaxHighlightingPallete()
-                {
-                    { SyntaxClass.CommandName, ConsoleColor.Yellow },
-                    { SyntaxClass.OptionName, ConsoleColor.Blue, ConsoleColor.Yellow },
-                    { SyntaxClass.Operand, new ConsoleTextStyle(ConsoleColor.DarkCyan) }
-                };
+            {
+                { SyntaxClass.CommandName, ConsoleColor.Yellow },
+                { SyntaxClass.OptionName, ConsoleColor.Blue, ConsoleColor.Yellow },
+                { SyntaxClass.Operand, new ConsoleTextStyle(ConsoleColor.DarkCyan) }
+                // OptionNameMarker, OptionValueMarker, OptionValue, OperandsSectionMarker
+            };
             // or
             options.Pallete = ConsoleSyntaxHighlightingPallete.Default;
         });
