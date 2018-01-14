@@ -74,7 +74,7 @@ namespace VoidMain.Application.Commands.Tests
             var argument = ctor.Create(parameter, command);
 
             // Assert
-            Assert.Equal(AttributesModule.ArgumentAlias, argument.Alias);
+            Assert.Equal(AttributesModule.ArgumentAlias.ToString(), argument.Alias);
         }
 
         [Fact]

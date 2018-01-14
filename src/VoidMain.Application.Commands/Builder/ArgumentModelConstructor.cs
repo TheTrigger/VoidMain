@@ -33,7 +33,7 @@ namespace VoidMain.Application.Commands.Builder
                     argument.Name = argAttr.Name ?? parameter.Name;
                     if (argAttr.IsAliasSet)
                     {
-                        argument.Alias = argAttr.Alias;
+                        argument.Alias = argAttr.Alias.ToString();
                     }
                     argument.Description = argAttr.Description;
                     argument.DefaultValue = argAttr.DefaultValue ?? GetDefaultValue(parameter);
