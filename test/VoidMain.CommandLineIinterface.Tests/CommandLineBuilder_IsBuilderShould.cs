@@ -6,11 +6,17 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class CommandLineBuilder_IsBuilderShould
     {
+        #region Ctor tests
+
         [Fact]
         public void HaveValidCapacity()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new CommandLineBuilder(-1));
         }
+
+        #endregion
+
+        #region Move & MoveTo tests
 
         [Theory]
         [InlineData(-1)]
@@ -70,6 +76,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(newPos, builder.Position);
         }
 
+        #endregion
+
+        #region Insert tests
+
         [Theory]
         [InlineData("", 0, 'a', "a", 1)]
         [InlineData("test", 0, 'a', "atest", 1)]
@@ -127,6 +137,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal("", builder.ToString());
         }
 
+        #endregion
+
+        #region Delete & Clear tests
+
         [Theory]
         [InlineData(-1)]
         [InlineData(1)]
@@ -179,6 +193,25 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(0, builder.Position);
         }
 
+        #endregion
+
+        #region ToString tests
+
+        [Fact]
+        public void ReturnValidString()
+        {
+            // Arrange
+            var builder = new CommandLineBuilder();
+            string expected = "test";
+            builder.Insert(expected);
+
+            // Act
+            string actual = builder.ToString();
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
         [Theory]
         [InlineData("test", 0, "test")]
         [InlineData("test", 2, "st")]
@@ -212,5 +245,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(expected, actual);
         }
+
+        #endregion
     }
 }

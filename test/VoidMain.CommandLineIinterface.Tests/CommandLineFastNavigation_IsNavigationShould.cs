@@ -6,6 +6,8 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class CommandLineFastNavigation_IsNavigationShould
     {
+        #region FindNext tests
+
         [Theory]
         [InlineData("", 0, 0)]
         [InlineData("test", 0, 4)]
@@ -31,6 +33,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(expectedPos, actualPos);
         }
 
+        #endregion
+
+        #region FindPrev tests
+
         [Theory]
         [InlineData("", 0, 0)]
         [InlineData("test", 4, 0)]
@@ -55,5 +61,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(expectedPos, actualPos);
         }
+
+        #endregion
     }
 }

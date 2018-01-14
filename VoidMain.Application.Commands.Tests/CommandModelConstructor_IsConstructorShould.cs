@@ -9,11 +9,17 @@ namespace VoidMain.Application.Commands.Tests
 {
     public class CommandModelConstructor_IsConstructorShould
     {
+        #region Ctor tests
+
         [Fact]
         public void RequireArgumentModelConstructor()
         {
             Assert.Throws<ArgumentNullException>(() => new CommandModelConstructor(null));
         }
+
+        #endregion
+
+        #region Method tests
 
         [Fact]
         public void InitializeMethod()
@@ -28,70 +34,6 @@ namespace VoidMain.Application.Commands.Tests
 
             // Assert
             Assert.Equal(func.Method, command.Method);
-        }
-
-        [Fact]
-        public void InitializeModule()
-        {
-            // Arrange
-            var ctor = NewCommandModelConstructor();
-            var module = GetModule(typeof(SignatureModule));
-            Action<string> func = new SignatureModule().Command;
-
-            // Act
-            var command = ctor.Create(func.Method, module);
-
-            // Assert
-            Assert.Equal(module, command.Module);
-        }
-
-        [Fact]
-        public void InitializeArgumentsCollection()
-        {
-            // Arrange
-            var ctor = NewCommandModelConstructor();
-            var module = GetModule(typeof(SignatureModule));
-            Action<string> func = new SignatureModule().Command;
-
-            // Act
-            var command = ctor.Create(func.Method, module);
-
-            // Assert
-            Assert.NotNull(command.Arguments);
-        }
-
-        [Theory]
-        [InlineData(typeof(SignatureModule), nameof(SignatureModule.Command), nameof(SignatureModule.Command))]
-        [InlineData(typeof(EmptyAttributesModule), nameof(EmptyAttributesModule.Command), nameof(EmptyAttributesModule.Command))]
-        [InlineData(typeof(AttributesModule), nameof(AttributesModule.Command), AttributesModule.CommandName)]
-        public void InitializeName(Type moduleType, string methodName, string commandName)
-        {
-            // Arrange
-            var ctor = NewCommandModelConstructor();
-            var module = GetModule(moduleType);
-            var method = GetMethod(moduleType, methodName);
-
-            // Act
-            var command = ctor.Create(method, module);
-
-            // Assert
-            Assert.Equal(commandName, command.Name);
-        }
-
-        [Fact]
-        public void InitializeDescription()
-        {
-            // Arrange
-            var ctor = NewCommandModelConstructor();
-            var moduleType = typeof(AttributesModule);
-            var module = GetModule(moduleType);
-            Action<string> func = new AttributesModule().Command;
-
-            // Act
-            var command = ctor.Create(func.Method, module);
-
-            // Assert
-            Assert.Equal(AttributesModule.CommandDescription, command.Description);
         }
 
         [Theory]
@@ -145,6 +87,90 @@ namespace VoidMain.Application.Commands.Tests
             Assert.Equal(expected, actual);
         }
 
+        #endregion
+
+        #region Module tests
+
+        [Fact]
+        public void InitializeModule()
+        {
+            // Arrange
+            var ctor = NewCommandModelConstructor();
+            var module = GetModule(typeof(SignatureModule));
+            Action<string> func = new SignatureModule().Command;
+
+            // Act
+            var command = ctor.Create(func.Method, module);
+
+            // Assert
+            Assert.Equal(module, command.Module);
+        }
+
+        #endregion
+
+        #region Arguments tests
+
+        [Fact]
+        public void InitializeArgumentsCollection()
+        {
+            // Arrange
+            var ctor = NewCommandModelConstructor();
+            var module = GetModule(typeof(SignatureModule));
+            Action<string> func = new SignatureModule().Command;
+
+            // Act
+            var command = ctor.Create(func.Method, module);
+
+            // Assert
+            Assert.NotNull(command.Arguments);
+        }
+
+        #endregion
+
+        #region Name tests
+
+        [Theory]
+        [InlineData(typeof(SignatureModule), nameof(SignatureModule.Command), nameof(SignatureModule.Command))]
+        [InlineData(typeof(EmptyAttributesModule), nameof(EmptyAttributesModule.Command), nameof(EmptyAttributesModule.Command))]
+        [InlineData(typeof(AttributesModule), nameof(AttributesModule.Command), AttributesModule.CommandName)]
+        public void InitializeName(Type moduleType, string methodName, string commandName)
+        {
+            // Arrange
+            var ctor = NewCommandModelConstructor();
+            var module = GetModule(moduleType);
+            var method = GetMethod(moduleType, methodName);
+
+            // Act
+            var command = ctor.Create(method, module);
+
+            // Assert
+            Assert.Equal(commandName, command.Name);
+        }
+
+        #endregion
+
+        #region Description tests
+
+        [Fact]
+        public void InitializeDescription()
+        {
+            // Arrange
+            var ctor = NewCommandModelConstructor();
+            var moduleType = typeof(AttributesModule);
+            var module = GetModule(moduleType);
+            Action<string> func = new AttributesModule().Command;
+
+            // Act
+            var command = ctor.Create(func.Method, module);
+
+            // Assert
+            Assert.Equal(AttributesModule.CommandDescription, command.Description);
+        }
+
+        #endregion
+
+        #region Helpers
+
         private CommandModelConstructor NewCommandModelConstructor()
         {
             var ctor = new Mock<IArgumentModelConstructor>();
@@ -196,5 +222,7 @@ namespace VoidMain.Application.Commands.Tests
             [NonCommand]
             public void NonCommand() { }
         }
+
+        #endregion
     }
 }

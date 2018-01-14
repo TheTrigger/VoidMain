@@ -6,11 +6,17 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class ElementsCursor_IsCursorShould
     {
+        #region Ctor tests
+
         [Fact]
         public void RequireElementsList()
         {
             Assert.Throws<ArgumentNullException>(() => new ElementsCursor<int>(null, 0));
         }
+
+        #endregion
+
+        #region IsAtTheEnd tests
 
         [Theory]
         [InlineData(new int[] { })]
@@ -31,6 +37,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.True(cursor.IsAtTheEnd());
         }
 
+        #endregion
+
+        #region MoveNext tests
+
         [Theory]
         [InlineData(new int[] { 1, 2, 3 }, 0, 0)]
         [InlineData(new int[] { 1, 2, 3 }, 1, 1)]
@@ -46,6 +56,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(expected, cursor.Position);
         }
+
+        #endregion
+
+        #region Peek tests
 
         [Theory]
         [InlineData(new int[] { 1, 2, 3 }, 0, 1)]
@@ -63,5 +77,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(expected, actual);
         }
+
+        #endregion
     }
 }

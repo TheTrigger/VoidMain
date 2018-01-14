@@ -7,6 +7,8 @@ namespace VoidMain.Application.Commands.Tests
 {
     public class ModuleModelConstructor_IsConstructorShould
     {
+        #region Type tests
+
         [Fact]
         public void InitializeType()
         {
@@ -19,51 +21,6 @@ namespace VoidMain.Application.Commands.Tests
 
             // Assert
             Assert.Equal(moduleType, module.Type);
-        }
-
-        [Fact]
-        public void InitializeEmptyCommandsCollection()
-        {
-            // Arrange
-            var ctor = new ModuleModelConstructor();
-            var moduleType = typeof(SignatureModule);
-
-            // Act
-            var module = ctor.Create(moduleType.GetTypeInfo());
-
-            // Assert
-            Assert.NotNull(module.Commands);
-            Assert.Empty(module.Commands);
-        }
-
-        [Theory]
-        [InlineData(typeof(SignatureModule), "Signature")]
-        [InlineData(typeof(EmptyAttributesModule), "EmptyAttributes")]
-        [InlineData(typeof(AttributesModule), AttributesModule.ModuleName)]
-        public void InitializeName(Type moduleType, string moduleName)
-        {
-            // Arrange
-            var ctor = new ModuleModelConstructor();
-
-            // Act
-            var module = ctor.Create(moduleType.GetTypeInfo());
-
-            // Assert
-            Assert.Equal(moduleName, module.Name);
-        }
-
-        [Fact]
-        public void InitializeDescription()
-        {
-            // Arrange
-            var ctor = new ModuleModelConstructor();
-            var moduleType = typeof(AttributesModule);
-
-            // Act
-            var module = ctor.Create(moduleType.GetTypeInfo());
-
-            // Assert
-            Assert.Equal(AttributesModule.ModuleDescription, module.Description);
         }
 
         [Theory]
@@ -83,7 +40,7 @@ namespace VoidMain.Application.Commands.Tests
             string errorMessage = ex.Message;
             int start = errorMessage.IndexOf(':') + 2;
             int length = errorMessage.IndexOf(Environment.NewLine) - start;
-            string actualReason = errorMessage.Substring(start,length);
+            string actualReason = errorMessage.Substring(start, length);
             Assert.Equal(expectedReason, actualReason);
         }
 
@@ -109,6 +66,67 @@ namespace VoidMain.Application.Commands.Tests
             Assert.Equal(expected, actual);
         }
 
+        #endregion
+
+        #region Commands tests
+
+        [Fact]
+        public void InitializeEmptyCommandsCollection()
+        {
+            // Arrange
+            var ctor = new ModuleModelConstructor();
+            var moduleType = typeof(SignatureModule);
+
+            // Act
+            var module = ctor.Create(moduleType.GetTypeInfo());
+
+            // Assert
+            Assert.NotNull(module.Commands);
+            Assert.Empty(module.Commands);
+        }
+
+        #endregion
+
+        #region Name tests
+
+        [Theory]
+        [InlineData(typeof(SignatureModule), "Signature")]
+        [InlineData(typeof(EmptyAttributesModule), "EmptyAttributes")]
+        [InlineData(typeof(AttributesModule), AttributesModule.ModuleName)]
+        public void InitializeName(Type moduleType, string moduleName)
+        {
+            // Arrange
+            var ctor = new ModuleModelConstructor();
+
+            // Act
+            var module = ctor.Create(moduleType.GetTypeInfo());
+
+            // Assert
+            Assert.Equal(moduleName, module.Name);
+        }
+
+        #endregion
+
+        #region Description tests
+
+        [Fact]
+        public void InitializeDescription()
+        {
+            // Arrange
+            var ctor = new ModuleModelConstructor();
+            var moduleType = typeof(AttributesModule);
+
+            // Act
+            var module = ctor.Create(moduleType.GetTypeInfo());
+
+            // Assert
+            Assert.Equal(AttributesModule.ModuleDescription, module.Description);
+        }
+
+        #endregion
+
+        #region Helpers
+
         public class SignatureModule
         {
         }
@@ -132,5 +150,7 @@ namespace VoidMain.Application.Commands.Tests
         public class GenericModule<T> { }
         [NonModule]
         public class NonModule { }
+
+        #endregion
     }
 }

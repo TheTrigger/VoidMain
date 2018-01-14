@@ -8,6 +8,8 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class CommandLineParser_IsParserShould
     {
+        #region Ctor tests
+
         [Fact]
         public void RequireLexer()
         {
@@ -31,5 +33,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             var semanticModel = new Mock<ISemanticModel>();
             Assert.Throws<ArgumentNullException>(() => new CommandLineParser(lexer.Object, semanticModel.Object, null));
         }
+
+        #endregion
     }
 }

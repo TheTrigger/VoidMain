@@ -7,6 +7,8 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class CommandsHistoryManager_IsManagerShould
     {
+        #region Ctor tests
+
         [Fact]
         public void RequireStorage()
         {
@@ -32,6 +34,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => new CommandsHistoryManager(storage.Object,
                 new CommandsHistoryOptions { MaxCount = maxCounts }));
         }
+
+        #endregion
+
+        #region EnsureCommandsLoaded tests
 
         [Theory]
         [InlineData("prev")]
@@ -62,6 +68,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             storage.Verify(s => s.Load(), Times.Once());
         }
 
+        #endregion
+
+        #region TryGetPrevCommand
+
         [Theory]
         [InlineData(1, "c")]
         [InlineData(2, "b")]
@@ -77,28 +87,6 @@ namespace VoidMain.CommandLineIinterface.Tests
             for (int i = 0; i < times; i++)
             {
                 manager.TryGetPrevCommand(out command);
-            }
-
-            // Assert
-            Assert.Equal(expected, command);
-        }
-
-        [Theory]
-        [InlineData(1, "b")]
-        [InlineData(2, "c")]
-        public void GetNextCommand(int times, string expected)
-        {
-            // Arrange
-            var storage = new Mock<ICommandsHistoryStorage>();
-            storage.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
-            var manager = new CommandsHistoryManager(storage.Object);
-            while (manager.TryGetPrevCommand(out string _)) { }
-
-            // Act
-            string command = null;
-            for (int i = 0; i < times; i++)
-            {
-                manager.TryGetNextCommand(out command);
             }
 
             // Assert
@@ -128,6 +116,32 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(3, count);
         }
 
+        #endregion
+
+        #region TryGetNextCommand
+
+        [Theory]
+        [InlineData(1, "b")]
+        [InlineData(2, "c")]
+        public void GetNextCommand(int times, string expected)
+        {
+            // Arrange
+            var storage = new Mock<ICommandsHistoryStorage>();
+            storage.Setup(s => s.Load()).Returns(new[] { "a", "b", "c" });
+            var manager = new CommandsHistoryManager(storage.Object);
+            while (manager.TryGetPrevCommand(out string _)) { }
+
+            // Act
+            string command = null;
+            for (int i = 0; i < times; i++)
+            {
+                manager.TryGetNextCommand(out command);
+            }
+
+            // Assert
+            Assert.Equal(expected, command);
+        }
+
         [Fact]
         public void StopAfterLastCommand()
         {
@@ -151,6 +165,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(2, count);
         }
+
+        #endregion
+
+        #region AddCommand tests
 
         [Fact]
         public void AddNewCommand()
@@ -221,6 +239,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(1, manager.Count);
         }
 
+        #endregion
+
+        #region Clear tests
+
         [Fact]
         public void ClearElements()
         {
@@ -252,5 +274,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(0, manager.Count);
             storage.Verify(s => s.Load(), Times.Never());
         }
+
+        #endregion
     }
 }

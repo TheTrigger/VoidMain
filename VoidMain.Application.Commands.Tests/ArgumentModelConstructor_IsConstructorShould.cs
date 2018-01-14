@@ -9,7 +9,7 @@ namespace VoidMain.Application.Commands.Tests
 {
     public class ArgumentModelConstructor_IsConstructorShould
     {
-        private const string ArgumentName = "value";
+        #region Parameter tests
 
         [Fact]
         public void InitializeParameter()
@@ -27,6 +27,10 @@ namespace VoidMain.Application.Commands.Tests
             Assert.Equal(parameter, argument.Parameter);
         }
 
+        #endregion
+
+        #region Type tests
+
         [Fact]
         public void InitializeType()
         {
@@ -42,6 +46,10 @@ namespace VoidMain.Application.Commands.Tests
             // Assert
             Assert.Equal(typeof(object), argument.Type);
         }
+
+        #endregion
+
+        #region Name tests
 
         [Theory]
         [InlineData(typeof(SignatureModule), nameof(SignatureModule.Option), ArgumentName)]
@@ -61,6 +69,10 @@ namespace VoidMain.Application.Commands.Tests
             Assert.Equal(name, argument.Name);
         }
 
+        #endregion
+
+        #region Alias tests
+
         [Fact]
         public void InitializeAlias()
         {
@@ -77,6 +89,10 @@ namespace VoidMain.Application.Commands.Tests
             Assert.Equal(AttributesModule.ArgumentAlias.ToString(), argument.Alias);
         }
 
+        #endregion
+
+        #region Description tests
+
         [Fact]
         public void InitializeDescription()
         {
@@ -92,6 +108,10 @@ namespace VoidMain.Application.Commands.Tests
             // Assert
             Assert.Equal(AttributesModule.ArgumentDescription, argument.Description);
         }
+
+        #endregion
+
+        #region DefaultValue tests
 
         [Theory]
         [InlineData(typeof(DefaultValueModule), nameof(DefaultValueModule.SignatureNone), null)]
@@ -114,7 +134,11 @@ namespace VoidMain.Application.Commands.Tests
             // Assert
             Assert.Equal(defaultValue, argument.DefaultValue);
         }
-        
+
+        #endregion
+
+        #region ValueParser tests
+
         [Fact]
         public void InitializeValueParser()
         {
@@ -130,6 +154,10 @@ namespace VoidMain.Application.Commands.Tests
             // Assert
             Assert.Equal(typeof(object), argument.ValueParser);
         }
+
+        #endregion
+
+        #region Kind tests
 
         [Theory]
         [InlineData(typeof(SignatureModule), nameof(SignatureModule.Service), ArgumentKind.Service)]
@@ -151,6 +179,10 @@ namespace VoidMain.Application.Commands.Tests
             // Assert
             Assert.Equal(kind, argument.Kind);
         }
+
+        #endregion
+
+        #region Optional 
 
         [Theory]
         [InlineData(typeof(OptionalModule), nameof(OptionalModule.SignatureNullDefaultValue), true)]
@@ -176,6 +208,10 @@ namespace VoidMain.Application.Commands.Tests
             Assert.Equal(isOptional, argument.Optional);
         }
 
+        #endregion
+
+        #region Helpers
+
         private ParameterInfo GetFirstParameter(Type type, string methodName)
         {
             var method = type.GetTypeInfo().GetMethod(methodName,
@@ -183,6 +219,8 @@ namespace VoidMain.Application.Commands.Tests
                 BindingFlags.Instance | BindingFlags.Static);
             return method.GetParameters().First();
         }
+
+        private const string ArgumentName = "value";
 
         public class SignatureModule
         {
@@ -244,5 +282,7 @@ namespace VoidMain.Application.Commands.Tests
             public void AttributeNullDefaultValue([Option(DefaultValue = null)] object value) { }
             public void AttributeNotNullDefaultValue([Option(DefaultValue = "")] string value) { }
         }
+
+        #endregion
     }
 }

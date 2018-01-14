@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using VoidMain.CommandLineIinterface.Internal;
 using Xunit;
 
@@ -7,6 +6,8 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class PushOutCollection_IsCollectionShould
     {
+        #region Ctor tests
+
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
@@ -41,6 +42,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(elements.Length, collection.MaxCount);
         }
+
+        #endregion
+
+        #region Add tests
 
         [Theory]
         [InlineData(3, 1)]
@@ -97,6 +102,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(expected, collection);
         }
 
+        #endregion
+
+        #region Get tests
+
         [Theory]
         [InlineData(3, 0, 0, 0)]
         [InlineData(3, 0, 2, 2)]
@@ -118,6 +127,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(expected, actual);
         }
 
+        #endregion
+
+        #region Set tests
+
         [Theory]
         [InlineData(3, 0, new[] { -1, 1, 2 })]
         [InlineData(3, 1, new[] { -1, 2, 3 })]
@@ -138,6 +151,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Equal(expected, collection);
         }
 
+        #endregion
+
+        #region Clear tests
+
         [Fact]
         public void ClearElements()
         {
@@ -150,6 +167,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(0, collection.Count);
         }
+
+        #endregion
+
+        #region TrimTo tests
 
         [Theory]
         [InlineData(5, 0, 0, new int[0])]
@@ -171,5 +192,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(expected, collection);
         }
+
+        #endregion
     }
 }

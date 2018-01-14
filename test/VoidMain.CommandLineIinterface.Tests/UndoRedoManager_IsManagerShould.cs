@@ -7,18 +7,19 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class UndoRedoManager_IsManagerShould
     {
-        private static CommandLineViewSnapshot S(string value)
-        {
-            return new CommandLineViewSnapshot(value, 0);
-        }
+        #region Ctor tests
 
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
         public void HaveValidMaxCount(int maxCount)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UndoRedoManager(new UndoRedoOptions { MaxCount = maxCount}));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new UndoRedoManager(new UndoRedoOptions { MaxCount = maxCount }));
         }
+
+        #endregion
+
+        #region Null spanshot tessts
 
         [Fact]
         public void RequireValidSnapshotsOnUndo()
@@ -53,6 +54,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.Throws<ArgumentNullException>(() => manager.TryAddSnapshot(snapshot));
         }
 
+        #endregion
+
+        #region Empty history tests
+
         [Fact]
         public void NotUndoWithoutSnapshots()
         {
@@ -86,6 +91,10 @@ namespace VoidMain.CommandLineIinterface.Tests
                 Assert.False(done);
             }
         }
+
+        #endregion
+
+        #region History end tests
 
         [Fact]
         public void NotUndoMoreThanItHaveSnapshots()
@@ -131,6 +140,10 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.False(done);
         }
 
+        #endregion
+
+        #region AddSnapshot tests
+
         [Fact]
         public void AddNewSnapshot()
         {
@@ -163,6 +176,43 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(manager.MaxCount, manager.Count);
         }
+
+        [Fact]
+        public void NotAddSameLastSnapshot()
+        {
+            // Arrange
+            var manager = new UndoRedoManager();
+            var snapshot = S("snapshot_1");
+            manager.TryAddSnapshot(snapshot);
+
+            // Act
+            bool added = manager.TryAddSnapshot(snapshot);
+
+            // Assert
+            Assert.False(added);
+            Assert.Equal(1, manager.Count);
+        }
+
+        [Fact]
+        public void NotAddSameCurrentSnapshot()
+        {
+            // Arrange
+            var manager = new UndoRedoManager();
+            var firstSnapshot = S("snapshot_1");
+            var secondSnapshot = S("snapshot_2");
+            manager.TryAddSnapshot(firstSnapshot);
+            manager.TryAddSnapshot(secondSnapshot);
+            manager.TryUndo(secondSnapshot, out var _);
+
+            // Act
+            bool added = manager.TryAddSnapshot(firstSnapshot);
+
+            // Assert
+            Assert.False(added);
+            Assert.Equal(1, manager.Count);
+        }
+
+        #endregion
 
         [Fact]
         public void DeleteAfterCurrent()
@@ -203,41 +253,6 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Assert
             Assert.Equal(3, manager.Count);
             Assert.Equal(secondSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
-        }
-
-        [Fact]
-        public void NotAddSameLastSnapshot()
-        {
-            // Arrange
-            var manager = new UndoRedoManager();
-            var snapshot = S("snapshot_1");
-            manager.TryAddSnapshot(snapshot);
-
-            // Act
-            bool added = manager.TryAddSnapshot(snapshot);
-
-            // Assert
-            Assert.False(added);
-            Assert.Equal(1, manager.Count);
-        }
-
-        [Fact]
-        public void NotAddSameCurrentSnapshot()
-        {
-            // Arrange
-            var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
-            manager.TryAddSnapshot(firstSnapshot);
-            manager.TryAddSnapshot(secondSnapshot);
-            manager.TryUndo(secondSnapshot, out var _);
-
-            // Act
-            bool added = manager.TryAddSnapshot(firstSnapshot);
-
-            // Assert
-            Assert.False(added);
-            Assert.Equal(1, manager.Count);
         }
 
         [Fact]
@@ -298,5 +313,14 @@ namespace VoidMain.CommandLineIinterface.Tests
             Assert.False(done);
             Assert.Equal(2, manager.Count);
         }
+
+        #region Helpers
+
+        private static CommandLineViewSnapshot S(string value)
+        {
+            return new CommandLineViewSnapshot(value, 0);
+        }
+
+        #endregion
     }
 }

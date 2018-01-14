@@ -8,11 +8,15 @@ namespace VoidMain.CommandLineIinterface.Tests
 {
     public class CommandLineLexer_IsLexerShould
     {
+        #region Ctor tests
+
         [Fact]
         public void RequireSyntaxFactory()
         {
             Assert.Throws<ArgumentNullException>(() => new CommandLineLexer(null));
         }
+
+        #endregion
 
         [Theory]
         [InlineData("")]
