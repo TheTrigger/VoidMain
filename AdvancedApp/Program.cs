@@ -28,7 +28,7 @@ namespace AdvancedApp
         {
             var interfaceBuilder = services
                 .AddConsoleInterface()
-                .AddCmdPrompt()
+                .AddPromptMessage()
                 .AddUndoRedo(options =>
                 {
                     options.MaxCount = 10;

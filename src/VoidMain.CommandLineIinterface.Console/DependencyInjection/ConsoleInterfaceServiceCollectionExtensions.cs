@@ -51,7 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var interfaceBuilder = services
                 .AddConsoleInterface()
-                .AddCmdPrompt()
+                .AddPromptMessage()
                 .AddUndoRedo();
 
             interfaceBuilder

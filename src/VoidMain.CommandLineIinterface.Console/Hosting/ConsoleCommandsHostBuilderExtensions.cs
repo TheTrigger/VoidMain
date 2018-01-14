@@ -10,7 +10,7 @@ namespace VoidMain.Hosting
             {
                 services
                     .AddConsoleInterface()
-                    .AddCmdPrompt();
+                    .AddPromptMessage();
             });
         }
 
@@ -20,7 +20,7 @@ namespace VoidMain.Hosting
             {
                 var interfaceBuilder = services
                     .AddConsoleInterface()
-                    .AddCmdPrompt()
+                    .AddPromptMessage()
                     .AddUndoRedo()
                     .AddSyntaxHighlighting();
 

@@ -81,7 +81,7 @@ public class GreetingsModule : Module
 CMD> greetings hello world
 ```
 
-You can get rid of `greetings` if you set module name to an empty string like this: `[Module(Name = "")]`
+You can get rid of `greetings` if you set the module name to an empty string like this: `[Module(Name = "")]`
 ```
 CMD> hello world
 ```
@@ -92,7 +92,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     var interfaceBuilder = services
         .AddConsoleInterface()
-        .AddCmdPrompt()
+        .AddPromptMessage()
         .AddUndoRedo(options =>
         {
             options.MaxCount = 10;

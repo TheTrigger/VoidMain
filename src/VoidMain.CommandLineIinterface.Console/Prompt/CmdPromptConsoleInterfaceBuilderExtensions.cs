@@ -4,11 +4,15 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class CmdPromptConsoleInterfaceBuilderExtensions
     {
-        public static ConsoleInterfaceBuilder AddCmdPrompt(
-            this ConsoleInterfaceBuilder builder)
+        public static ConsoleInterfaceBuilder AddPromptMessage(
+            this ConsoleInterfaceBuilder builder, string message = null)
         {
             var services = builder.Services;
-            services.AddTransient<ICommandLinePrompt, CmdPrompt>();
+            if (message == null)
+            {
+                message = "CMD> ";
+            }
+            services.AddTransient<ICommandLinePrompt>(s => new PromptMessage(message));
             return builder;
         }
     }
