@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\VoidMain.Application.Commands\VoidMain.Application.Commands.csproj" />
+    <ProjectReference Include="..\..\src\VoidMain.Application.Commands\VoidMain.Application.Commands.csproj" />
   </ItemGroup>
 
 </Project>
