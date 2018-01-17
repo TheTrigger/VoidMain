@@ -3,7 +3,7 @@
 namespace VoidMain.Application.Commands
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-    public class NonCommandAttribute : Attribute
+    public sealed class NonCommandAttribute : Attribute
     {
     }
 }
