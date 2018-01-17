@@ -115,10 +115,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var collection = new PushOutCollection<int>(capacity);
-            for (int i = 0; i < capacity + extraElements; i++)
-            {
-                collection.Add(i);
-            }
+            PopulateCollection(collection, capacity + extraElements);
 
             // Act
             int actual = collection[index];
@@ -139,10 +136,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var collection = new PushOutCollection<int>(capacity);
-            for (int i = 0; i < capacity + extraElements; i++)
-            {
-                collection.Add(i);
-            }
+            PopulateCollection(collection, capacity + extraElements);
 
             // Act
             collection[0] = -1;
@@ -181,16 +175,25 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var collection = new PushOutCollection<int>(capacity);
-            for (int i = 0; i < capacity + extraElements; i++)
-            {
-                collection.Add(i);
-            }
+            PopulateCollection(collection, capacity + extraElements);
 
             // Act
             collection.TrimTo(newCount);
 
             // Assert
             Assert.Equal(expected, collection);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private static void PopulateCollection(PushOutCollection<int> collection, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                collection.Add(i);
+            }
         }
 
         #endregion

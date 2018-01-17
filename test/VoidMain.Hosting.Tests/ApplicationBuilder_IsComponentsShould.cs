@@ -12,17 +12,17 @@ namespace VoidMain.Hosting.Tests
         {
             // Arrange
             var builder = new ApplicationBuilder(Services.Empty);
-            var traker = new ComponentsInvokeTracker();
+            var tracker = new ComponentsInvokeTracker();
 
             // Act
-            builder.Use(traker.Component_A);
-            builder.Use(traker.Component_B);
-            builder.Use(traker.Component_Terminator);
+            builder.Use(tracker.Component_A);
+            builder.Use(tracker.Component_B);
+            builder.Use(tracker.Component_Terminator);
             var app = builder.Build();
             app(null).GetAwaiter().GetResult();
 
             // Assert
-            Assert.Equal(new[] { "A", "B", "Terminator" }, traker.Invoked);
+            Assert.Equal(new[] { "A", "B", "Terminator" }, tracker.Invoked);
         }
 
         [Fact]
@@ -30,11 +30,11 @@ namespace VoidMain.Hosting.Tests
         {
             // Arrange
             var builder = new ApplicationBuilder(Services.Empty);
-            var traker = new ComponentsInvokeTracker();
+            var tracker = new ComponentsInvokeTracker();
 
             // Act
-            builder.Use(traker.Component_A);
-            builder.Use(traker.Component_B);
+            builder.Use(tracker.Component_A);
+            builder.Use(tracker.Component_B);
             var app = builder.Build();
 
             // Assert
@@ -46,18 +46,18 @@ namespace VoidMain.Hosting.Tests
         {
             // Arrange
             var builder = new ApplicationBuilder(Services.Empty);
-            var traker = new ComponentsInvokeTracker();
+            var tracker = new ComponentsInvokeTracker();
 
             // Act
-            builder.Use(traker.Component_A);
-            builder.Use(traker.Component_B);
-            builder.Use(traker.Component_Terminator);
-            builder.Use(traker.Component_C);
+            builder.Use(tracker.Component_A);
+            builder.Use(tracker.Component_B);
+            builder.Use(tracker.Component_Terminator);
+            builder.Use(tracker.Component_C);
             var app = builder.Build();
             app(null).GetAwaiter().GetResult();
 
             // Assert
-            Assert.Equal(new[] { "A", "B", "Terminator" }, traker.Invoked);
+            Assert.Equal(new[] { "A", "B", "Terminator" }, tracker.Invoked);
         }
 
         [Fact]
@@ -65,18 +65,18 @@ namespace VoidMain.Hosting.Tests
         {
             // Arrange
             var builder = new ApplicationBuilder(Services.Empty);
-            var traker = new ComponentsInvokeTracker();
+            var tracker = new ComponentsInvokeTracker();
 
             // Act
-            builder.Use(traker.Component_A);
-            builder.Use(traker.Component_B);
-            builder.Run(traker.Component_Run);
-            builder.Use(traker.Component_C);
+            builder.Use(tracker.Component_A);
+            builder.Use(tracker.Component_B);
+            builder.Run(tracker.Component_Run);
+            builder.Use(tracker.Component_C);
             var app = builder.Build();
             app(null).GetAwaiter().GetResult();
 
             // Assert
-            Assert.Equal(new[] { "A", "B", "Run" }, traker.Invoked);
+            Assert.Equal(new[] { "A", "B", "Run" }, tracker.Invoked);
         }
 
         [Fact]
@@ -84,26 +84,26 @@ namespace VoidMain.Hosting.Tests
         {
             // Arrange
             var builder = new ApplicationBuilder(Services.Empty);
-            var traker = new ComponentsInvokeTracker();
+            var tracker = new ComponentsInvokeTracker();
 
             // Act
-            builder.Use(traker.Component_A);
-            builder.UseWhen(traker.Condition("Branch_1", true), branchOneApp =>
+            builder.Use(tracker.Component_A);
+            builder.UseWhen(tracker.Condition("Branch_1", true), branchOneApp =>
             {
-                branchOneApp.Use(traker.Component_B);
-                branchOneApp.UseWhen(traker.Condition("Branch_2", false), branchTwoApp =>
+                branchOneApp.Use(tracker.Component_B);
+                branchOneApp.UseWhen(tracker.Condition("Branch_2", false), branchTwoApp =>
                 {
-                    branchTwoApp.Use(traker.Component_C);
+                    branchTwoApp.Use(tracker.Component_C);
                 });
-                branchOneApp.Use(traker.Component_Terminator);
+                branchOneApp.Use(tracker.Component_Terminator);
             });
-            builder.Run(traker.Component_Run);
-            builder.Use(traker.Component_C);
+            builder.Run(tracker.Component_Run);
+            builder.Use(tracker.Component_C);
             var app = builder.Build();
             app(null).GetAwaiter().GetResult();
 
             // Assert
-            Assert.Equal(new[] { "A", "Branch_1", "B", "Branch_2", "Terminator" }, traker.Invoked);
+            Assert.Equal(new[] { "A", "Branch_1", "B", "Branch_2", "Terminator" }, tracker.Invoked);
         }
     }
 }

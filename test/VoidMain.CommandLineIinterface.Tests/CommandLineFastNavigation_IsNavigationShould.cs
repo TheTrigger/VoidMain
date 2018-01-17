@@ -22,9 +22,7 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var navigation = new CommandLineFastNavigation();
-            var lineView = new CommandLineHiddenView();
-            lineView.Type(startValue);
-            lineView.MoveTo(startPos);
+            var lineView = InitView(startValue, startPos);
 
             // Act
             int actualPos = navigation.FindNext(lineView);
@@ -51,15 +49,25 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var navigation = new CommandLineFastNavigation();
-            var lineView = new CommandLineHiddenView();
-            lineView.Type(startValue);
-            lineView.MoveTo(startPos);
+            var lineView = InitView(startValue, startPos);
 
             // Act
             int actualPos = navigation.FindPrev(lineView);
 
             // Assert
             Assert.Equal(expectedPos, actualPos);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private static CommandLineHiddenView InitView(string startValue, int startPos)
+        {
+            var lineView = new CommandLineHiddenView();
+            lineView.Type(startValue);
+            lineView.MoveTo(startPos);
+            return lineView;
         }
 
         #endregion

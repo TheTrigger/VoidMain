@@ -99,19 +99,21 @@ namespace VoidMain.CommandLineIinterface.Tests
         [Fact]
         public void NotUndoMoreThanItHaveSnapshots()
         {
-            // Arrange
+            // Arrange state
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
+            var firstSnapshot = S("S1");
+            var secondSnapshot = S("S2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
             var currentSnapshot = secondSnapshot;
-            var prevSnapshot = S(null);
+            // Current state: S1, [S2]
 
             // Act
-            bool done = manager.TryUndo(currentSnapshot, out prevSnapshot);
+            manager.TryUndo(currentSnapshot, out var prevSnapshot);
             currentSnapshot = prevSnapshot;
-            done = manager.TryUndo(currentSnapshot, out prevSnapshot);
+            // Current state: [S1], S2
+            bool done = manager.TryUndo(currentSnapshot, out prevSnapshot);
+            // Current state: [S1], S2
 
             // Assert
             Assert.False(done);
@@ -122,19 +124,21 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
+            var firstSnapshot = S("S1");
+            var secondSnapshot = S("S2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
             var currentSnapshot = secondSnapshot;
-            var nextSnapshot = S(null);
             manager.TryUndo(currentSnapshot, out var prevSnaoshot);
             currentSnapshot = prevSnaoshot;
+            // Current state: [S1], S2
 
             // Act
-            bool done = manager.TryRedo(currentSnapshot, out nextSnapshot);
+            manager.TryRedo(currentSnapshot, out var nextSnapshot);
             currentSnapshot = nextSnapshot;
-            done = manager.TryRedo(currentSnapshot, out nextSnapshot);
+            // Current state: S1, [S2]
+            bool done = manager.TryRedo(currentSnapshot, out nextSnapshot);
+            // Current state: S1, [S2]
 
             // Assert
             Assert.False(done);
@@ -149,13 +153,16 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var expected = S("snapshot_1");
-            var undoneSnapshot = S("snapshot_2");
+            var expected = S("S1");
+            var undoneSnapshot = S("S2");
             manager.TryAddSnapshot(expected);
+            // Current state: [S1]
 
             // Act
             manager.TryAddSnapshot(undoneSnapshot);
+            // Current state: S1, [S2]
             manager.TryUndo(undoneSnapshot, out var prevSnapshot);
+            // Current state: [S1], S2
 
             // Assert
             Assert.Equal(expected, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
@@ -170,7 +177,7 @@ namespace VoidMain.CommandLineIinterface.Tests
             // Act
             for (int i = 0; i < manager.MaxCount + 1; i++)
             {
-                manager.TryAddSnapshot(S("snapshot_" + i));
+                manager.TryAddSnapshot(S("S" + i));
             }
 
             // Assert
@@ -182,11 +189,13 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var snapshot = S("snapshot_1");
+            var snapshot = S("S1");
             manager.TryAddSnapshot(snapshot);
+            // Current state: [S1]
 
             // Act
             bool added = manager.TryAddSnapshot(snapshot);
+            // Current state: [S1]
 
             // Assert
             Assert.False(added);
@@ -198,14 +207,16 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
+            var firstSnapshot = S("S1");
+            var secondSnapshot = S("S2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
             manager.TryUndo(secondSnapshot, out var _);
+            // Current state: [S1], S2
 
             // Act
             bool added = manager.TryAddSnapshot(firstSnapshot);
+            // Current state: [S1]
 
             // Assert
             Assert.False(added);
@@ -219,16 +230,19 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var undoneSnapshot = S("snapshot_2");
-            var newSnapshot = S("snapshot_3");
+            var firstSnapshot = S("S1");
+            var undoneSnapshot = S("S2");
+            var newSnapshot = S("S3");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(undoneSnapshot);
             manager.TryUndo(undoneSnapshot, out var _);
+            // Current state: [S1], S2
 
             // Act
             manager.TryAddSnapshot(newSnapshot, deleteAfter: true);
+            // Current state: S1, [S3]
             manager.TryUndo(newSnapshot, out var prevSnapshot);
+            // Current state: [S1], S3
 
             // Assert
             Assert.Equal(2, manager.Count);
@@ -240,15 +254,18 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
-            var newSnapshot = S("snapshot_3");
+            var firstSnapshot = S("S1");
+            var secondSnapshot = S("S2");
+            var newSnapshot = S("S3");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
+            // Current state: S1, [S2]
 
             // Act
             manager.TryAddSnapshot(newSnapshot, deleteAfter: true);
+            // Current state: S1, S2, [S3]
             manager.TryUndo(newSnapshot, out var prevSnapshot);
+            // Current state: S1, [S2], S3
 
             // Assert
             Assert.Equal(3, manager.Count);
@@ -260,14 +277,16 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
+            var firstSnapshot = S("S1");
+            var secondSnapshot = S("S2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
-            var changedSnapshot = S("snapshot_3");
+            var changedSnapshot = S("S3");
+            // Current state: S1, [S2]
 
             // Act
             manager.TryUndo(changedSnapshot, out var prevSnapshot);
+            // Current state: S1, [S2], S3
 
             // Assert
             Assert.Equal(3, manager.Count);
@@ -279,15 +298,17 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
+            var firstSnapshot = S("S1");
+            var secondSnapshot = S("S2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
             manager.TryUndo(secondSnapshot, out var _);
-            var changedSnapshot = S("snapshot_3");
+            var changedSnapshot = S("S3");
+            // Current state: [S1], S2
 
             // Act
             manager.TryUndo(changedSnapshot, out var prevSnapshot);
+            // Current state: [S1], S3
 
             // Assert
             Assert.Equal(2, manager.Count);
@@ -299,15 +320,17 @@ namespace VoidMain.CommandLineIinterface.Tests
         {
             // Arrange
             var manager = new UndoRedoManager();
-            var firstSnapshot = S("snapshot_1");
-            var secondSnapshot = S("snapshot_2");
+            var firstSnapshot = S("S1");
+            var secondSnapshot = S("S2");
             manager.TryAddSnapshot(firstSnapshot);
             manager.TryAddSnapshot(secondSnapshot);
             manager.TryUndo(secondSnapshot, out var _);
-            var changedSnapshot = S("snapshot_3");
+            var changedSnapshot = S("S3");
+            // Current state: [S1], S2
 
             // Act
             bool done = manager.TryRedo(changedSnapshot, out var prevSnapshot);
+            // Current state: S1, [S3]
 
             // Assert
             Assert.False(done);

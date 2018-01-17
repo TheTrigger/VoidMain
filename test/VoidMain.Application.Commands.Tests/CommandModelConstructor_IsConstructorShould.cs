@@ -181,7 +181,7 @@ namespace VoidMain.Application.Commands.Tests
 
         private ModuleModel GetModule(Type type)
         {
-            return new ModuleModel();
+            return new ModuleModel() { Type = type };
         }
 
         private MethodInfo GetMethod(Type type, string methodName)
