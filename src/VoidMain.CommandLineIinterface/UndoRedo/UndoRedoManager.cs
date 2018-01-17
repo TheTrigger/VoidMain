@@ -5,12 +5,6 @@ using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.UndoRedo
 {
-    public class UndoRedoOptions
-    {
-        public int? MaxCount { get; set; }
-        public IEqualityComparer<CommandLineViewSnapshot> SnapshotsComparer { get; set; }
-    }
-
     public class UndoRedoManager : IUndoRedoManager
     {
         private readonly IEqualityComparer<CommandLineViewSnapshot> _comparer;
