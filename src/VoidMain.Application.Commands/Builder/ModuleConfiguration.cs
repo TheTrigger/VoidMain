@@ -25,14 +25,14 @@ namespace VoidMain.Application.Commands.Builder
                 var method = call.Method;
                 if (method.DeclaringType != typeof(TModule))
                 {
-                    throw new Exception($"Removed command must be declared " +
-                        $"in the '{typeof(TModule).Name}' type.");
+                    throw new CommandsConfigurationException(
+                        $"Removed command must be declared in the '{typeof(TModule).Name}' type.");
                 }
                 _removed.Add(method);
             }
             else
             {
-                throw new Exception("Expression must be a method call.");
+                throw new CommandsConfigurationException("Expression must be a method call.");
             }
         }
 

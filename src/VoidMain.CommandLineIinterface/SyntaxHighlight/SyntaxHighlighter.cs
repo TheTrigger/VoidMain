@@ -35,7 +35,8 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             {
                 if (highlight.Span.Start < pos)
                 {
-                    throw new Exception("Overlapped spans");
+                    // TODO: Throw specialized exception.
+                    throw new Exception("Overlapped spans.");
                 }
                 pos = highlight.Span.End;
             }
