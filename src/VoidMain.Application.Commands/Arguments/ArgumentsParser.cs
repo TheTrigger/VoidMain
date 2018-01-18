@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using VoidMain.Application.Commands.Model;
 
@@ -10,6 +11,7 @@ namespace VoidMain.Application.Commands.Arguments
         private readonly Type StringType = typeof(string);
 
         private readonly IServiceProvider _services;
+        private readonly IFormatProvider _formatProvider;
         private readonly ICollectionConstructor _arrayCtor;
         private readonly Dictionary<Type, ICollectionConstructor> _colCtors;
 
@@ -17,9 +19,11 @@ namespace VoidMain.Application.Commands.Arguments
         private readonly Dictionary<Type, IValueParser> _standardParsers;
         private readonly Dictionary<Type, IValueParser> _customParsersCache;
 
+
         public ArgumentsParser(IServiceProvider services, ArgumentsParserOptions options = null)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
+            _formatProvider = options?.FormatProvider ?? CultureInfo.CurrentCulture;
             _arrayCtor = options?.ArrayConstructor ?? new ArrayConstructor();
             _colCtors = InitCollectionConstructors(options?.CollectionConstructors);
             _defaultParser = options?.DefaultParser ?? new ChangeTypeValueParser();
@@ -230,7 +234,7 @@ namespace VoidMain.Application.Commands.Arguments
                 for (int i = 0; i < valuesUsed; i++)
                 {
                     string stringValue = stringValues[valuesOffset + i];
-                    var value = parser.Parse(stringValue, valueType);
+                    var value = parser.Parse(stringValue, valueType, _formatProvider);
                     colInit.SetValue(i, value);
                 }
 
@@ -256,7 +260,7 @@ namespace VoidMain.Application.Commands.Arguments
                 }
 
                 var parser = GetParser(argType, arg.ValueParser);
-                var value = parser.Parse(stringValue, argType);
+                var value = parser.Parse(stringValue, argType, _formatProvider);
                 return value;
             }
         }

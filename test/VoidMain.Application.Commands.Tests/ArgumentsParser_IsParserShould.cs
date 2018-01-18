@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using VoidMain.Application.Commands.Arguments;
 using VoidMain.Application.Commands.Model;
 using Xunit;
@@ -70,7 +71,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             int value = 1;
-            var arg = Option<int>("name");
+            var arg = Option<int>("value");
             var options = OptionValues(
                 arg.Name, new[] { value.ToString() },
                 "another", new[] { "a" });
@@ -89,7 +90,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             int value = 1;
-            var arg = Option<int>("name").WithAlias("n");
+            var arg = Option<int>("value").WithAlias("n");
             var options = OptionValues(
                 arg.Alias, new[] { value.ToString() },
                 "another", new[] { "a" });
@@ -107,7 +108,7 @@ namespace VoidMain.Application.Commands.Tests
         {
             // Arrange
             var parser = Parser();
-            var arg = Option<int>("name").IsOptional();
+            var arg = Option<int>("value").IsOptional();
             var options = OptionValues("another", new[] { "a" });
 
             // Act
@@ -123,7 +124,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             int value = 1;
-            var arg = Option<int>("name");
+            var arg = Option<int>("value");
             var options = OptionValues(arg.Name, new[] { "a", "b", value.ToString() });
 
             // Act
@@ -144,7 +145,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             int[] values = { 1, 2 };
-            var arg = Operand<int>("name");
+            var arg = Operand<int>("value");
             string[] operands = { values[0].ToString(), values[1].ToString() };
 
             // Act
@@ -161,8 +162,8 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             int[] values = { 1, 2 };
-            var arg0 = Operand<int>("name1");
-            var arg1 = Operand<int>("name2");
+            var arg0 = Operand<int>("value1");
+            var arg1 = Operand<int>("value2");
             string[] operands = { values[0].ToString(), values[1].ToString() };
 
             // Act
@@ -182,7 +183,7 @@ namespace VoidMain.Application.Commands.Tests
         {
             // Arrange
             var parser = Parser();
-            var arg = Operand<int>("name").IsOptional();
+            var arg = Operand<int>("value").IsOptional();
 
             // Act
             var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
@@ -197,7 +198,7 @@ namespace VoidMain.Application.Commands.Tests
         {
             // Arrange
             var parser = Parser();
-            var arg = Operand<int>("name").IsOptional(false);
+            var arg = Operand<int>("value").IsOptional(false);
 
             // Act, Assert
             Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands));
@@ -209,7 +210,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             int defaultValue = 11;
-            var arg = Operand<int>("name").HasDefaultValue(defaultValue);
+            var arg = Operand<int>("value").HasDefaultValue(defaultValue);
 
             // Act
             var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
@@ -227,7 +228,7 @@ namespace VoidMain.Application.Commands.Tests
             int[] defaultValue = { 1, 2, 3 };
             int[] unmodified = { 1, 2, 3 };
             int[] modified = { 5, 2, 3 };
-            var arg = Operand<int[]>("name").HasDefaultValue(defaultValue);
+            var arg = Operand<int[]>("value").HasDefaultValue(defaultValue);
 
             // Act
             var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
@@ -244,7 +245,7 @@ namespace VoidMain.Application.Commands.Tests
         {
             // Arrange
             var parser = Parser();
-            var arg = Operand<int>("name").HasDefaultValue(new string[0]);
+            var arg = Operand<int>("value").HasDefaultValue(new string[0]);
 
             // Act, Assert
             Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands));
@@ -255,7 +256,7 @@ namespace VoidMain.Application.Commands.Tests
         {
             // Arrange
             var parser = Parser();
-            var arg = Operand<int>("name").HasDefaultValue(new double[0]);
+            var arg = Operand<int>("value").HasDefaultValue(new double[0]);
 
             // Act, Assert
             Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands));
@@ -273,7 +274,7 @@ namespace VoidMain.Application.Commands.Tests
             string[] operands = { "a", "b", "c" };
             string[] unmodified = { "a", "b", "c" };
             string[] modified = { "X", "b", "c" };
-            var arg = Operand<string[]>("name");
+            var arg = Operand<string[]>("value");
 
             // Act
             var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
@@ -292,7 +293,7 @@ namespace VoidMain.Application.Commands.Tests
             var parser = Parser();
             string[] operands = { "1", "2", "3" };
             int[] expected = { 1, 2, 3 };
-            var arg = Operand<int[]>("name");
+            var arg = Operand<int[]>("value");
 
             // Act
             var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
@@ -309,7 +310,7 @@ namespace VoidMain.Application.Commands.Tests
             var parser = Parser();
             string[] operands = { "1", "2", "3" };
             var expected = new List<int>(new[] { 1, 2, 3 });
-            var arg = Operand<List<int>>("name");
+            var arg = Operand<List<int>>("value");
 
             // Act
             var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
@@ -325,7 +326,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             string[] operands = { "a" };
-            var arg = Operand<string>("name");
+            var arg = Operand<string>("value");
 
             // Act
             var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
@@ -341,7 +342,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             int value = 1;
-            var arg = Operand<int>("name");
+            var arg = Operand<int>("value");
             string[] operands = { value.ToString() };
 
             // Act
@@ -354,13 +355,36 @@ namespace VoidMain.Application.Commands.Tests
 
         #endregion
 
+        #region FormatProvider tests
+
+        [Theory]
+        [InlineData(3.14, "en-US")]
+        [InlineData(3.14, "ru-RU")]
+        public void ParseDoubleValuesWithDifferentDecimalSeparator(double value, string culture)
+        {
+            // Arrange
+            var cultureInfo = new CultureInfo(culture);
+            var parser = Parser(new ArgumentsParserOptions { FormatProvider = cultureInfo });
+            var arg = Operand<double>("value");
+            string[] operands = { value.ToString(cultureInfo) };
+
+            // Act
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+
+            // Assert
+            Assert.IsAssignableFrom(arg.Type, parsed[0]);
+            Assert.Equal(value, (double)parsed[0]);
+        }
+
+        #endregion
+
         #region Helpers
 
-        private static ArgumentsParser Parser()
+        private static ArgumentsParser Parser(ArgumentsParserOptions options = null)
         {
             var collection = new ServiceCollection();
             var services = collection.BuildServiceProvider();
-            return new ArgumentsParser(services);
+            return new ArgumentsParser(services, options);
         }
 
         private static ArgumentsParser ParserWithServices()

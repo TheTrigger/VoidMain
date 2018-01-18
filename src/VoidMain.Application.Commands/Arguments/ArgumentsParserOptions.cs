@@ -5,6 +5,7 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public class ArgumentsParserOptions
     {
+        public IFormatProvider FormatProvider { get; set; }
         public ICollectionConstructor ArrayConstructor { get; set; }
         public Dictionary<Type, ICollectionConstructor> CollectionConstructors { get; set; }
         public IValueParser DefaultParser { get; set; }

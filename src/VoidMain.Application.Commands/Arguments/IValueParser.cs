@@ -4,6 +4,6 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public interface IValueParser
     {
-        object Parse(string text, Type valueType);
+        object Parse(string text, Type valueType, IFormatProvider provider);
     }
 }
