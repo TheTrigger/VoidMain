@@ -28,8 +28,7 @@ Almost every part of the framework can be extended or replaced.
   - Expression trees
 - Commands execution
   - Command resolver
-  - Value parsers
-  - Arguments binder
+  - Arguments parsers **(done)**
 - Standard commands
   - Help commands
   - Version command
@@ -127,6 +126,11 @@ public void ConfigureServices(IServiceCollection services)
     services.AddCommands();
 }
 ```
+
+## Known issues
+
+- **Application closes instead of canceling the current operation after pressing `Ctrl+C` if it was started with `dotnet run`.**<br>This is due to the [issue](https://github.com/dotnet/cli/issues/812) in the .NET CLI. Use `dotnet publish` and run the compiled executable instead.
+- **Command line reader is not working on Linux as expected (at all).**<br>Terminal is working differently than the Windows console. .NET team tried to make a `Console` API to behave the same way on all platforms with many hacks and compromises, but it is still have differences and bugs. `PowerShell` have some native calls to make it work on Linux. I hope, someday I can make it work too.
 
 ## License
 MIT License. See LICENSE file for more details.
