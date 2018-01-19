@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Builder;
@@ -9,15 +8,17 @@ namespace VoidMain.Hosting
 {
     public class CommandsHost : ICommandsHost
     {
-        private IServiceCollection _serviceCollection;
-        private IServiceProvider _appServices;
+        private IServiceProvider _services;
         private ICommandLineIinterface _cli;
         private CommandDelegate _app;
         private bool _isDisposed;
 
-        public CommandsHost(IServiceCollection serviceCollection)
+        public CommandsHost(IServiceProvider services,
+            ICommandLineIinterface cli, CommandDelegate app)
         {
-            _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _cli = cli ?? throw new ArgumentNullException(nameof(cli));
+            _app = app ?? throw new ArgumentNullException(nameof(app));
             _isDisposed = false;
         }
 
@@ -25,7 +26,6 @@ namespace VoidMain.Hosting
         {
             token.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            EnsureApplicationBuilt();
             await _cli.StartAsync(_app, token).ConfigureAwait(false);
         }
 
@@ -40,47 +40,6 @@ namespace VoidMain.Hosting
             return _cli.WaitForShutdownAsync(token);
         }
 
-        public void EnsureApplicationBuilt()
-        {
-            if (_app != null && _cli != null)
-            {
-                return;
-            }
-
-            try
-            {
-                var hostServices = _serviceCollection.BuildServiceProvider();
-
-                var startup = hostServices.GetService<IStartupWithCustomDI>();
-                if (startup == null)
-                {
-                    var startupWithDefaultDI = hostServices.GetRequiredService<IStartup>();
-                    startup = new StartupWithDefaultDI(startupWithDefaultDI);
-                }
-
-                (hostServices as IDisposable)?.Dispose();
-
-                _appServices = startup.ConfigureServices(_serviceCollection);
-                var appBuilder = _appServices.GetRequiredService<IApplicationBuilder>();
-                startup.ConfigureApplication(appBuilder);
-
-                _app = appBuilder.Build();
-                _cli = _appServices.GetRequiredService<ICommandLineIinterface>();
-
-                // We don't need this anymore because the host can be initialized only once.
-                (_serviceCollection as IDisposable)?.Dispose();
-                _serviceCollection = null;
-            }
-            catch
-            {
-                (_appServices as IDisposable)?.Dispose();
-                _appServices = null;
-                _app = null;
-                _cli = null;
-                throw;
-            }
-        }
-
         private void ThrowIfDisposed()
         {
             if (_isDisposed)
@@ -92,8 +51,7 @@ namespace VoidMain.Hosting
         public void Dispose()
         {
             _isDisposed = true;
-            (_serviceCollection as IDisposable)?.Dispose();
-            (_appServices as IDisposable)?.Dispose();
+            (_services as IDisposable)?.Dispose();
         }
     }
 }

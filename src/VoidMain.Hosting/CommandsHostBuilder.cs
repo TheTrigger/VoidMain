@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using VoidMain.Application.Builder;
+using VoidMain.CommandLineIinterface;
 
 namespace VoidMain.Hosting
 {
@@ -32,8 +33,39 @@ namespace VoidMain.Hosting
         public ICommandsHost Build()
         {
             var serviceCollection = ConfigureAllServices();
-            var host = new CommandsHost(serviceCollection);
-            return host;
+
+            IServiceProvider hostServices = null;
+            IServiceProvider services = null;
+            try
+            {
+                hostServices = serviceCollection.BuildServiceProvider();
+
+                var startup = hostServices.GetService<IStartupWithCustomDI>();
+                if (startup == null)
+                {
+                    var startupWithDefaultDI = hostServices.GetRequiredService<IStartup>();
+                    startup = new StartupWithDefaultDI(startupWithDefaultDI);
+                }
+
+                services = startup.ConfigureServices(serviceCollection);
+                var appBuilder = services.GetRequiredService<IApplicationBuilder>();
+                startup.ConfigureApplication(appBuilder);
+
+                var app = appBuilder.Build();
+                var cli = services.GetRequiredService<ICommandLineIinterface>();
+
+                var host = new CommandsHost(services, cli, app);
+                return host;
+            }
+            catch
+            {
+                (services as IDisposable)?.Dispose();
+                throw;
+            }
+            finally
+            {
+                (hostServices as IDisposable)?.Dispose();
+            }
         }
 
         private IServiceCollection ConfigureAllServices()
