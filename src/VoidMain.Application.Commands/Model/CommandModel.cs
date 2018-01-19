@@ -8,7 +8,7 @@ namespace VoidMain.Application.Commands.Model
     {
         public MethodInfo Method { get; set; }
         public IReadOnlyList<ArgumentModel> Arguments { get; set; }
-        public string Name { get; set; }
+        public CommandName Name { get; set; }
         public string Description { get; set; }
         public ModuleModel Module { get; set; }
 

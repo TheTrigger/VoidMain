@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using VoidMain.Application.Builder;
+using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
 using VoidMain.Hosting;
 
@@ -44,6 +45,7 @@ namespace SimpleApp
         }
     }
 
+    [Module(Name = "")]
     public class GreetingsModule
     {
         public void Hello(string name)

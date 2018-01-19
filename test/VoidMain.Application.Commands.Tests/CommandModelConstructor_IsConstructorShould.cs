@@ -130,21 +130,24 @@ namespace VoidMain.Application.Commands.Tests
         #region Name tests
 
         [Theory]
-        [InlineData(typeof(SignatureModule), nameof(SignatureModule.Command), nameof(SignatureModule.Command))]
-        [InlineData(typeof(EmptyAttributesModule), nameof(EmptyAttributesModule.Command), nameof(EmptyAttributesModule.Command))]
-        [InlineData(typeof(AttributesModule), nameof(AttributesModule.Command), AttributesModule.CommandName)]
-        public void InitializeName(Type moduleType, string methodName, string commandName)
+        [InlineData(typeof(SignatureModule), nameof(SignatureModule.Command), "Signature", nameof(SignatureModule.Command))]
+        [InlineData(typeof(EmptyAttributesModule), nameof(EmptyAttributesModule.Command), "EmptyAttributes", nameof(EmptyAttributesModule.Command))]
+        [InlineData(typeof(AttributesModule), nameof(AttributesModule.Command), AttributesModule.ModuleName, AttributesModule.CommandName)]
+        [InlineData(typeof(SignatureModule), nameof(SignatureModule.Command), "", nameof(SignatureModule.Command))]
+        public void InitializeName(Type moduleType, string methodName, string moduleName, string commandName)
         {
             // Arrange
             var ctor = NewCommandModelConstructor();
             var module = GetModule(moduleType);
+            module.Name = moduleName;
             var method = GetMethod(moduleType, methodName);
+            var name = CommandName.Parse(moduleName + " " + commandName);
 
             // Act
             var command = ctor.Create(method, module);
 
             // Assert
-            Assert.Equal(commandName, command.Name);
+            Assert.Equal(name, command.Name, Comparer);
         }
 
         #endregion
@@ -171,6 +174,11 @@ namespace VoidMain.Application.Commands.Tests
 
         #region Helpers
 
+        private static readonly CommandNameComparer Comparer
+            = new CommandNameComparer(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly IModuleModelConstructor ModuleConstructor
+            = new ModuleModelConstructor();
+
         private CommandModelConstructor NewCommandModelConstructor()
         {
             var ctor = new Mock<IArgumentModelConstructor>();
@@ -196,12 +204,14 @@ namespace VoidMain.Application.Commands.Tests
             public void Command(string value) { }
         }
 
+        [Module(Name = ModuleName)]
         public class AttributesModule
         {
             [Command(Name = CommandName, Description = CommandDescription)]
             public void Command(string value) { }
 
-            public const string CommandName = "Name";
+            public const string ModuleName = "ModuleName";
+            public const string CommandName = "CommandName";
             public const string CommandDescription = "Description";
         }
 

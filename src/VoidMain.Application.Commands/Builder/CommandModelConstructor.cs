@@ -30,16 +30,23 @@ namespace VoidMain.Application.Commands.Builder
             command.Method = method;
             command.Module = module;
 
+            string name = null;
             var attr = method.GetCustomAttribute<CommandAttribute>();
             if (attr == null)
             {
-                command.Name = method.Name;
+                name = method.Name;
             }
             else
             {
-                command.Name = attr.Name ?? method.Name;
+                name = attr.Name ?? method.Name;
                 command.Description = attr.Description;
             }
+
+            if (!String.IsNullOrWhiteSpace(module.Name))
+            {
+                name = module.Name + " " + name;
+            }
+            command.Name = CommandName.Parse(name);
 
             var parameters = method.GetParameters();
             var arguments = new ArgumentModel[parameters.Length];
