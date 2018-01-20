@@ -92,6 +92,19 @@ namespace VoidMain.Application.Commands.Arguments
             IReadOnlyList<ArgumentModel> argsModel,
             Dictionary<string, string[]> options, string[] operands)
         {
+            if (argsModel == null)
+            {
+                throw new ArgumentNullException(nameof(argsModel));
+            }
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            if (operands == null)
+            {
+                throw new ArgumentNullException(nameof(operands));
+            }
+
             var values = new object[argsModel.Count];
             int operandsOffset = 0;
 

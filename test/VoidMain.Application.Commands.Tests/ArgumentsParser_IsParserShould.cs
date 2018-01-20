@@ -20,6 +20,31 @@ namespace VoidMain.Application.Commands.Tests
 
         #endregion
 
+        #region Valid parameters
+
+        [Fact]
+        public void RequireValidArgumentsModel()
+        {
+            var parser = Parser();
+            Assert.Throws<ArgumentNullException>(() => parser.Parse(null, EmptyOptions, EmptyOperands));
+        }
+
+        [Fact]
+        public void RequireValidOptions()
+        {
+            var parser = Parser();
+            Assert.Throws<ArgumentNullException>(() => parser.Parse(Model(), null, EmptyOperands));
+        }
+
+        [Fact]
+        public void RequireValidOperands()
+        {
+            var parser = Parser();
+            Assert.Throws<ArgumentNullException>(() => parser.Parse(Model(), EmptyOptions, null));
+        }
+
+        #endregion
+
         #region Services tests
 
         [Fact]
