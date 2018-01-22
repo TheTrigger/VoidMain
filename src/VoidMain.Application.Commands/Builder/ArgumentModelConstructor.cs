@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 
 namespace VoidMain.Application.Commands.Builder
@@ -15,7 +16,7 @@ namespace VoidMain.Application.Commands.Builder
             argument.Type = paramType;
 
             var attr = parameter.GetCustomAttribute<ParameterAttribute>();
-            bool isNullableOrParams = IsNullableType(paramType) ||
+            bool isNullableOrParams = paramType.IsNullable() ||
                 parameter.IsDefined(typeof(ParamArrayAttribute));
 
             if (attr == null)
@@ -45,16 +46,6 @@ namespace VoidMain.Application.Commands.Builder
             }
 
             return argument;
-        }
-
-        private static bool IsNullableType(Type type)
-        {
-            if (!type.GetTypeInfo().IsValueType)
-            {
-                return false;
-            }
-
-            return Nullable.GetUnderlyingType(type) != null;
         }
 
         private ArgumentKind GetKindFromType(Type paramType)
@@ -90,10 +81,8 @@ namespace VoidMain.Application.Commands.Builder
         private object GetDefaultValue(ParameterInfo parameter)
         {
             var value = parameter.DefaultValue;
-            if (value?.GetType().FullName == "System.DBNull")
-            {
-                return null;
-            }
+            if (ReferenceEquals(value, null)) return value;
+            if (value.GetType().IsDbNull()) return null;
             return value;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 
 namespace VoidMain.Application.Commands.Builder
@@ -7,14 +8,10 @@ namespace VoidMain.Application.Commands.Builder
     public class CommandModelConstructor : ICommandModelConstructor
     {
         private readonly IArgumentModelConstructor _argumentConstructor;
-        private readonly TypeInfo DisposableType;
-        private readonly string DisposableName;
 
         public CommandModelConstructor(IArgumentModelConstructor argumentConstructor)
         {
             _argumentConstructor = argumentConstructor ?? throw new ArgumentNullException(nameof(argumentConstructor));
-            DisposableType = typeof(IDisposable).GetTypeInfo();
-            DisposableName = nameof(IDisposable.Dispose);
         }
 
         public bool IsCommand(MethodInfo method, ModuleModel module)
@@ -107,12 +104,12 @@ namespace VoidMain.Application.Commands.Builder
                 return "The command must not be a compile generated method.";
             }
 
-            if (IsObjectBaseClassMethod(method))
+            if (method.IsObjectBaseClassMethod())
             {
                 return "The command must not be one of the object's base methods.";
             }
 
-            if (IsDisposeMethod(method))
+            if (method.IsDisposeMethod())
             {
                 return "The command must not be the IDisposable.Dispose method.";
             }
@@ -123,17 +120,6 @@ namespace VoidMain.Application.Commands.Builder
             }
 
             return null;
-        }
-
-        private bool IsObjectBaseClassMethod(MethodInfo method)
-        {
-            return method.GetBaseDefinition().DeclaringType == typeof(Object);
-        }
-
-        private bool IsDisposeMethod(MethodInfo method)
-        {
-            return method.Name == DisposableName
-                && DisposableType.IsAssignableFrom(method.DeclaringType);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 
 namespace VoidMain.Application.Commands.Arguments
@@ -180,7 +181,7 @@ namespace VoidMain.Application.Commands.Arguments
                     // TODO: Or prompt value.
                 }
 
-                var argType = arg.Type;
+                var argType = UnwrapIfNullable(arg.Type);
                 var defaultValueType = defaultValue.GetType();
 
                 if (argType == defaultValueType)
@@ -240,8 +241,9 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 valuesUsed = stringValues.Length - valuesOffset;
 
-                var valueType = colCtor.GetElementType(argType);
-                var colInit = colCtor.Create(valueType, valuesUsed);
+                var elemType = colCtor.GetElementType(argType); // Use for collection
+                var valueType = UnwrapIfNullable(elemType); // Use for parser
+                var colInit = colCtor.Create(elemType, valuesUsed);
                 var parser = GetParser(valueType, arg.ValueParser);
 
                 for (int i = 0; i < valuesUsed; i++)
@@ -272,8 +274,9 @@ namespace VoidMain.Application.Commands.Arguments
                     return stringValue;
                 }
 
-                var parser = GetParser(argType, arg.ValueParser);
-                var value = parser.Parse(stringValue, argType, _formatProvider);
+                var valueType = UnwrapIfNullable(argType);
+                var parser = GetParser(valueType, arg.ValueParser);
+                var value = parser.Parse(stringValue, valueType, _formatProvider);
                 return value;
             }
         }
@@ -285,6 +288,15 @@ namespace VoidMain.Application.Commands.Arguments
                 return Activator.CreateInstance(type);
             }
             return null;
+        }
+
+        private Type UnwrapIfNullable(Type type)
+        {
+            if (type.IsNullable())
+            {
+                return Nullable.GetUnderlyingType(type);
+            }
+            return type;
         }
 
         private Array CopyArray(Array source, int offset, int length)
