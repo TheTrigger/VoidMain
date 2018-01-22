@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using VoidMain.Application.Builder;
 using VoidMain.CommandLineIinterface.Internal;
 using VoidMain.CommandLineIinterface.IO;
+using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.IO.Console.Internal;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
@@ -14,23 +15,23 @@ namespace VoidMain.CommandLineIinterface.Console
     public class ConsoleInterface : ICommandLineIinterface
     {
         private readonly IConsole _console;
+        private readonly ConsoleOutputLock _outputLock;
         private readonly ICommandLinePrompt _prompt;
         private readonly ICommandLineReader _reader;
         private readonly ICommandLineParser _parser;
-        private readonly ConsoleLockingOutput _output;
         private readonly ContextCreationHelper _contextHelper;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
 
-        public ConsoleInterface(IConsole console, ICommandLineReader reader,
-            ICommandLineParser parser, ICommandLinePrompt prompt = null)
+        public ConsoleInterface(IConsole console, ConsoleOutputLock outputLock,
+            ICommandLineReader reader, ICommandLineParser parser, ICommandLinePrompt prompt = null)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
+            _outputLock = outputLock ?? throw new ArgumentNullException(nameof(outputLock));
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _prompt = prompt;
-            _output = new ConsoleLockingOutput(console);
             _contextHelper = new ContextCreationHelper();
             _cliLoopTokenSource = new CancellationTokenSource();
             _cliLoop = null;
@@ -95,7 +96,7 @@ namespace VoidMain.CommandLineIinterface.Console
                 {
                     try
                     {
-                        _output.LockForRead();
+                        _outputLock.Lock();
                         commandLine = await _reader.ReadLineAsync(_prompt, consoleTokenSource.Token)
                             .ConfigureAwait(false);
                     }
@@ -124,7 +125,7 @@ namespace VoidMain.CommandLineIinterface.Console
                     }
                     finally
                     {
-                        _output.Unlock();
+                        _outputLock.Unlock();
                     }
 
                     // Reset the flag after a succesfull reading.
@@ -144,7 +145,6 @@ namespace VoidMain.CommandLineIinterface.Console
 
                         var context = new Dictionary<string, object>();
                         _contextHelper.UseContext(context)
-                            .SetOutput(_output)
                             .SetCancellation(consoleTokenSource.Token)
                             .SetRawCommandLine(commandLine)
                             .SetParsedCommandLine(parsedCommandLine);

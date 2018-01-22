@@ -8,6 +8,5 @@
         public static readonly string CommandOptions = Namespace + "CommandOptions";
         public static readonly string CommandOperands = Namespace + "CommandOperands";
         public static readonly string CommandCanceled = Namespace + "CommandCanceled";
-        public static readonly string Output = Namespace + "Output";
     }
 }

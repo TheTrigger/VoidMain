@@ -3,6 +3,7 @@ using System;
 using System.Text;
 using VoidMain.Application.Builder;
 using VoidMain.Application.Commands.Builder;
+using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.History;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
@@ -94,9 +95,9 @@ namespace AdvancedApp
 
     public class GreetingsModule
     {
-        public void Hello(string name)
+        public void Hello(ICommandLineOutput output, string name)
         {
-            Console.WriteLine($"Hello, {name}!");
+            output.WriteLine($"Hello, {name}!");
         }
 
         public void RemovedCommand() { }

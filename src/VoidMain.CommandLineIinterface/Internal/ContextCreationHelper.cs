@@ -28,12 +28,6 @@ namespace VoidMain.CommandLineIinterface.Internal
             return this;
         }
 
-        public ContextCreationHelper SetOutput(ICommandLineOutput output)
-        {
-            _context[ContextKey.Output] = output;
-            return this;
-        }
-
         public ContextCreationHelper SetCancellation(CancellationToken token)
         {
             _context[ContextKey.CommandCanceled] = token;

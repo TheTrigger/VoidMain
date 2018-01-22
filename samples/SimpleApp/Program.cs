@@ -3,6 +3,7 @@ using System;
 using VoidMain.Application.Builder;
 using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
+using VoidMain.CommandLineIinterface;
 using VoidMain.Hosting;
 
 namespace SimpleApp
@@ -48,9 +49,9 @@ namespace SimpleApp
     [Module(Name = "")]
     public class GreetingsModule
     {
-        public void Hello(string name)
+        public void Hello(ICommandLineOutput output, string name)
         {
-            Console.WriteLine($"Hello, {name}!");
+            output.WriteLine($"Hello, {name}!");
         }
     }
 }

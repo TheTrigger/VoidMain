@@ -20,6 +20,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddSingleton<ICommandLineIinterface, ConsoleInterface>();
 
+            services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
+            services.AddSingleton<ConsoleOutputLock>();
+
             var cursorType = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? typeof(CmdCursor)
                 : typeof(TerminalCursor);
