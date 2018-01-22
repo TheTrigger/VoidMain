@@ -1,124 +1,85 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using VoidMain.Application.Commands.Arguments;
+using VoidMain.Application.Commands.Execution;
 using VoidMain.Application.Commands.Model;
-using VoidMain.CommandLineIinterface;
+using VoidMain.Application.Commands.Resolving;
 using VoidMain.Hosting;
 
 namespace VoidMain.Application.Commands
 {
     public class CommandsApplication : ICommandsApplication
     {
-        private readonly IServiceProvider _services;
-        private readonly ApplicationModel _appModel;
-        private readonly StringComparer _comparerComparer;
+        private readonly Dictionary<string, string[]> EmptyOptions = new Dictionary<string, string[]>();
+        private readonly string[] EmptyOperands = new string[0];
 
-        public CommandsApplication(IServiceProvider services, ApplicationModel appModel)
+        private readonly IServiceProvider _services;
+        private readonly ICommandResolver _commandResolver;
+        private readonly IArgumentsParser _argumentsParser;
+        private readonly ICommandExecutor _commandExecutor;
+        private readonly ApplicationModel _appModel;
+
+        public CommandsApplication(IServiceProvider services, ICommandResolver commandResolver,
+            IArgumentsParser argumentsParser, ICommandExecutor commandExecutor,
+            ApplicationModel appModel)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
+            _commandResolver = commandResolver ?? throw new ArgumentNullException(nameof(commandResolver));
+            _argumentsParser = argumentsParser ?? throw new ArgumentNullException(nameof(argumentsParser));
+            _commandExecutor = commandExecutor ?? throw new ArgumentNullException(nameof(commandExecutor));
             _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
-            _comparerComparer = StringComparer.OrdinalIgnoreCase;
         }
 
         public async Task ExecuteCommand(Dictionary<string, object> context)
         {
-            var commandLine = (string)context[ContextKey.CommandLine];
-            var token = (CancellationToken)context[ContextKey.CommandCanceled];
-            var output = (ICommandLineOutput)context[ContextKey.Output];
+            var token = GetCancellationToken(context);
+            var options = GetOptions(context);
+            var operands = GetOperands(context);
+            token.ThrowIfCancellationRequested();
 
-            bool handled = HandleQuitCommand(context);
-            if (handled) return;
-
-            PrintCommandDetails(context, output);
-
-            output.Write("Executing command");
-
-            for (int i = 0; i < 3; i++)
+            using (var scope = _services.CreateScope())
             {
-                output.Write('.');
-                await Task.Delay(1000, token);
-            }
+                var command = _commandResolver.Resolve(context, _appModel.Commands);
+                var arguments = _argumentsParser.Parse(command.Arguments, options, operands);
 
-            output.WriteLine("\nDone\n");
+                token.ThrowIfCancellationRequested();
+
+                await _commandExecutor.ExecuteAsync(command, arguments, scope.ServiceProvider, token);
+            }
         }
 
-        // TODO: Replace with proper commands.
-        private bool HandleQuitCommand(Dictionary<string, object> context)
+        private CancellationToken GetCancellationToken(Dictionary<string, object> context)
         {
-            var commandName = (string[])context[ContextKey.CommandName];
-            if (commandName == null || commandName.Length == 0) return false;
-
-            bool isQuitCommand = _comparerComparer.Equals(commandName[0], "q")
-                || _comparerComparer.Equals(commandName[0], "quit");
-            if (!isQuitCommand) return false;
-
-#pragma warning disable CS4014 // Do not await it because app will wait until this method is over.
-            var app = _services.GetRequiredService<ICommandLineIinterface>();
-            app.StopAsync().ContinueWith(t => { /* TODO: Log error. */ }, TaskContinuationOptions.OnlyOnFaulted);
-#pragma warning restore CS4014
-
-            return true;
+            if (context.TryGetValue(ContextKey.CommandCanceled, out var value))
+            {
+                return (CancellationToken)value;
+            }
+            return CancellationToken.None;
         }
 
-        private void PrintCommandDetails(
-            Dictionary<string, object> context, ICommandLineOutput output)
+        private Dictionary<string, string[]> GetOptions(Dictionary<string, object> context)
         {
-            output.WriteLine("Command info");
-            output.WriteLine("============");
+            if (context.TryGetValue(ContextKey.CommandOptions, out var value))
+            {
+                return (Dictionary<string, string[]>)value;
+            }
+            if (EmptyOptions.Count > 0)
+            {
+                EmptyOptions.Clear();
+            }
+            return EmptyOptions;
+        }
 
-            output.WriteLine("Command name:");
-            var commandName = (string[])context[ContextKey.CommandName];
-            if (commandName == null || commandName.Length == 0)
+        private string[] GetOperands(Dictionary<string, object> context)
+        {
+            if (context.TryGetValue(ContextKey.CommandOperands, out var value))
             {
-                output.WriteLine("\t---");
+                return (string[])value;
             }
-            else
-            {
-                foreach (var name in commandName)
-                {
-                    output.Write('\t');
-                    output.WriteLine(name);
-                }
-            }
-
-            output.WriteLine("Options:");
-            var options = (Dictionary<string, string[]>)context[ContextKey.CommandOptions];
-            if (options == null || options.Count == 0)
-            {
-                output.WriteLine("\t---");
-            }
-            else
-            {
-                foreach (var option in options)
-                {
-                    string values = option.Value.Length == 1
-                           ? option.Value[0] ?? "<NULL>"
-                           : "[" + String.Join(", ", option.Value.Select(_ => _ ?? "<NULL>")) + "]";
-
-                    output.Write('\t');
-                    output.Write(option.Key);
-                    output.Write(": ");
-                    output.WriteLine(values);
-                }
-            }
-
-            output.WriteLine("Operands:");
-            var operands = (string[])context[ContextKey.CommandOperands];
-            if (operands == null || operands.Length == 0)
-            {
-                output.WriteLine("\t---");
-            }
-            else
-            {
-                foreach (var operand in operands)
-                {
-                    output.Write('\t');
-                    output.WriteLine(operand ?? "<NULL>");
-                }
-            }
+            return EmptyOperands;
         }
     }
 }

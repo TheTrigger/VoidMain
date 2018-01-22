@@ -28,9 +28,9 @@ namespace VoidMain.Application.Commands.Resolving
         {
             if (String.IsNullOrWhiteSpace(message))
             {
-                return $"Command '{commandName}' is not found.";
+                return $"Command '{commandName}' was not found.";
             }
-            return $"Command '{commandName}' is not found: {message}";
+            return $"Command '{commandName}' was not found: {message}";
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace VoidMain.Application.Commands.Model
+﻿namespace VoidMain.Application.Commands.Model
 {
     public class ApplicationModel
     {
-        public List<ModuleModel> Modules { get; set; }
+        public CommandsCollection Commands { get; set; }
     }
 }

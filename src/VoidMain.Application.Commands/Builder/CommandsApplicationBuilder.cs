@@ -93,11 +93,10 @@ namespace VoidMain.Application.Commands.Builder
 
         public ICommandsApplication Build()
         {
-            var appModel = new ApplicationModel
-            {
-                Modules = _modules.Values.ToList()
-            };
-            return new CommandsApplication(_services, appModel);
+            var appModel = _services.GetRequiredService<ApplicationModel>();
+            appModel.Commands = new CommandsCollection(_modules.Values.SelectMany(_ => _.Commands));
+            var app = ActivatorUtilities.CreateInstance<CommandsApplication>(_services, Type.EmptyTypes);
+            return app;
         }
     }
 }
