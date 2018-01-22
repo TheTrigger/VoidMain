@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Commands.Model;
+using VoidMain.CommandLineIinterface;
 
 namespace VoidMain.Application.Commands.Execution
 {
@@ -39,6 +41,11 @@ namespace VoidMain.Application.Commands.Execution
 
             try
             {
+                if (moduleInstance is ICommandsModule standard)
+                {
+                    standard.Output = services.GetRequiredService<ICommandLineOutput>();
+                }
+
                 var invoker = _invokerProvider.GetInvoker(method);
                 var result = await invoker.Invoke(moduleInstance, method, arguments)
                     .ConfigureAwait(false);

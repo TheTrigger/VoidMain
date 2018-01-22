@@ -66,9 +66,9 @@ class Program : IStartup
     }
 }
 
-public class GreetingsModule : Module
+public class GreetingsModule : CommandsModule
 {
-    public void Hello(string name)
+    public void Hello([Operand] string name)
     {
         Output.WriteLine($"Hello, {name}!");
     }
@@ -80,7 +80,11 @@ public class GreetingsModule : Module
 CMD> greetings hello world
 ```
 
-You can get rid of `greetings` if you set the module name to an empty string like this: `[Module(Name = "")]`
+You can get rid of `greetings` command name if you set the module name to an empty string like this:
+```csharp
+[Module(Name = "")]
+public class GreetingsModule : CommandsModule { }
+```
 ```
 CMD> hello world
 ```

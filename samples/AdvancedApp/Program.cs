@@ -2,8 +2,8 @@
 using System;
 using System.Text;
 using VoidMain.Application.Builder;
+using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
-using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.History;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
@@ -94,11 +94,11 @@ namespace AdvancedApp
         }
     }
 
-    public class GreetingsModule
+    public class GreetingsModule : CommandsModule
     {
-        public void Hello(ICommandLineOutput output, string name)
+        public void Hello([Operand] string name)
         {
-            output.WriteLine($"Hello, {name}!");
+            Output.WriteLine($"Hello, {name}!");
         }
 
         public void RemovedCommand() { }
