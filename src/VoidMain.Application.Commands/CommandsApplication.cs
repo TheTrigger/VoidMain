@@ -47,7 +47,9 @@ namespace VoidMain.Application.Commands
 
                 token.ThrowIfCancellationRequested();
 
-                await _commandExecutor.ExecuteAsync(command, arguments, scope.ServiceProvider, token);
+                await _commandExecutor.ExecuteAsync(
+                    command, arguments, scope.ServiceProvider, token)
+                    .ConfigureAwait(false);
             }
         }
 

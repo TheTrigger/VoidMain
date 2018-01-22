@@ -7,7 +7,8 @@ namespace VoidMain.Application.Commands.Execution
     {
         public async Task<object> Invoke(object instance, MethodInfo method, object[] arguments)
         {
-            await (Task)method.Invoke(instance, arguments);
+            await ((Task)method.Invoke(instance, arguments))
+                .ConfigureAwait(false);
             return null;
         }
     }

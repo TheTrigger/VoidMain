@@ -8,7 +8,7 @@ namespace VoidMain.Application.Commands.Execution
         public async Task<object> Invoke(object instance, MethodInfo method, object[] arguments)
         {
             var task = (Task)method.Invoke(instance, arguments);
-            await task;
+            await task.ConfigureAwait(false);
 
             var resultProperty = task.GetType().GetTypeInfo()
                 .GetProperty(nameof(Task<object>.Result));

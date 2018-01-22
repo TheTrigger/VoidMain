@@ -40,7 +40,8 @@ namespace VoidMain.Application.Commands.Execution
             try
             {
                 var invoker = _invokerProvider.GetInvoker(method);
-                var result = await invoker.Invoke(moduleInstance, method, arguments);
+                var result = await invoker.Invoke(moduleInstance, method, arguments)
+                    .ConfigureAwait(false);
                 return result;
             }
             finally
