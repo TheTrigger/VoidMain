@@ -31,6 +31,7 @@ namespace SimpleApp
         {
             app.RunCommands(commands =>
             {
+                commands.AddStandardCommands();
                 commands.AddModule<GreetingsModule>();
             });
         }

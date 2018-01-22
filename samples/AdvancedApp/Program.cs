@@ -72,6 +72,7 @@ namespace AdvancedApp
         {
             app.RunCommands(commands =>
             {
+                commands.AddStandardCommands();
                 commands.AddModule<GreetingsModule>(module =>
                 {
                     module.Name = "";
