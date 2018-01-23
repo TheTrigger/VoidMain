@@ -4,7 +4,6 @@ using System.Text;
 using VoidMain.Application.Builder;
 using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
-using VoidMain.CommandLineIinterface.History;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
 using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
@@ -53,7 +52,7 @@ namespace AdvancedApp
                 {
                     options.MaxCount = 10;
                     options.SavePeriod = TimeSpan.FromSeconds(10);
-                    options.CommandsComparer = CommandsHistoryComparer.OrdinalIgnoreCase;
+                    options.CommandsComparer = StringComparer.OrdinalIgnoreCase;
                 })
                 .AddInMemoryStorage(options =>
                 {
@@ -96,7 +95,7 @@ namespace AdvancedApp
 
     public class GreetingsModule : CommandsModule
     {
-        public void Hello([Operand] string name)
+        public void Hello([Operand(DefaultValue = "World")] string name)
         {
             Output.WriteLine($"Hello, {name}!");
         }

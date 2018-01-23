@@ -32,7 +32,7 @@ namespace VoidMain.CommandLineIinterface.History
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
             _commandsWriteLock = new object();
-            _comparer = options?.CommandsComparer ?? CommandsHistoryComparer.OrdinalIgnoreCase;
+            _comparer = options?.CommandsComparer ?? StringComparer.OrdinalIgnoreCase;
             SavePeriod = options?.SavePeriod ?? TimeSpan.FromSeconds(10.0);
             MaxCount = options?.MaxCount ?? 10;
             if (SavePeriod.TotalMilliseconds < 1.0)
