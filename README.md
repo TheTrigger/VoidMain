@@ -26,10 +26,12 @@ Almost every part of the framework can be extended or replaced.
   - Method signature **(done)**
   - Attributes **(done)**
   - Expression trees
-- Commands execution
-  - Command resolver
+- Commands execution **(done)**
+  - Command resolver **(done)**
   - Arguments parsers **(done)**
 - Standard commands
+  - Close app command **(done)**
+  - Clear output **(done)**
   - Help commands
   - Version command
 
@@ -61,12 +63,12 @@ class Program : IStartup
     {
         app.RunCommands(commands =>
         {
-            commands.AddModule<GreetingsModule>();
+            commands.AddModule<HelloWorldModule>();
         });
     }
 }
 
-public class GreetingsModule : CommandsModule
+public class HelloWorldModule : CommandsModule
 {
     public void Hello([Operand] string name)
     {
