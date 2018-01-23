@@ -19,7 +19,7 @@ namespace VoidMain.CommandLineIinterface.Console
         private readonly ICommandLinePrompt _prompt;
         private readonly ICommandLineReader _reader;
         private readonly ICommandLineParser _parser;
-        private readonly ContextCreationHelper _contextHelper;
+        private readonly ContextInitHelper _contextHelper;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
@@ -32,7 +32,7 @@ namespace VoidMain.CommandLineIinterface.Console
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _prompt = prompt;
-            _contextHelper = new ContextCreationHelper();
+            _contextHelper = new ContextInitHelper();
             _cliLoopTokenSource = new CancellationTokenSource();
             _cliLoop = null;
             IsRunning = false;

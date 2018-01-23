@@ -8,39 +8,39 @@ using VoidMain.Hosting;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
-    public class ContextCreationHelper
+    public class ContextInitHelper
     {
         private readonly StringBuilder _valueBuffer;
         private readonly Dictionary<string, List<string>> _optionsBuffer;
         private readonly List<string> _operandsBuffer;
         private Dictionary<string, object> _context;
 
-        public ContextCreationHelper()
+        public ContextInitHelper()
         {
             _valueBuffer = new StringBuilder();
             _optionsBuffer = new Dictionary<string, List<string>>();
             _operandsBuffer = new List<string>();
         }
 
-        public ContextCreationHelper UseContext(Dictionary<string, object> context)
+        public ContextInitHelper UseContext(Dictionary<string, object> context)
         {
             _context = context;
             return this;
         }
 
-        public ContextCreationHelper SetCancellation(CancellationToken token)
+        public ContextInitHelper SetCancellation(CancellationToken token)
         {
             _context[ContextKey.CommandCanceled] = token;
             return this;
         }
 
-        public ContextCreationHelper SetRawCommandLine(string commandLine)
+        public ContextInitHelper SetRawCommandLine(string commandLine)
         {
             _context[ContextKey.CommandLine] = commandLine;
             return this;
         }
 
-        public ContextCreationHelper SetParsedCommandLine(CommandLineSyntax syntax)
+        public ContextInitHelper SetParsedCommandLine(CommandLineSyntax syntax)
         {
             SetCommandName(syntax.CommandName);
             SetCommandArguments(syntax.Arguments);
