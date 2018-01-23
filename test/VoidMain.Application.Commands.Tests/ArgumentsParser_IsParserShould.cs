@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,7 +16,28 @@ namespace VoidMain.Application.Commands.Tests
         [Fact]
         public void RequireServices()
         {
-            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(null));
+            IServiceProvider services = null;
+            var colCtorProvider = new Mock<ICollectionConstructorProvider>().Object;
+            var parserProvider = new Mock<IValueParserProvider>().Object;
+            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(services, colCtorProvider, parserProvider));
+        }
+
+        [Fact]
+        public void RequireCollectionConstructorProvider()
+        {
+            var services = new Mock<IServiceProvider>().Object;
+            ICollectionConstructorProvider colCtorProvider = null;
+            var parserProvider = new Mock<IValueParserProvider>().Object;
+            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(services, colCtorProvider, parserProvider));
+        }
+
+        [Fact]
+        public void RequireValueParserProvider()
+        {
+            var services = new Mock<IServiceProvider>().Object;
+            var colCtorProvider = new Mock<ICollectionConstructorProvider>().Object;
+            IValueParserProvider parserProvider = null;
+            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(services, colCtorProvider, parserProvider));
         }
 
         #endregion
@@ -409,15 +431,22 @@ namespace VoidMain.Application.Commands.Tests
         {
             var collection = new ServiceCollection();
             var services = collection.BuildServiceProvider();
-            return new ArgumentsParser(services, options);
+            return Parser(services, options);
         }
 
-        private static ArgumentsParser ParserWithServices()
+        private static ArgumentsParser ParserWithServices(ArgumentsParserOptions options = null)
         {
             var collection = new ServiceCollection();
             collection.AddTransient<IRegisteredService, ServiceImpl>();
             var services = collection.BuildServiceProvider();
-            return new ArgumentsParser(services);
+            return Parser(services, options);
+        }
+
+        private static ArgumentsParser Parser(IServiceProvider services, ArgumentsParserOptions options = null)
+        {
+            var colCtorProvider = new CollectionConstructorProvider();
+            var parserProvider = new ValueParserProvider();
+            return new ArgumentsParser(services, colCtorProvider, parserProvider, options);
         }
 
         public interface IRegisteredService { }

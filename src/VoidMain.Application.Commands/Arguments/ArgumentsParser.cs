@@ -12,81 +12,25 @@ namespace VoidMain.Application.Commands.Arguments
         private readonly Type StringType = typeof(string);
 
         private readonly IServiceProvider _services;
-        private readonly IFormatProvider _formatProvider;
+        private readonly ICollectionConstructorProvider _colCtorProvider;
+        private readonly IValueParserProvider _parserProvider;
         private readonly ICollectionConstructor _arrayCtor;
-        private readonly Dictionary<Type, ICollectionConstructor> _colCtors;
+        private readonly IFormatProvider _formatProvider;
 
-        private readonly IValueParser _defaultParser;
-        private readonly Dictionary<Type, IValueParser> _standardParsers;
-        private readonly Dictionary<Type, IValueParser> _customParsersCache;
-
-
-        public ArgumentsParser(IServiceProvider services, ArgumentsParserOptions options = null)
+        public ArgumentsParser(IServiceProvider services,
+            ICollectionConstructorProvider colCtorProvider,
+            IValueParserProvider parserProvider,
+            ArgumentsParserOptions options = null)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
+            _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
+            _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
+            if (!_colCtorProvider.TryGetCollectionConstructor(typeof(Array), out _arrayCtor))
+            {
+                _arrayCtor = new ArrayConstructor();
+            }
             _formatProvider = options?.FormatProvider ?? CultureInfo.CurrentCulture;
-            _arrayCtor = options?.ArrayConstructor ?? new ArrayConstructor();
-            _colCtors = InitCollectionConstructors(options?.CollectionConstructors);
-            _defaultParser = options?.DefaultParser ?? new ChangeTypeValueParser();
-            _standardParsers = InitStandardParsers(options?.ValueParsers);
-            _customParsersCache = new Dictionary<Type, IValueParser>();
-        }
 
-        private Dictionary<Type, ICollectionConstructor> InitCollectionConstructors(
-            Dictionary<Type, ICollectionConstructor> customCtors)
-        {
-            var ctors = new Dictionary<Type, ICollectionConstructor>();
-
-            // Default ctors.
-            ctors[typeof(IEnumerable<>)] = _arrayCtor;
-            ctors[typeof(ICollection<>)] = _arrayCtor;
-            ctors[typeof(IReadOnlyCollection<>)] = _arrayCtor;
-            ctors[typeof(IReadOnlyList<>)] = _arrayCtor;
-            var listCtor = new ListConstructor();
-            ctors[typeof(IList<>)] = listCtor;
-            ctors[typeof(List<>)] = listCtor;
-
-            // Custom ctors.
-            if (customCtors != null && customCtors.Count > 0)
-            {
-                foreach (var custom in customCtors)
-                {
-                    if (custom.Value == null)
-                    {
-                        ctors.Remove(custom.Key);
-                    }
-                    else
-                    {
-                        ctors[custom.Key] = custom.Value;
-                    }
-                }
-            }
-
-            return ctors;
-        }
-
-        private Dictionary<Type, IValueParser> InitStandardParsers(
-            Dictionary<Type, IValueParser> customParsers)
-        {
-            var parsers = new Dictionary<Type, IValueParser>();
-
-            // Custom parsers.
-            if (customParsers != null && customParsers.Count > 0)
-            {
-                foreach (var custom in customParsers)
-                {
-                    if (custom.Value == null)
-                    {
-                        parsers.Remove(custom.Key);
-                    }
-                    else
-                    {
-                        parsers[custom.Key] = custom.Value;
-                    }
-                }
-            }
-
-            return parsers;
         }
 
         public object[] Parse(
@@ -237,14 +181,17 @@ namespace VoidMain.Application.Commands.Arguments
                 return values;
             }
 
-            if (TryGetCollectionConstructor(argType, out ICollectionConstructor colCtor))
+            bool isCollection = _colCtorProvider.TryGetCollectionConstructor(
+                argType, out ICollectionConstructor colCtor);
+
+            if (isCollection)
             {
                 valuesUsed = stringValues.Length - valuesOffset;
 
                 var elemType = colCtor.GetElementType(argType); // Use for collection
                 var valueType = UnwrapIfNullable(elemType); // Use for parser
                 var colInit = colCtor.Create(elemType, valuesUsed);
-                var parser = GetParser(valueType, arg.ValueParser);
+                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
 
                 for (int i = 0; i < valuesUsed; i++)
                 {
@@ -275,7 +222,7 @@ namespace VoidMain.Application.Commands.Arguments
                 }
 
                 var valueType = UnwrapIfNullable(argType);
-                var parser = GetParser(valueType, arg.ValueParser);
+                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
                 var value = parser.Parse(stringValue, valueType, _formatProvider);
                 return value;
             }
@@ -305,48 +252,6 @@ namespace VoidMain.Application.Commands.Arguments
             var copy = (Array)_arrayCtor.Create(elementType, length).Collection;
             Array.Copy(source, offset, copy, 0, length);
             return copy;
-        }
-
-        private bool TryGetCollectionConstructor(
-            Type collectionType, out ICollectionConstructor colCtor)
-        {
-            if (_colCtors.TryGetValue(collectionType, out colCtor))
-            {
-                return true;
-            }
-
-            if (collectionType.IsArray)
-            {
-                colCtor = _arrayCtor;
-                return true;
-            }
-
-            if (!collectionType.GetTypeInfo().IsGenericType)
-            {
-                colCtor = null;
-                return false;
-            }
-
-            var genericDefinition = collectionType.GetGenericTypeDefinition();
-            return _colCtors.TryGetValue(genericDefinition, out colCtor);
-        }
-
-        private IValueParser GetParser(Type valueType, Type parserType)
-        {
-            IValueParser parser = null;
-            if (parserType == null)
-            {
-                if (!_standardParsers.TryGetValue(valueType, out parser))
-                {
-                    parser = _defaultParser;
-                }
-            }
-            else if (!_customParsersCache.TryGetValue(parserType, out parser))
-            {
-                parser = (IValueParser)Activator.CreateInstance(parserType);
-                _customParsersCache.Add(parserType, parser);
-            }
-            return parser;
         }
     }
 }

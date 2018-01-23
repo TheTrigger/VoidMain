@@ -21,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<ICommandExecutor, CommandExecutor>();
             services.AddTransient<ITypeActivator, CachedTypeActivator>();
             services.AddTransient<IMethodInvokerProvider, MethodInvokerProvider>();
+            services.AddSingleton<ICollectionConstructorProvider, CollectionConstructorProvider>();
+            services.AddSingleton<IValueParserProvider, ValueParserProvider>();
             return services;
         }
     }
