@@ -25,14 +25,17 @@ namespace VoidMain.CommandLineIinterface.Console
         public bool IsRunning { get; private set; }
 
         public ConsoleInterface(IConsole console, ConsoleOutputLock outputLock,
-            ICommandLineReader reader, ICommandLineParser parser, ICommandLinePrompt prompt = null)
+            ICommandLineReader reader, ICommandLineParser parser, ICommandLinePrompt prompt = null,
+            CommandLineSyntaxOptions syntaxOptions = null)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _outputLock = outputLock ?? throw new ArgumentNullException(nameof(outputLock));
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _prompt = prompt;
-            _contextHelper = new ContextInitHelper();
+            var identifierComparer = syntaxOptions?.IdentifierComparer
+                ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
+            _contextHelper = new ContextInitHelper(identifierComparer);
             _cliLoopTokenSource = new CancellationTokenSource();
             _cliLoop = null;
             IsRunning = false;

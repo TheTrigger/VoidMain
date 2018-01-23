@@ -79,7 +79,7 @@ namespace VoidMain.Application.Commands.Model
         {
             if (y.Count > x.Count) return false;
 
-            for (int i = 0; i < x.Count; i++)
+            for (int i = 0; i < y.Count; i++)
             {
                 if (!_comparer.Equals(x[i], y[i])) return false;
             }

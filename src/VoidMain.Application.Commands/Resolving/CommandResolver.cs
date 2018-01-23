@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VoidMain.Application.Commands.Model;
+using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.Hosting;
 
 namespace VoidMain.Application.Commands.Resolving
@@ -10,10 +11,11 @@ namespace VoidMain.Application.Commands.Resolving
     {
         private readonly IEqualityComparer<CommandName> _nameComparer;
 
-        public CommandResolver()
+        public CommandResolver(CommandLineSyntaxOptions syntaxOptions = null)
         {
-            // TODO: inject nameComparer
-            _nameComparer = new CommandNameComparer(StringComparer.OrdinalIgnoreCase);
+            var identifierComparer = syntaxOptions?.IdentifierComparer
+                ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
+            _nameComparer = new CommandNameComparer(identifierComparer);
         }
 
         public CommandModel Resolve(Dictionary<string, object> context, ICommandsCollection commands)

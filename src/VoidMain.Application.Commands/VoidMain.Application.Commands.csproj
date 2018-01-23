@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VoidMain.CommandLineIinterface\VoidMain.CommandLineIinterface.csproj" />
     <ProjectReference Include="..\VoidMain.Hosting\VoidMain.Hosting.csproj" />
   </ItemGroup>
 

@@ -10,15 +10,17 @@ namespace VoidMain.CommandLineIinterface.Internal
 {
     public class ContextInitHelper
     {
+        private readonly IEqualityComparer<string> _optionNameComparer;
         private readonly StringBuilder _valueBuffer;
         private readonly Dictionary<string, List<string>> _optionsBuffer;
         private readonly List<string> _operandsBuffer;
         private Dictionary<string, object> _context;
 
-        public ContextInitHelper()
+        public ContextInitHelper(IEqualityComparer<string> optionNameComparer)
         {
+            _optionNameComparer = optionNameComparer ?? throw new ArgumentNullException(nameof(optionNameComparer));
             _valueBuffer = new StringBuilder();
-            _optionsBuffer = new Dictionary<string, List<string>>();
+            _optionsBuffer = new Dictionary<string, List<string>>(optionNameComparer);
             _operandsBuffer = new List<string>();
         }
 
@@ -106,7 +108,7 @@ namespace VoidMain.CommandLineIinterface.Internal
             }
 
             _context[ContextKey.CommandOptions] = _optionsBuffer
-                .ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
+                .ToDictionary(kv => kv.Key, kv => kv.Value.ToArray(), _optionNameComparer);
             _context[ContextKey.CommandOperands] = _operandsBuffer.ToArray();
         }
 
