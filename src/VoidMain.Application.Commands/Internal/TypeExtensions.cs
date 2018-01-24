@@ -14,6 +14,15 @@ namespace VoidMain.Application.Commands.Internal
             return Nullable.GetUnderlyingType(type) != null;
         }
 
+        public static Type UnwrapIfNullable(this Type type)
+        {
+            if (type.IsNullable())
+            {
+                return Nullable.GetUnderlyingType(type);
+            }
+            return type;
+        }
+
         public static bool IsDbNull(this Type type)
         {
             return type.FullName == "System.DBNull";

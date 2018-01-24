@@ -3,6 +3,7 @@ using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Execution;
 using VoidMain.Application.Commands.Model;
 using VoidMain.Application.Commands.Resolving;
+using VoidMain.CommandLineIinterface.Parser;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -23,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IMethodInvokerProvider, MethodInvokerProvider>();
             services.AddSingleton<ICollectionConstructorProvider, CollectionConstructorProvider>();
             services.AddSingleton<IValueParserProvider, ValueParserProvider>();
+            services.AddTransient<ISemanticModel, CommandsSemanticModel>();
             return services;
         }
     }
