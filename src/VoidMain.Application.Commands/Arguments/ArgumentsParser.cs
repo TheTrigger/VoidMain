@@ -10,6 +10,7 @@ namespace VoidMain.Application.Commands.Arguments
     public class ArgumentsParser : IArgumentsParser
     {
         private readonly Type StringType = typeof(string);
+        private readonly Type BooleanType = typeof(bool);
 
         private readonly IServiceProvider _services;
         private readonly ICollectionConstructorProvider _colCtorProvider;
@@ -118,11 +119,20 @@ namespace VoidMain.Application.Commands.Arguments
                     if (arg.Optional)
                     {
                         valuesUsed = 0;
+                        // Do not unwrap to get value of correct type.
                         return GetEmptyValue(arg.Type);
+                    }
+
+                    var valueType = arg.Type.UnwrapIfNullable();
+                    if (valueType == BooleanType)
+                    {
+                        valuesUsed = 0;
+                        return false;
                     }
 
                     throw new ArgumentParseException(arg, "Value is missing.");
                     // TODO: Or prompt value.
+                    // Use double Enter to end filling collection.
                 }
 
                 var argType = arg.Type.UnwrapIfNullable();
@@ -133,6 +143,7 @@ namespace VoidMain.Application.Commands.Arguments
                     valuesUsed = 0;
                     if (argType.IsArray)
                     {
+                        // TODO: initialize any collection
                         var source = (Array)defaultValue;
                         return CopyArray(source, 0, source.Length);
                     }
@@ -196,6 +207,20 @@ namespace VoidMain.Application.Commands.Arguments
                 for (int i = 0; i < valuesUsed; i++)
                 {
                     string stringValue = stringValues[valuesOffset + i];
+
+                    if (stringValue == null)
+                    {
+                        if (valueType == BooleanType)
+                        {
+                            colInit.SetValue(i, value: true);
+                            continue;
+                        }
+                        else
+                        {
+                            stringValue = String.Empty;
+                        }
+                    }
+
                     var value = parser.Parse(stringValue, valueType, _formatProvider);
                     colInit.SetValue(i, value);
                 }
@@ -216,12 +241,23 @@ namespace VoidMain.Application.Commands.Arguments
                     valuesUsed = 1;
                 }
 
-                if (argType == StringType)
+                var valueType = argType.UnwrapIfNullable();
+                if (valueType == StringType)
                 {
                     return stringValue;
                 }
+                if (stringValue == null)
+                {
+                    if (valueType == BooleanType)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        stringValue = String.Empty;
+                    }
+                }
 
-                var valueType = argType.UnwrapIfNullable();
                 var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
                 var value = parser.Parse(stringValue, valueType, _formatProvider);
                 return value;
