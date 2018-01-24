@@ -7,7 +7,7 @@ namespace VoidMain.CommandLineIinterface.Parser
     {
         public IEqualityComparer<string> IdentifierComparer { get; set; }
 
-        public static readonly IEqualityComparer<string> DefaultIdentifierComparer
-            = StringComparer.OrdinalIgnoreCase;
+        public static IEqualityComparer<string> DefaultIdentifierComparer
+            => StringComparer.OrdinalIgnoreCase;
     }
 }

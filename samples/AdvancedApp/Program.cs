@@ -72,7 +72,7 @@ namespace AdvancedApp
             app.RunCommands(commands =>
             {
                 commands.AddStandardCommands();
-                commands.AddModule<HelloWorldModule>(module =>
+                commands.AddModule<ExampleModule>(module =>
                 {
                     module.Name = "";
                     module.Description = "";
@@ -93,7 +93,7 @@ namespace AdvancedApp
         }
     }
 
-    public class HelloWorldModule : CommandsModule
+    public class ExampleModule : CommandsModule
     {
         public void Hello([Operand(DefaultValue = "World")] string name)
         {

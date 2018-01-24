@@ -63,12 +63,12 @@ class Program : IStartup
     {
         app.RunCommands(commands =>
         {
-            commands.AddModule<HelloWorldModule>();
+            commands.AddModule<ExampleModule>();
         });
     }
 }
 
-public class HelloWorldModule : CommandsModule
+public class ExampleModule : CommandsModule
 {
     public void Hello([Operand] string name)
     {
@@ -79,13 +79,13 @@ public class HelloWorldModule : CommandsModule
 
 **Command line**
 ```
-CMD> greetings hello world
+CMD> example hello world
 ```
 
 You can get rid of `greetings` command name if you set the module name to an empty string like this:
 ```csharp
 [Module(Name = "")]
-public class GreetingsModule : CommandsModule { }
+public class ExampleModule : CommandsModule { }
 ```
 ```
 CMD> hello world
@@ -136,7 +136,7 @@ public void ConfigureServices(IServiceCollection services)
 ## Known issues
 
 - **Application closes instead of canceling the current operation after pressing `Ctrl+C` if it was started with `dotnet run`.**<br>This is due to the [issue](https://github.com/dotnet/cli/issues/812) in the .NET CLI. Use `dotnet publish` and run the compiled executable instead.
-- **Command line reader is not working on Linux as expected (at all).**<br>Terminal is working differently than the Windows console. .NET team tried to make a `Console` API to behave the same way on all platforms with many hacks and compromises, but it is still have differences and bugs. `PowerShell` have some native calls to make it work on Linux. I hope, someday I can make it work too.
+- **Command line reader is not working on Linux as expected (at all).**<br>Terminal works differently than the Windows console. .NET team tried to make a `Console` API to behave the same way on all platforms with many hacks and compromises, but it is still have differences and bugs. `PowerShell` have some native calls to make it work on Linux. I hope, someday I can make it work too.
 
 ## License
-MIT License. See LICENSE file for more details.
+MIT License. See [LICENSE](LICENSE) file for more details.

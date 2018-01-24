@@ -31,7 +31,7 @@ namespace SimpleApp
             app.RunCommands(commands =>
             {
                 commands.AddStandardCommands();
-                commands.AddModule<HelloWorldModule>();
+                commands.AddModule<ExampleModule>();
             });
         }
 
@@ -47,7 +47,7 @@ namespace SimpleApp
     }
 
     [Module(Name = "")]
-    public class HelloWorldModule : CommandsModule
+    public class ExampleModule : CommandsModule
     {
         public void Hello([Operand] string name = "World")
         {
