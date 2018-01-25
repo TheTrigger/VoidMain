@@ -11,6 +11,16 @@ using VoidMain.Hosting;
 
 namespace AdvancedApp
 {
+    public class ExampleModule : CommandsModule
+    {
+        public void Hello([Operand(DefaultValue = "World")] string name)
+        {
+            Output.WriteLine($"Hello, {name}!");
+        }
+
+        public void RemovedCommand() { }
+    }
+
     class Program : IStartup
     {
         static void Main(string[] args)
@@ -27,7 +37,7 @@ namespace AdvancedApp
         public void ConfigureServices(IServiceCollection services)
         {
             var interfaceBuilder = services
-                .AddConsoleInterface()
+                .AddConsoleInterfaceCore()
                 .AddPromptMessage()
                 .AddUndoRedo(options =>
                 {
@@ -91,15 +101,5 @@ namespace AdvancedApp
             Console.WriteLine("=======================================================");
             Console.WriteLine();
         }
-    }
-
-    public class ExampleModule : CommandsModule
-    {
-        public void Hello([Operand(DefaultValue = "World")] string name)
-        {
-            Output.WriteLine($"Hello, {name}!");
-        }
-
-        public void RemovedCommand() { }
     }
 }

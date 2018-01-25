@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ConsoleInterfaceServiceCollectionExtensions
     {
-        public static ConsoleInterfaceBuilder AddConsoleInterface(
+        public static ConsoleInterfaceBuilder AddConsoleInterfaceCore(
             this IServiceCollection services)
         {
             services.AddSingleton<ICommandLineIinterface, ConsoleInterface>();
@@ -49,13 +49,14 @@ namespace Microsoft.Extensions.DependencyInjection
             return new ConsoleInterfaceBuilder(services);
         }
 
-        public static ConsoleInterfaceBuilder AddAdvancedConsoleInterface(
+        public static ConsoleInterfaceBuilder AddConsoleInterface(
             this IServiceCollection services)
         {
             var interfaceBuilder = services
-                .AddConsoleInterface()
+                .AddConsoleInterfaceCore()
                 .AddPromptMessage()
-                .AddUndoRedo();
+                .AddUndoRedo()
+                .AddSyntaxHighlighting();
 
             interfaceBuilder
                 .AddCommandsHistory()

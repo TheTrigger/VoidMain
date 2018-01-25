@@ -9,7 +9,7 @@ namespace VoidMain.Hosting
             return hostBuilder.ConfigureServices(services =>
             {
                 services
-                    .AddConsoleInterface()
+                    .AddConsoleInterfaceCore()
                     .AddPromptMessage();
             });
         }
@@ -19,7 +19,7 @@ namespace VoidMain.Hosting
             return hostBuilder.ConfigureServices(services =>
             {
                 var interfaceBuilder = services
-                    .AddConsoleInterface()
+                    .AddConsoleInterfaceCore()
                     .AddPromptMessage()
                     .AddUndoRedo()
                     .AddSyntaxHighlighting();

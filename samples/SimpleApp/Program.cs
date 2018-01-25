@@ -7,22 +7,32 @@ using VoidMain.Hosting;
 
 namespace SimpleApp
 {
+    [Module(Name = "")]
+    public class ExampleModule : CommandsModule
+    {
+        public void Hello([Operand] string name = "World")
+        {
+            Output.WriteLine($"Hello, {name}!");
+        }
+
+        [Command(Name = "command name")]
+        public void Command(string option, bool flag, string[] operands)
+        {
+            Output.WriteLine("The command was executed.");
+        }
+    }
+
     class Program : IStartup
     {
         static void Main(string[] args)
         {
             PrintDevelopmentNote();
-
-            var host = new CommandsHostBuilder()
-                .UseAdvancedConsole()
-                .UseStartup<Program>()
-                .Build();
-
-            host.Run();
+            CommandsApp.Start<Program>();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddConsoleInterface();
             services.AddCommands();
         }
 
@@ -43,15 +53,6 @@ namespace SimpleApp
             Console.WriteLine("Type 'quit' or press Ctrl+C twice to close application.");
             Console.WriteLine("=======================================================");
             Console.WriteLine();
-        }
-    }
-
-    [Module(Name = "")]
-    public class ExampleModule : CommandsModule
-    {
-        public void Hello([Operand] string name = "World")
-        {
-            Output.WriteLine($"Hello, {name}!");
         }
     }
 }
