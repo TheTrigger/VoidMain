@@ -91,7 +91,7 @@ CMD> hello world
 public void ConfigureServices(IServiceCollection services)
 {
     var interfaceBuilder = services
-        .AddConsoleInterface()
+        .AddConsoleInterfaceCore()
         .AddPromptMessage()
         .AddUndoRedo(options =>
         {

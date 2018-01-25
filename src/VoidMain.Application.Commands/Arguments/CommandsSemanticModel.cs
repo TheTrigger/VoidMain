@@ -76,10 +76,16 @@ namespace VoidMain.Application.Commands.Arguments
             }
 
             var option = commands[0].Arguments
-                .FirstOrDefault(_ => _.Kind == ArgumentKind.Option && _identifierComparer.Equals(_.Name, optionName));
+                .FirstOrDefault(_ => _.Kind == ArgumentKind.Option && IsNameOrAliasEquals(_, optionName));
 
             valueType = option?.Type;
             return option != null;
+        }
+
+        private bool IsNameOrAliasEquals(ArgumentModel option, string optionName)
+        {
+            return _identifierComparer.Equals(option.Name, optionName)
+                || _identifierComparer.Equals(option.Alias, optionName);
         }
 
         public bool TryGetOperandType(IReadOnlyList<string> commandName, int operandIndex, out Type valueType)
