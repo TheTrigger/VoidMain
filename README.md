@@ -2,60 +2,63 @@
 VoidMain is a framework for building command-line applications, inspired by ASP.NET Core.
 Almost every part of the framework can be extended or replaced.
 
+![demo](demo.gif)
+
 ## This is a work in progress.
+
+The framework is still in early development. The API is not final and some features are missing or incomplete. The work on the documentation and performance is not started yet.
 
 **The current state of planned features:**
 - Command-line interface
-  - Command-line reader **(done)**
-    - Async and cancellable **(done)**
-    - Masked input **(done)**
-    - Hidden input **(done)**
-    - Undo/Redo **(done)**
-  - Prompt message provider **(done)**
+  - Masked/hidden input **(done)**
+  - Undo/redo **(done)**
   - Commands history **(done)**
-    - In-memory storage **(done)**
-    - File storage **(done)**
-  - Command-line parser **(done)**
+  - Custom prompt message **(done)**
   - Syntax highlighting **(done\*)**
   - Autocomplete
-    - Command name provider
-    - Option name provider
-    - Enum value provider
-    - File path provider
-- Easy configuration with
+- Standard commands
+  - Clear output **(done)**
+  - Close application **(done)**
+  - Show help
+  - Show version
+- Configuration
   - Method signature **(done)**
   - Attributes **(done)**
   - Expression trees
-- Commands execution **(done)**
-  - Command resolver **(done)**
-  - Arguments parsers **(done)**
-- Standard commands
-  - Close app command **(done)**
-  - Clear output **(done)**
-  - Help commands
-  - Version command
 
 **\*** *Errors highlighting is not supported yet.*
 
-## How to use it (as soon as it's ready)? 
+## How to use it 
 
-**C# code**
+**Simple configuration**
+
+```csharp
+public class ExampleModule : CommandsModule
+{
+    public void Hello([Operand] string name)
+    {
+        Output.WriteLine($"Hello, {name}!");
+    }
+
+    [Command(Name = "command name")]
+    public void Command(string option, bool flag, string[] operands)
+    {
+        Output.WriteLine("The command was executed.");
+    }
+}
+```
+
 ```csharp
 class Program : IStartup
 {
     static void Main(string[] args)
     {
-        var host = new CommandsHostBuilder()
-            .UseStartup<Program>()
-            .Build();
-
-        host.Run();
+        CommandsApp.Start<Program>();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
-        // Advanced console interface includes all features.
-        services.AddAdvancedConsoleInterface();
+        services.AddConsoleInterface();
         services.AddCommands();
     }
 
@@ -63,21 +66,13 @@ class Program : IStartup
     {
         app.RunCommands(commands =>
         {
+            commands.AddStandardCommands();
             commands.AddModule<ExampleModule>();
         });
     }
 }
-
-public class ExampleModule : CommandsModule
-{
-    public void Hello([Operand] string name)
-    {
-        Output.WriteLine($"Hello, {name}!");
-    }
-}
 ```
 
-**Command line**
 ```
 CMD> example hello world
 ```
@@ -91,7 +86,7 @@ public class ExampleModule : CommandsModule { }
 CMD> hello world
 ```
 
-**More advanced configuration**
+**Advanced configuration**
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
