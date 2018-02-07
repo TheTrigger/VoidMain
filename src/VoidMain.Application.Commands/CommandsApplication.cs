@@ -13,8 +13,8 @@ namespace VoidMain.Application.Commands
 {
     public class CommandsApplication : ICommandsApplication
     {
-        private readonly Dictionary<string, string[]> EmptyOptions = new Dictionary<string, string[]>();
-        private readonly string[] EmptyOperands = new string[0];
+        private readonly KeyValuePair<string, string>[] EmptyOptions = Array.Empty<KeyValuePair<string, string>>();
+        private readonly string[] EmptyOperands = Array.Empty<string>();
 
         private readonly IServiceProvider _services;
         private readonly ICommandResolver _commandResolver;
@@ -62,16 +62,13 @@ namespace VoidMain.Application.Commands
             return CancellationToken.None;
         }
 
-        private Dictionary<string, string[]> GetOptions(Dictionary<string, object> context)
+        private KeyValuePair<string, string>[] GetOptions(Dictionary<string, object> context)
         {
             if (context.TryGetValue(ContextKey.CommandOptions, out var value))
             {
-                return (Dictionary<string, string[]>)value;
+                return (KeyValuePair<string, string>[])value;
             }
-            if (EmptyOptions.Count > 0)
-            {
-                EmptyOptions.Clear();
-            }
+
             return EmptyOptions;
         }
 

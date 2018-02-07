@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
@@ -12,15 +11,14 @@ namespace VoidMain.CommandLineIinterface.Internal
     {
         private readonly IEqualityComparer<string> _optionNameComparer;
         private readonly StringBuilder _valueBuffer;
-        private readonly Dictionary<string, List<string>> _optionsBuffer;
+        private readonly List<KeyValuePair<string, string>> _optionsBuffer;
         private readonly List<string> _operandsBuffer;
         private Dictionary<string, object> _context;
 
-        public ContextInitHelper(IEqualityComparer<string> optionNameComparer)
+        public ContextInitHelper()
         {
-            _optionNameComparer = optionNameComparer ?? throw new ArgumentNullException(nameof(optionNameComparer));
             _valueBuffer = new StringBuilder();
-            _optionsBuffer = new Dictionary<string, List<string>>(optionNameComparer);
+            _optionsBuffer = new List<KeyValuePair<string, string>>();
             _operandsBuffer = new List<string>();
         }
 
@@ -72,14 +70,13 @@ namespace VoidMain.CommandLineIinterface.Internal
         {
             if (syntax == null)
             {
-                _context[ContextKey.CommandOptions] = new Dictionary<string, string[]>();
+                _context[ContextKey.CommandOptions] = Array.Empty<KeyValuePair<string, string>>();
                 _context[ContextKey.CommandOperands] = Array.Empty<string>();
                 return;
             }
 
             var arguments = syntax.Arguments;
 
-            // TODO: Add all lists to pool.
             _optionsBuffer.Clear();
             _operandsBuffer.Clear();
 
@@ -89,14 +86,8 @@ namespace VoidMain.CommandLineIinterface.Internal
                 {
                     case OptionSyntax option:
                         string optionName = option.Name.StringValue;
-                        if (!_optionsBuffer.TryGetValue(optionName, out List<string> values))
-                        {
-                            // TODO: Use pool for lists.
-                            values = new List<string>();
-                            _optionsBuffer.Add(optionName, values);
-                        }
                         string optionValue = GetValue(option.Value);
-                        values.Add(optionValue);
+                        _optionsBuffer.Add(new KeyValuePair<string, string>(optionName, optionValue));
                         break;
                     case OperandSyntax operand:
                         string operandValue = GetValue(operand.Value);
@@ -107,8 +98,7 @@ namespace VoidMain.CommandLineIinterface.Internal
                 }
             }
 
-            _context[ContextKey.CommandOptions] = _optionsBuffer
-                .ToDictionary(kv => kv.Key, kv => kv.Value.ToArray(), _optionNameComparer);
+            _context[ContextKey.CommandOptions] = _optionsBuffer.ToArray();
             _context[ContextKey.CommandOperands] = _operandsBuffer.ToArray();
         }
 

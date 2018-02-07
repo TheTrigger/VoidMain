@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
+using VoidMain.CommandLineIinterface.Parser;
 
 namespace VoidMain.Application.Commands.Arguments
 {
@@ -17,20 +18,24 @@ namespace VoidMain.Application.Commands.Arguments
         private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly IValueParserProvider _parserProvider;
         private readonly IFormatProvider _formatProvider;
+        private readonly IEqualityComparer<string> _identifierComparer;
 
         public ArgumentsParser(IServiceProvider services,
             ICollectionConstructorProvider colCtorProvider,
             IValueParserProvider parserProvider,
-            ArgumentsParserOptions options = null)
+            ArgumentsParserOptions options = null,
+            CommandLineSyntaxOptions syntaxOptions = null)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
             _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
             _formatProvider = options?.FormatProvider ?? CultureInfo.CurrentCulture;
+            _identifierComparer = syntaxOptions?.IdentifierComparer
+                ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
         }
 
         public object[] Parse(IReadOnlyList<ArgumentModel> argsModel,
-            Dictionary<string, string[]> options, string[] operands)
+            KeyValuePair<string, string>[] options, string[] operands)
         {
             if (argsModel == null)
             {
@@ -73,16 +78,25 @@ namespace VoidMain.Application.Commands.Arguments
             return values;
         }
 
-        private string[] GetOptionValues(Dictionary<string, string[]> options, ArgumentModel arg)
+        private string[] GetOptionValues(KeyValuePair<string, string>[] options, ArgumentModel arg)
         {
-            if (!options.TryGetValue(arg.Name, out string[] values))
+            var buffer = new List<string>();
+
+            foreach (var option in options)
             {
-                if (arg.Alias != null)
+                if (IsNameOrAliasEquals(option.Key, arg))
                 {
-                    options.TryGetValue(arg.Alias, out values);
+                    buffer.Add(option.Value);
                 }
             }
-            return values;
+
+            return buffer.ToArray();
+        }
+
+        private bool IsNameOrAliasEquals(string optionName, ArgumentModel arg)
+        {
+            return _identifierComparer.Equals(optionName, arg.Name)
+                || _identifierComparer.Equals(optionName, arg.Alias);
         }
 
         private object GetService(ArgumentModel arg)

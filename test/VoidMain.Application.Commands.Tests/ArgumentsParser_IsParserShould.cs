@@ -120,8 +120,8 @@ namespace VoidMain.Application.Commands.Tests
             int value = 1;
             var arg = Option<int>("value");
             var options = OptionValues(
-                arg.Name, new[] { value.ToString() },
-                "another", new[] { "a" });
+                (arg.Name, value.ToString()),
+                ("another", "a"));
 
             // Act
             var parsed = parser.Parse(Model(arg), options, EmptyOperands);
@@ -139,8 +139,8 @@ namespace VoidMain.Application.Commands.Tests
             int value = 1;
             var arg = Option<int>("value").WithAlias("n");
             var options = OptionValues(
-                arg.Alias, new[] { value.ToString() },
-                "another", new[] { "a" });
+                (arg.Alias, value.ToString()),
+                ("another", "a"));
 
             // Act
             var parsed = parser.Parse(Model(arg), options, EmptyOperands);
@@ -156,7 +156,7 @@ namespace VoidMain.Application.Commands.Tests
             // Arrange
             var parser = Parser();
             var arg = Option<int>("value").IsOptional();
-            var options = OptionValues("another", new[] { "a" });
+            var options = OptionValues(("another", "a"));
 
             // Act
             var parsed = parser.Parse(Model(arg), options, EmptyOperands);
@@ -172,7 +172,10 @@ namespace VoidMain.Application.Commands.Tests
             var parser = Parser();
             int value = 1;
             var arg = Option<int>("value");
-            var options = OptionValues(arg.Name, new[] { "a", "b", value.ToString() });
+            var options = OptionValues(
+                (arg.Name, "a"),
+                (arg.Name, "b"),
+                (arg.Name, value.ToString()));
 
             // Act
             var parsed = parser.Parse(Model(arg), options, EmptyOperands);
@@ -453,8 +456,8 @@ namespace VoidMain.Application.Commands.Tests
         public interface IUnregisteredService { }
         public class ServiceImpl : IRegisteredService, IUnregisteredService { }
 
-        private static readonly Dictionary<string, string[]> EmptyOptions
-            = new Dictionary<string, string[]>();
+        private static readonly KeyValuePair<string, string>[] EmptyOptions
+            = Array.Empty<KeyValuePair<string, string>>();
         private static readonly string[] EmptyOperands = new string[0];
 
         private static Dictionary<string, string[]> OptionValues(
@@ -465,14 +468,17 @@ namespace VoidMain.Application.Commands.Tests
             return options;
         }
 
-        private static Dictionary<string, string[]> OptionValues(
-            string name1, string[] values1,
-            string name2, string[] values2)
+        private static KeyValuePair<string, string>[] OptionValues(
+            params (string name, string value)[] options)
         {
-            var options = new Dictionary<string, string[]>();
-            options.Add(name1, values1);
-            options.Add(name2, values2);
-            return options;
+            var buffer = new List<KeyValuePair<string, string>>();
+
+            foreach (var option in options)
+            {
+                buffer.Add(new KeyValuePair<string, string>(option.name, option.value));
+            }
+
+            return buffer.ToArray();
         }
 
         private static ArgumentModel[] Model(params ArgumentModel[] args)

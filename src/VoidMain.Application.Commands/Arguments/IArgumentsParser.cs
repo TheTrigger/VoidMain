@@ -6,6 +6,6 @@ namespace VoidMain.Application.Commands.Arguments
     public interface IArgumentsParser
     {
         object[] Parse(IReadOnlyList<ArgumentModel> argsModel,
-            Dictionary<string, string[]> options, string[] operands);
+            KeyValuePair<string, string>[] options, string[] operands);
     }
 }
