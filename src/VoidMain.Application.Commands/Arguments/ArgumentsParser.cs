@@ -11,11 +11,11 @@ namespace VoidMain.Application.Commands.Arguments
     {
         private readonly Type StringType = typeof(string);
         private readonly Type BooleanType = typeof(bool);
+        private readonly object TrueValue = true;
 
         private readonly IServiceProvider _services;
         private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly IValueParserProvider _parserProvider;
-        private readonly ICollectionConstructor _arrayCtor;
         private readonly IFormatProvider _formatProvider;
 
         public ArgumentsParser(IServiceProvider services,
@@ -26,16 +26,10 @@ namespace VoidMain.Application.Commands.Arguments
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
             _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
-            if (!_colCtorProvider.TryGetCollectionConstructor(typeof(Array), out _arrayCtor))
-            {
-                _arrayCtor = new ArrayConstructor();
-            }
             _formatProvider = options?.FormatProvider ?? CultureInfo.CurrentCulture;
-
         }
 
-        public object[] Parse(
-            IReadOnlyList<ArgumentModel> argsModel,
+        public object[] Parse(IReadOnlyList<ArgumentModel> argsModel,
             Dictionary<string, string[]> options, string[] operands)
         {
             if (argsModel == null)
@@ -94,104 +88,113 @@ namespace VoidMain.Application.Commands.Arguments
         private object GetService(ArgumentModel arg)
         {
             var service = _services.GetService(arg.Type);
-            if (service == null)
+            if (service != null)
+            {
+                return service;
+            }
+
+            if (arg.Optional)
+            {
+                return arg.Type.GetEmptyValue();
+            }
+
+            throw new ArgumentParseException(arg, $"Service '{arg.Type}' is not registered.");
+        }
+
+        private object ParseValueOrGetDefault(ArgumentModel arg, string[] stringValues,
+            int valuesOffset, out int valuesUsed, bool useLastValue = false)
+        {
+            if (stringValues == null || valuesOffset == stringValues.Length)
+            {
+                valuesUsed = 0;
+                return GetDefaultValue(arg, useLastValue);
+            }
+
+            return ParseValue(arg, stringValues, valuesOffset, out valuesUsed, useLastValue);
+        }
+
+        private object GetDefaultValue(ArgumentModel arg, bool useLastValue)
+        {
+            var defaultValue = arg.DefaultValue;
+            if (defaultValue == null)
             {
                 if (arg.Optional)
                 {
-                    return GetEmptyValue(arg.Type);
+                    return arg.Type.GetEmptyValue();
                 }
 
-                throw new ArgumentParseException(arg, $"Service '{arg.Type}' is not registered.");
+                var valueType = arg.Type.UnwrapIfNullable();
+                if (valueType == BooleanType)
+                {
+                    // Flag without a value is true by default.
+                    return TrueValue;
+                }
+
+                throw new ArgumentParseException(arg, "Value is missing.");
+                // TODO: Or prompt value.
+                // Use double Enter to end filling collection.
             }
-            return service;
+
+            switch (defaultValue)
+            {
+                case string stringValue:
+                    return ParseValue(arg, new[] { stringValue }, 0, out var _, useLastValue);
+                case string[] stringValues when stringValues.Length > 0:
+                    return ParseValue(arg, stringValues, 0, out var _, useLastValue);
+                default:
+                    return TryToCast(arg, defaultValue);
+            }
         }
 
-        private object ParseValueOrGetDefault(ArgumentModel arg, string[] values,
-            int valuesOffset, out int valuesUsed, bool useLastValue = false)
+        private object TryToCast(ArgumentModel arg, object value)
         {
-            bool isDefaultValue = false;
+            var argType = arg.Type;
+            var valueType = value.GetType();
 
-            if (values == null || valuesOffset == values.Length)
+            bool isArgCollection = _colCtorProvider.TryGetCollectionConstructor(argType, out var argColCtor);
+            bool isValueCollection = _colCtorProvider.TryGetCollectionConstructor(valueType, out var valueColCtor);
+
+            if (isArgCollection && isValueCollection)
             {
-                var defaultValue = arg.DefaultValue;
-                if (defaultValue == null)
+                var argElemType = argColCtor.GetElementType(argType);
+                var valueElemType = valueColCtor.GetElementType(valueType);
+                if (!argElemType.GetTypeInfo().IsAssignableFrom(valueElemType))
                 {
-                    if (arg.Optional)
-                    {
-                        valuesUsed = 0;
-                        // Do not unwrap to get value of correct type.
-                        return GetEmptyValue(arg.Type);
-                    }
-
-                    var valueType = arg.Type.UnwrapIfNullable();
-                    if (valueType == BooleanType)
-                    {
-                        valuesUsed = 0;
-                        return false;
-                    }
-
-                    throw new ArgumentParseException(arg, "Value is missing.");
-                    // TODO: Or prompt value.
-                    // Use double Enter to end filling collection.
+                    throw new ArgumentParseException(arg, "Element's types of the argument and default value do not match.");
                 }
 
-                var argType = arg.Type.UnwrapIfNullable();
-                var defaultValueType = defaultValue.GetType();
-
-                if (argType == defaultValueType)
-                {
-                    valuesUsed = 0;
-                    if (argType.IsArray)
-                    {
-                        // TODO: initialize any collection
-                        var source = (Array)defaultValue;
-                        return CopyArray(source, 0, source.Length);
-                    }
-                    return defaultValue;
-                }
-
-                switch (defaultValue)
-                {
-                    case string stringValue:
-                        values = new[] { stringValue };
-                        break;
-                    case string[] stringValues:
-                        if (stringValues.Length == 0)
-                        {
-                            // Because argType != defaultValueType
-                            // and we can't parse an empty string array.
-                            throw new ArgumentParseException(arg, "Types of the argument and default value do not match.");
-                        }
-                        values = stringValues;
-                        break;
-                    default:
-                        throw new ArgumentParseException(arg, "Types of the argument and default value do not match.");
-                }
-
-                valuesOffset = 0;
-                isDefaultValue = true;
+                return CopyCollection(valueColCtor, value, argColCtor, argType);
             }
 
-            var value = ParseValue(arg, values, valuesOffset, out valuesUsed, useLastValue);
-            if (isDefaultValue)
+            if (argType.GetTypeInfo().IsAssignableFrom(valueType))
             {
-                valuesUsed = 0;
+                return value;
             }
-            return value;
+
+            throw new ArgumentParseException(arg, "Types of the argument and default value do not match.");
+        }
+
+        private object CopyCollection(
+            ICollectionConstructor sourceCtor, object sourceCollection,
+            ICollectionConstructor targetCtor, Type targetCollectionType)
+        {
+            var elementType = targetCtor.GetElementType(targetCollectionType);
+            var source = sourceCtor.Wrap(sourceCollection);
+            var target = targetCtor.Create(elementType, source.Count);
+
+            for (int i = 0; i < source.Count; i++)
+            {
+                var value = source.GetValue(i);
+                target.SetValue(i, value);
+            }
+
+            return target.Collection;
         }
 
         private object ParseValue(ArgumentModel arg, string[] stringValues,
             int valuesOffset, out int valuesUsed, bool useLastValue = false)
         {
             var argType = arg.Type;
-
-            if (argType.IsArray && argType.GetElementType() == StringType)
-            {
-                valuesUsed = stringValues.Length - valuesOffset;
-                var values = CopyArray(stringValues, valuesOffset, valuesUsed);
-                return values;
-            }
-
             bool isCollection = _colCtorProvider.TryGetCollectionConstructor(
                 argType, out ICollectionConstructor colCtor);
 
@@ -199,33 +202,20 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 valuesUsed = stringValues.Length - valuesOffset;
 
-                var elemType = colCtor.GetElementType(argType); // Use for collection
-                var valueType = elemType.UnwrapIfNullable(); // Use for parser
-                var colInit = colCtor.Create(elemType, valuesUsed);
+                var argElemType = colCtor.GetElementType(argType);
+                var colAdapter = colCtor.Create(argElemType, valuesUsed);
+
+                var valueType = argElemType.UnwrapIfNullable();
                 var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
 
                 for (int i = 0; i < valuesUsed; i++)
                 {
                     string stringValue = stringValues[valuesOffset + i];
-
-                    if (stringValue == null)
-                    {
-                        if (valueType == BooleanType)
-                        {
-                            colInit.SetValue(i, value: true);
-                            continue;
-                        }
-                        else
-                        {
-                            stringValue = String.Empty;
-                        }
-                    }
-
-                    var value = parser.Parse(stringValue, valueType, _formatProvider);
-                    colInit.SetValue(i, value);
+                    var value = ParseValue(stringValue, valueType, parser);
+                    colAdapter.SetValue(i, value);
                 }
 
-                return colInit.Collection;
+                return colAdapter.Collection;
             }
             else
             {
@@ -241,44 +231,23 @@ namespace VoidMain.Application.Commands.Arguments
                     valuesUsed = 1;
                 }
 
-                var valueType = argType.UnwrapIfNullable();
-                if (valueType == StringType)
-                {
-                    return stringValue;
-                }
-                if (stringValue == null)
-                {
-                    if (valueType == BooleanType)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        stringValue = String.Empty;
-                    }
-                }
-
-                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
-                var value = parser.Parse(stringValue, valueType, _formatProvider);
-                return value;
+                var parser = _parserProvider.GetParser(argType, arg.ValueParser);
+                return ParseValue(stringValue, argType, parser);
             }
         }
 
-        private object GetEmptyValue(Type type)
+        private object ParseValue(string stringValue, Type valueType, IValueParser parser)
         {
-            if (type.GetTypeInfo().IsValueType)
+            if (stringValue == null)
             {
-                return Activator.CreateInstance(type);
+                if (valueType == BooleanType)
+                {
+                    return TrueValue;
+                }
+                stringValue = String.Empty;
             }
-            return null;
-        }
 
-        private Array CopyArray(Array source, int offset, int length)
-        {
-            var elementType = _arrayCtor.GetElementType(source.GetType());
-            var copy = (Array)_arrayCtor.Create(elementType, length).Collection;
-            Array.Copy(source, offset, copy, 0, length);
-            return copy;
+            return parser.Parse(stringValue, valueType, _formatProvider);
         }
     }
 }

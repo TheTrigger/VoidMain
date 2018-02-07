@@ -21,6 +21,9 @@ namespace VoidMain.Application.Commands.Arguments
         {
             var parsers = new Dictionary<Type, IValueParser>();
 
+            // Default parsers.
+            parsers[typeof(string)] = new StringValueParser();
+
             // Custom parsers.
             if (customParsers?.Count > 0)
             {

@@ -4,7 +4,7 @@ Almost every part of the framework can be extended or replaced.
 
 ![demo](demo.gif)
 
-## This is a work in progress.
+## This is a work in progress
 
 The framework is still in early development. The API is not final and some features are missing or incomplete. The work on the documentation and performance is not started yet.
 

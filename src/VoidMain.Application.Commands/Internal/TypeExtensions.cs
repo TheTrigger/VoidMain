@@ -38,5 +38,14 @@ namespace VoidMain.Application.Commands.Internal
             return method.Name == DisposableName
                 && DisposableType.IsAssignableFrom(method.DeclaringType);
         }
+
+        public static object GetEmptyValue(this Type type)
+        {
+            if (type.GetTypeInfo().IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+            return null;
+        }
     }
 }

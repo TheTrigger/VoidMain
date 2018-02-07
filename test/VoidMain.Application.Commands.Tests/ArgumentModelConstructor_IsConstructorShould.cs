@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using VoidMain.Application.Commands.Arguments;
 using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Model;
 using Xunit;
@@ -15,7 +16,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeParameter()
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(
                 typeof(SignatureModule), nameof(SignatureModule.Option));
@@ -35,7 +36,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeType()
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(
                 typeof(SignatureModule), nameof(SignatureModule.Option));
@@ -58,7 +59,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeName(Type moduleType, string methodName, string name)
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(moduleType, methodName);
 
@@ -77,7 +78,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeAlias()
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(
                 typeof(AttributesModule), nameof(AttributesModule.Option));
@@ -97,7 +98,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeDescription()
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(
                 typeof(AttributesModule), nameof(AttributesModule.Option));
@@ -124,7 +125,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeDefaultValue(Type moduleType, string methodName, object defaultValue)
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(moduleType, methodName);
 
@@ -143,7 +144,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeValueParser()
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(
                 typeof(AttributesModule), nameof(AttributesModule.Option));
@@ -169,7 +170,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeKind(Type moduleType, string methodName, ArgumentKind kind)
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(moduleType, methodName);
 
@@ -197,7 +198,7 @@ namespace VoidMain.Application.Commands.Tests
         public void InitializeOptional(Type moduleType, string methodName, bool isOptional)
         {
             // Arrange
-            var ctor = new ArgumentModelConstructor();
+            var ctor = NewArgumentModelConstructor();
             var command = new CommandModel();
             var parameter = GetFirstParameter(moduleType, methodName);
 
@@ -211,6 +212,12 @@ namespace VoidMain.Application.Commands.Tests
         #endregion
 
         #region Helpers
+
+        private ArgumentModelConstructor NewArgumentModelConstructor()
+        {
+            var colCtorProvider = new CollectionConstructorProvider();
+            return new ArgumentModelConstructor(colCtorProvider);
+        }
 
         private ParameterInfo GetFirstParameter(Type type, string methodName)
         {
