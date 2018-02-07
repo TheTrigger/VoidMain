@@ -19,10 +19,26 @@ namespace VoidMain.Application.Commands.Builder
             return GetError(method, module) == null;
         }
 
+        public bool TryCreate(MethodInfo method, ModuleModel module, out CommandModel command)
+        {
+            if (!IsCommand(method, module))
+            {
+                command = null;
+                return false;
+            }
+
+            command = CreateInternal(method, module);
+            return true;
+        }
+
         public CommandModel Create(MethodInfo method, ModuleModel module)
         {
             Validate(method, module);
+            return CreateInternal(method, module);
+        }
 
+        private CommandModel CreateInternal(MethodInfo method, ModuleModel module)
+        {
             var command = new CommandModel();
             command.Method = method;
             command.Module = module;

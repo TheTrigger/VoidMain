@@ -55,9 +55,8 @@ namespace VoidMain.Application.Commands.Builder
             var methods = moduleType.GetMethods();
             foreach (var method in methods)
             {
-                if (_commandsConstructor.IsCommand(method, module))
+                if (_commandsConstructor.TryCreate(method, module, out var command))
                 {
-                    var command = _commandsConstructor.Create(method, module);
                     module.Commands.Add(command);
                 }
             }
@@ -82,10 +81,13 @@ namespace VoidMain.Application.Commands.Builder
             var methods = moduleType.GetMethods();
             foreach (var method in methods)
             {
-                if (_commandsConstructor.IsCommand(method, module)
-                    && !config.IsRemoved(method))
+                if (config.IsRemoved(method))
                 {
-                    var command = _commandsConstructor.Create(method, module);
+                    continue;
+                }
+
+                if (_commandsConstructor.TryCreate(method, module, out var command))
+                {
                     module.Commands.Add(command);
                 }
             }

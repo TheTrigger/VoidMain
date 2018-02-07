@@ -7,5 +7,6 @@ namespace VoidMain.Application.Commands.Builder
     {
         bool IsCommand(MethodInfo method, ModuleModel module);
         CommandModel Create(MethodInfo method, ModuleModel module);
+        bool TryCreate(MethodInfo method, ModuleModel module, out CommandModel command);
     }
 }
