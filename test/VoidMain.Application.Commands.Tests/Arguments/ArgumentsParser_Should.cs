@@ -3,13 +3,12 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using VoidMain.Application.Commands.Arguments;
 using VoidMain.Application.Commands.Model;
 using Xunit;
 
-namespace VoidMain.Application.Commands.Tests
+namespace VoidMain.Application.Commands.Arguments.Tests
 {
-    public class ArgumentsParser_IsParserShould
+    public class ArgumentsParser_Should
     {
         #region Ctor tests
 

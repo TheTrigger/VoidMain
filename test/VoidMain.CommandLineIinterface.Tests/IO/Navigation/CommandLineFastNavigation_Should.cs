@@ -1,10 +1,9 @@
-﻿using VoidMain.CommandLineIinterface.IO.Navigation;
-using VoidMain.CommandLineIinterface.IO.Views;
+﻿using VoidMain.CommandLineIinterface.IO.Views;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.IO.Navigation.Tests
 {
-    public class CommandLineFastNavigation_IsNavigationShould
+    public class CommandLineFastNavigation_Should
     {
         #region FindNext tests
 

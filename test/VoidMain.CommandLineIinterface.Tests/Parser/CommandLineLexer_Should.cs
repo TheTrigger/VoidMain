@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.Parser.Tests
 {
-    public class CommandLineLexer_IsLexerShould
+    public class CommandLineLexer_Should
     {
         #region Ctor tests
 

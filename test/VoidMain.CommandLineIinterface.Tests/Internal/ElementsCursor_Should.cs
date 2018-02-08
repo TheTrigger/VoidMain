@@ -1,10 +1,9 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Internal;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.Internal.Tests
 {
-    public class ElementsCursor_IsCursorShould
+    public class ElementsCursor_Should
     {
         #region Ctor tests
 

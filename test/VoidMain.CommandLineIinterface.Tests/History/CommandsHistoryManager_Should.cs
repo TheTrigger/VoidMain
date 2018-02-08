@@ -1,11 +1,10 @@
 ﻿using Moq;
 using System;
-using VoidMain.CommandLineIinterface.History;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.History.Tests
 {
-    public class CommandsHistoryManager_IsManagerShould
+    public class CommandsHistoryManager_Should
     {
         #region Ctor tests
 

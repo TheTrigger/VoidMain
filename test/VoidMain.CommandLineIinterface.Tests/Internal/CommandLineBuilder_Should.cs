@@ -1,10 +1,9 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Internal;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.Internal.Tests
 {
-    public class CommandLineBuilder_IsBuilderShould
+    public class CommandLineBuilder_Should
     {
         #region Ctor tests
 

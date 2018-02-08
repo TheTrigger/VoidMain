@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.Parser.Syntax.Tests
 {
     public class SyntaxKindTests
     {

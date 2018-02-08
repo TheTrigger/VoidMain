@@ -1,11 +1,10 @@
 using System;
 using System.Reflection;
-using VoidMain.Application.Commands.Builder;
 using Xunit;
 
-namespace VoidMain.Application.Commands.Tests
+namespace VoidMain.Application.Commands.Builder.Tests
 {
-    public class ModuleModelConstructor_IsConstructorShould
+    public class ModuleModelConstructor_Should
     {
         #region Type tests
 

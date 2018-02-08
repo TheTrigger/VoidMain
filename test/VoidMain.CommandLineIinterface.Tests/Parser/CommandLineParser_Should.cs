@@ -1,12 +1,11 @@
 ﻿using Moq;
 using System;
-using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.Parser.Tests
 {
-    public class CommandLineParser_IsParserShould
+    public class CommandLineParser_Should
     {
         #region Ctor tests
 

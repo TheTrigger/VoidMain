@@ -2,13 +2,12 @@
 using System.Linq;
 using System.Reflection;
 using VoidMain.Application.Commands.Arguments;
-using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Model;
 using Xunit;
 
-namespace VoidMain.Application.Commands.Tests
+namespace VoidMain.Application.Commands.Builder.Tests
 {
-    public class ArgumentModelConstructor_IsConstructorShould
+    public class ArgumentModelConstructor_Should
     {
         #region Parameter tests
 

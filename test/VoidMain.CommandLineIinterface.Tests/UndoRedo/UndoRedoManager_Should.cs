@@ -1,11 +1,10 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.IO.Views;
-using VoidMain.CommandLineIinterface.UndoRedo;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Tests
+namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
 {
-    public class UndoRedoManager_IsManagerShould
+    public class UndoRedoManager_Should
     {
         #region Ctor tests
 

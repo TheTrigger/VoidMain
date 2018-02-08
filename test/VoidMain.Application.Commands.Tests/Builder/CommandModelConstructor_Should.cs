@@ -1,13 +1,12 @@
 ﻿using Moq;
 using System;
 using System.Reflection;
-using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Model;
 using Xunit;
 
-namespace VoidMain.Application.Commands.Tests
+namespace VoidMain.Application.Commands.Builder.Tests
 {
-    public class CommandModelConstructor_IsConstructorShould
+    public class CommandModelConstructor_Should
     {
         #region Ctor tests
 
