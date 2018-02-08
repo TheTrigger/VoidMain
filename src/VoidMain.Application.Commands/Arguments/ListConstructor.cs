@@ -14,7 +14,7 @@ namespace VoidMain.Application.Commands.Arguments
         {
             if (!collectionType.GetTypeInfo().IsGenericType)
             {
-                throw new AggregateException("Collection type must be generic.");
+                throw new ArgumentException("Collection type must be generic.");
             }
             return collectionType.GenericTypeArguments[0];
         }

@@ -16,7 +16,7 @@ namespace VoidMain.Application.Commands.Arguments
                 return collectionType.GenericTypeArguments[0];
             }
 
-            throw new AggregateException("Collection type must be an array or one of it's generic interfaces.");
+            throw new ArgumentException("Collection type must be an array or one of it's generic interfaces.");
         }
 
         public ICollectionAdapter Create(Type elementType, int count)
