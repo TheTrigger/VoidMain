@@ -13,30 +13,17 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         #region Ctor tests
 
         [Fact]
-        public void RequireServices()
-        {
-            IServiceProvider services = null;
-            var colCtorProvider = new Mock<ICollectionConstructorProvider>().Object;
-            var parserProvider = new Mock<IValueParserProvider>().Object;
-            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(services, colCtorProvider, parserProvider));
-        }
-
-        [Fact]
         public void RequireCollectionConstructorProvider()
         {
-            var services = new Mock<IServiceProvider>().Object;
-            ICollectionConstructorProvider colCtorProvider = null;
             var parserProvider = new Mock<IValueParserProvider>().Object;
-            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(services, colCtorProvider, parserProvider));
+            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(null, parserProvider));
         }
 
         [Fact]
         public void RequireValueParserProvider()
         {
-            var services = new Mock<IServiceProvider>().Object;
             var colCtorProvider = new Mock<ICollectionConstructorProvider>().Object;
-            IValueParserProvider parserProvider = null;
-            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(services, colCtorProvider, parserProvider));
+            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(colCtorProvider, null));
         }
 
         #endregion
@@ -47,21 +34,28 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         public void RequireValidArgumentsModel()
         {
             var parser = Parser();
-            Assert.Throws<ArgumentNullException>(() => parser.Parse(null, EmptyOptions, EmptyOperands));
+            Assert.Throws<ArgumentNullException>(() => parser.Parse(null, EmptyOptions, EmptyOperands, EmptyServices));
         }
 
         [Fact]
         public void RequireValidOptions()
         {
             var parser = Parser();
-            Assert.Throws<ArgumentNullException>(() => parser.Parse(Model(), null, EmptyOperands));
+            Assert.Throws<ArgumentNullException>(() => parser.Parse(Model(), null, EmptyOperands, EmptyServices));
         }
 
         [Fact]
         public void RequireValidOperands()
         {
             var parser = Parser();
-            Assert.Throws<ArgumentNullException>(() => parser.Parse(Model(), EmptyOptions, null));
+            Assert.Throws<ArgumentNullException>(() => parser.Parse(Model(), EmptyOptions, null, EmptyServices));
+        }
+
+        [Fact]
+        public void RequireValidServices()
+        {
+            var parser = Parser();
+            Assert.Throws<ArgumentNullException>(() => parser.Parse(Model(), EmptyOptions, EmptyOperands, null));
         }
 
         #endregion
@@ -72,11 +66,12 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         public void GetRegisteredService()
         {
             // Arrange
-            var parser = ParserWithServices();
+            var parser = Parser();
+            var services = Services();
             var arg = Service<IRegisteredService>("s");
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands, services);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -86,11 +81,12 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         public void GetNullForOptionalUnregisteredService()
         {
             // Arrange
-            var parser = ParserWithServices();
+            var parser = Parser();
+            var services = Services();
             var arg = Service<IUnregisteredService>("s").IsOptional();
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands, services);
 
             // Assert
             Assert.Null(parsed[0]);
@@ -100,11 +96,12 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         public void ThrowForNonOptionalUnregisteredService()
         {
             // Arrange
-            var parser = ParserWithServices();
+            var parser = Parser();
+            var services = Services();
             var arg = Service<IUnregisteredService>("s").IsOptional(false);
 
             // Act, Assert
-            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands));
+            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands, services));
         }
 
         #endregion
@@ -123,7 +120,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
                 ("another", "a"));
 
             // Act
-            var parsed = parser.Parse(Model(arg), options, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), options, EmptyOperands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -142,7 +139,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
                 ("another", "a"));
 
             // Act
-            var parsed = parser.Parse(Model(arg), options, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), options, EmptyOperands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -158,7 +155,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var options = OptionValues(("another", "a"));
 
             // Act
-            var parsed = parser.Parse(Model(arg), options, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), options, EmptyOperands, EmptyServices);
 
             // Assert
             Assert.Equal(default(int), parsed[0]);
@@ -177,7 +174,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
                 (arg.Name, value.ToString()));
 
             // Act
-            var parsed = parser.Parse(Model(arg), options, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), options, EmptyOperands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -198,7 +195,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             string[] operands = { values[0].ToString(), values[1].ToString() };
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -216,7 +213,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             string[] operands = { values[0].ToString(), values[1].ToString() };
 
             // Act
-            var parsed = parser.Parse(Model(arg0, arg1), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg0, arg1), EmptyOptions, operands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg1.Type, parsed[1]);
@@ -235,7 +232,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<int>("value").IsOptional();
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -250,7 +247,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<int>("value").IsOptional(false);
 
             // Act, Assert
-            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands));
+            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands, EmptyServices));
         }
 
         [Fact]
@@ -262,7 +259,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<int>("value").HasDefaultValue(defaultValue);
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -280,7 +277,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<int[]>("value").HasDefaultValue(defaultValue);
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, EmptyOperands, EmptyServices);
             int[] array = (int[])parsed[0];
             array[0] = 5;
 
@@ -297,7 +294,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<int>("value").HasDefaultValue(new string[0]);
 
             // Act, Assert
-            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands));
+            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands, EmptyServices));
         }
 
         [Fact]
@@ -308,7 +305,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<int>("value").HasDefaultValue(new double[0]);
 
             // Act, Assert
-            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands));
+            Assert.Throws<ArgumentParseException>(() => parser.Parse(Model(arg), EmptyOptions, EmptyOperands, EmptyServices));
         }
 
         #endregion
@@ -326,7 +323,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<string[]>("value");
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands, EmptyServices);
             string[] array = (string[])parsed[0];
             array[0] = "X";
 
@@ -345,7 +342,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<int[]>("value");
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -362,7 +359,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<List<int>>("value");
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -378,7 +375,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             var arg = Operand<string>("value");
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -395,7 +392,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             string[] operands = { value.ToString() };
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -418,7 +415,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
             string[] operands = { value.ToString(cultureInfo) };
 
             // Act
-            var parsed = parser.Parse(Model(arg), EmptyOptions, operands);
+            var parsed = parser.Parse(Model(arg), EmptyOptions, operands, EmptyServices);
 
             // Assert
             Assert.IsAssignableFrom(arg.Type, parsed[0]);
@@ -431,29 +428,23 @@ namespace VoidMain.Application.Commands.Arguments.Tests
 
         private static ArgumentsParser Parser(ArgumentsParserOptions options = null)
         {
-            var collection = new ServiceCollection();
-            var services = collection.BuildServiceProvider();
-            return Parser(services, options);
-        }
-
-        private static ArgumentsParser ParserWithServices(ArgumentsParserOptions options = null)
-        {
-            var collection = new ServiceCollection();
-            collection.AddTransient<IRegisteredService, ServiceImpl>();
-            var services = collection.BuildServiceProvider();
-            return Parser(services, options);
-        }
-
-        private static ArgumentsParser Parser(IServiceProvider services, ArgumentsParserOptions options = null)
-        {
             var colCtorProvider = new CollectionConstructorProvider();
             var parserProvider = new ValueParserProvider();
-            return new ArgumentsParser(services, colCtorProvider, parserProvider, options);
+            return new ArgumentsParser(colCtorProvider, parserProvider, options);
         }
 
         public interface IRegisteredService { }
         public interface IUnregisteredService { }
         public class ServiceImpl : IRegisteredService, IUnregisteredService { }
+
+        private static readonly IServiceProvider EmptyServices = new Mock<IServiceProvider>().Object;
+
+        private static IServiceProvider Services()
+        {
+            var collection = new ServiceCollection();
+            collection.AddTransient<IRegisteredService, ServiceImpl>();
+            return collection.BuildServiceProvider();
+        }
 
         private static readonly KeyValuePair<string, string>[] EmptyOptions
             = Array.Empty<KeyValuePair<string, string>>();

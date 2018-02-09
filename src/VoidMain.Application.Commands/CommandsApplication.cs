@@ -42,13 +42,15 @@ namespace VoidMain.Application.Commands
 
             using (var scope = _services.CreateScope())
             {
+                var services = scope.ServiceProvider;
+
                 var command = _commandResolver.Resolve(context, _appModel.Commands);
-                var arguments = _argumentsParser.Parse(command.Arguments, options, operands);
+                var arguments = _argumentsParser.Parse(command.Arguments, options, operands, services);
 
                 token.ThrowIfCancellationRequested();
 
                 await _commandExecutor.ExecuteAsync(
-                    command, arguments, scope.ServiceProvider, token)
+                    command, arguments, services, token)
                     .ConfigureAwait(false);
             }
         }

@@ -10,23 +10,20 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public class ArgumentsParser : IArgumentsParser
     {
-        private readonly Type StringType = typeof(string);
         private readonly Type BooleanType = typeof(bool);
         private readonly object TrueValue = true;
 
-        private readonly IServiceProvider _services;
         private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly IValueParserProvider _parserProvider;
         private readonly IFormatProvider _formatProvider;
         private readonly IEqualityComparer<string> _identifierComparer;
 
-        public ArgumentsParser(IServiceProvider services,
+        public ArgumentsParser(
             ICollectionConstructorProvider colCtorProvider,
             IValueParserProvider parserProvider,
             ArgumentsParserOptions options = null,
             CommandLineSyntaxOptions syntaxOptions = null)
         {
-            _services = services ?? throw new ArgumentNullException(nameof(services));
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
             _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
             _formatProvider = options?.FormatProvider ?? CultureInfo.CurrentCulture;
@@ -35,7 +32,7 @@ namespace VoidMain.Application.Commands.Arguments
         }
 
         public object[] Parse(IReadOnlyList<ArgumentModel> argsModel,
-            KeyValuePair<string, string>[] options, string[] operands)
+            KeyValuePair<string, string>[] options, string[] operands, IServiceProvider services)
         {
             if (argsModel == null)
             {
@@ -49,6 +46,10 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 throw new ArgumentNullException(nameof(operands));
             }
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
 
             var values = new object[argsModel.Count];
             int operandsOffset = 0;
@@ -60,7 +61,7 @@ namespace VoidMain.Application.Commands.Arguments
                 switch (arg.Kind)
                 {
                     case ArgumentKind.Service:
-                        values[i] = GetService(arg);
+                        values[i] = GetService(arg, services);
                         break;
                     case ArgumentKind.Option:
                         string[] optionValues = GetOptionValues(options, arg);
@@ -99,9 +100,9 @@ namespace VoidMain.Application.Commands.Arguments
                 || _identifierComparer.Equals(optionName, arg.Alias);
         }
 
-        private object GetService(ArgumentModel arg)
+        private object GetService(ArgumentModel arg, IServiceProvider services)
         {
-            var service = _services.GetService(arg.Type);
+            var service = services.GetService(arg.Type);
             if (service != null)
             {
                 return service;
