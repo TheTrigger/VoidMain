@@ -35,6 +35,7 @@ namespace VoidMain.Application.Commands.Execution
                 throw new ArgumentNullException(nameof(services));
             }
 
+            token.ThrowIfCancellationRequested();
             var moduleType = command.Module.Type;
             var method = command.Method;
             var moduleInstance = _typeActivator.CreateInstance(services, moduleType);
@@ -47,6 +48,7 @@ namespace VoidMain.Application.Commands.Execution
                 }
 
                 var invoker = _invokerProvider.GetInvoker(method);
+                token.ThrowIfCancellationRequested();
                 var result = await invoker.Invoke(moduleInstance, method, arguments)
                     .ConfigureAwait(false);
                 return result;

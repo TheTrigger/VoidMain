@@ -13,8 +13,8 @@ namespace VoidMain.Application.Commands
 {
     public class CommandsApplication : ICommandsApplication
     {
-        private readonly KeyValuePair<string, string>[] EmptyOptions = Array.Empty<KeyValuePair<string, string>>();
-        private readonly string[] EmptyOperands = Array.Empty<string>();
+        private static readonly KeyValuePair<string, string>[] EmptyOptions = Array.Empty<KeyValuePair<string, string>>();
+        private static readonly string[] EmptyOperands = Array.Empty<string>();
 
         private readonly IServiceProvider _services;
         private readonly ICommandResolver _commandResolver;
@@ -22,7 +22,8 @@ namespace VoidMain.Application.Commands
         private readonly ICommandExecutor _commandExecutor;
         private readonly ApplicationModel _appModel;
 
-        public CommandsApplication(IServiceProvider services, ICommandResolver commandResolver,
+        public CommandsApplication(
+            IServiceProvider services, ICommandResolver commandResolver,
             IArgumentsParser argumentsParser, ICommandExecutor commandExecutor,
             ApplicationModel appModel)
         {
@@ -42,8 +43,7 @@ namespace VoidMain.Application.Commands
 
             using (var scope = _services.CreateScope())
             {
-                var services = scope.ServiceProvider;
-
+                var services = new ArgumentsServiceProvider(scope.ServiceProvider, token);
                 var command = _commandResolver.Resolve(context, _appModel.Commands);
                 var arguments = _argumentsParser.Parse(command.Arguments, options, operands, services);
 

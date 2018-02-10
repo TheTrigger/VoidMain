@@ -24,7 +24,11 @@ namespace VoidMain.CommandLineIinterface.IO.Console.Internal
         {
             if (_isDisposed) return;
             _console.CancelKeyPress -= Canceled;
-            _tokenSource.Dispose();
+            lock (_tokenSource)
+            {
+                _tokenSource.Dispose();
+            }
+            _isDisposed = true;
         }
 
         private void Canceled(object sender, ConsoleCancelEventArgs e)
@@ -45,7 +49,10 @@ namespace VoidMain.CommandLineIinterface.IO.Console.Internal
         public void Cancel()
         {
             ThrowIfDisposed();
-            _tokenSource.Cancel();
+            lock (_tokenSource)
+            {
+                _tokenSource.Cancel();
+            }
         }
 
         public void Reset()

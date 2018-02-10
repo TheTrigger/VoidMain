@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
 using VoidMain.Application.Commands.Arguments;
 using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
@@ -8,6 +9,7 @@ namespace VoidMain.Application.Commands.Builder
 {
     public class ArgumentModelConstructor : IArgumentModelConstructor
     {
+        private readonly Type TokenType = typeof(CancellationToken);
         private readonly ICollectionConstructorProvider _colCtorProvider;
 
         public ArgumentModelConstructor(ICollectionConstructorProvider colCtorProvider)
@@ -64,7 +66,7 @@ namespace VoidMain.Application.Commands.Builder
                 return ArgumentKind.Operand;
             }
 
-            if (paramType.GetTypeInfo().IsInterface)
+            if (paramType.GetTypeInfo().IsInterface || paramType == TokenType)
             {
                 return ArgumentKind.Service;
             }
