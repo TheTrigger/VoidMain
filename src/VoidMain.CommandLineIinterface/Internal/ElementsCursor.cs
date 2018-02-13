@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
-    [DebuggerDisplay("{Peek()} -> {Peek(1)}")]
+    [DebuggerDisplay("{Peek(0)} -> {Peek(1)}")]
     public class ElementsCursor<T>
     {
         public int Position { get; private set; }

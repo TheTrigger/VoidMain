@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.CommandLineIinterface.Parser.Syntax
 {
-    public interface ICommandLineSyntaxVisitor<TParam>
+    public interface ICommandLineSyntaxVisitor<in TParam>
     {
         /// <summary>
         /// Visits CommandLineSyntax node.

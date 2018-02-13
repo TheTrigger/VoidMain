@@ -19,8 +19,8 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
             MaskSymbol = Char.MinValue;
         }
 
-        public CommandLineViewType ViewType { get; private set; }
-        public char MaskSymbol { get; private set; }
+        public CommandLineViewType ViewType { get; }
+        public char MaskSymbol { get; }
 
         public int Position => _lineBuilder.Position;
         public int Length => _lineBuilder.Length;

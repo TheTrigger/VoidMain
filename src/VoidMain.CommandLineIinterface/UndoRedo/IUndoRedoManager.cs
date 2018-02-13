@@ -1,5 +1,4 @@
-﻿using System;
-using VoidMain.CommandLineIinterface.IO.Views;
+﻿using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.UndoRedo
 {

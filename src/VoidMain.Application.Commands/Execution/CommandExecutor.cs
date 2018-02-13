@@ -12,8 +12,7 @@ namespace VoidMain.Application.Commands.Execution
         private readonly ITypeActivator _typeActivator;
         private readonly IMethodInvokerProvider _invokerProvider;
 
-        public CommandExecutor(IServiceProvider services,
-            ITypeActivator typeActivator, IMethodInvokerProvider invokerProvider)
+        public CommandExecutor(ITypeActivator typeActivator, IMethodInvokerProvider invokerProvider)
         {
             _typeActivator = typeActivator ?? throw new ArgumentNullException(nameof(typeActivator));
             _invokerProvider = invokerProvider ?? throw new ArgumentNullException(nameof(invokerProvider));

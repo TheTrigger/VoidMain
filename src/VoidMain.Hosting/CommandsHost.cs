@@ -8,9 +8,9 @@ namespace VoidMain.Hosting
 {
     public class CommandsHost : ICommandsHost
     {
-        private IServiceProvider _services;
-        private ICommandLineIinterface _cli;
-        private CommandDelegate _app;
+        private readonly IServiceProvider _services;
+        private readonly ICommandLineIinterface _cli;
+        private readonly CommandDelegate _app;
         private bool _isDisposed;
 
         public CommandsHost(IServiceProvider services,

@@ -51,8 +51,8 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
             if (start.Source == null || end.Source == null
                 || end.Source != start.Source)
             {
-                throw new ArgumentException(nameof(end),
-                    "Source for the end span is not match one for the start span.");
+                throw new ArgumentException(
+                    "Source for the end span is not match one for the start span.", nameof(end));
             }
 
             return new TextSpan(start.Source, start.Start, end.End - start.Start);

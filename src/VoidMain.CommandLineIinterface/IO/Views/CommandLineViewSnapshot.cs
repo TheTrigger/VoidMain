@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    [DebuggerDisplay("{LineContent}")]
+    [DebuggerDisplay("{" + nameof(LineContent) + "}")]
     public struct CommandLineViewSnapshot : IEquatable<CommandLineViewSnapshot>
     {
         public string LineContent { get; }

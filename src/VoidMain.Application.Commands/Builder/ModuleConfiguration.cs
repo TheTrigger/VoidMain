@@ -7,7 +7,7 @@ namespace VoidMain.Application.Commands.Builder
 {
     public class ModuleConfiguration<TModule> : IModuleConfiguration<TModule>
     {
-        private List<MethodInfo> _removed;
+        private readonly List<MethodInfo> _removed;
 
         public string Name { get; set; }
         public string Description { get; set; }

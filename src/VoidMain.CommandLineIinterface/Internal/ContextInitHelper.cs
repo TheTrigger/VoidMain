@@ -9,7 +9,6 @@ namespace VoidMain.CommandLineIinterface.Internal
 {
     public class ContextInitHelper
     {
-        private readonly IEqualityComparer<string> _optionNameComparer;
         private readonly StringBuilder _valueBuffer;
         private readonly List<KeyValuePair<string, string>> _optionsBuffer;
         private readonly List<string> _operandsBuffer;

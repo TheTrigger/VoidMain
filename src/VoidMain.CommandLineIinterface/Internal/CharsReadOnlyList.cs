@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
-    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
     public class CharsReadOnlyList : IReadOnlyList<char>
     {
         private readonly string _value;
