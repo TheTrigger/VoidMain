@@ -92,7 +92,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     var interfaceBuilder = services
         .AddConsoleInterfaceCore()
-        .AddPromptMessage()
+        .AddPromptMessage("CMD> ")
         .AddUndoRedo(options =>
         {
             options.MaxCount = 10;
@@ -116,7 +116,7 @@ public void ConfigureServices(IServiceCollection services)
         {
             options.MaxCount = 10;
             options.SavePeriod = TimeSpan.FromSeconds(10);
-            options.CommandsComparer = CommandsHistoryComparer.OrdinalIgnoreCase;
+            options.CommandsComparer = StringComparer.OrdinalIgnoreCase;
         })
         .AddFileStorage(options =>
         {
