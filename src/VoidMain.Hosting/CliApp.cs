@@ -2,9 +2,9 @@
 
 namespace VoidMain.Hosting
 {
-    public static class CommandsApp
+    public static class CliApp
     {
-        public static void Start<TStartup>()
+        public static void Run<TStartup>()
             where TStartup : class, IStartup
         {
             var host = new CommandsHostBuilder()
