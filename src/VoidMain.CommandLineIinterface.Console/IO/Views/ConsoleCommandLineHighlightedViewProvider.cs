@@ -14,8 +14,6 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
         private readonly ISyntaxHighlighter<ConsoleTextStyle> _highlighter;
         private readonly SyntaxHighlightingPallete<ConsoleTextStyle> _pallete;
 
-        public CommandLineViewType ViewType { get; } = CommandLineViewType.Normal;
-
         public ConsoleCommandLineHighlightedViewProvider(
             IConsole console, IConsoleCursor cursor,
             ICommandLineParser parser, ISyntaxHighlighter<ConsoleTextStyle> highlighter,
@@ -30,7 +28,17 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
 
         public ICommandLineView GetView(CommandLineViewOptions options)
         {
-            return new ConsoleCommandLineHighlightedView(_console, _cursor, _parser, _highlighter, _pallete);
+            switch (options.ViewType)
+            {
+                case CommandLineViewType.Normal:
+                    return new ConsoleCommandLineHighlightedView(_console, _cursor, _parser, _highlighter, _pallete);
+                case CommandLineViewType.Masked:
+                    return new ConsoleCommandLineMaskedView(_console, _cursor, options.MaskSymbol);
+                case CommandLineViewType.Hidden:
+                    return new CommandLineHiddenView();
+                default:
+                    throw new NotSupportedException($"{options.ViewType} view is not supported.");
+            }
         }
     }
 }
