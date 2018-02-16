@@ -3,6 +3,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using VoidMain.Application.Commands.Arguments.ValueParsers;
 using VoidMain.Application.Commands.Model;
 using Xunit;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.Application.Commands.Arguments
+namespace VoidMain.Application.Commands.Arguments.ValueParsers
 {
     public class ValueParserProviderOptions
     {

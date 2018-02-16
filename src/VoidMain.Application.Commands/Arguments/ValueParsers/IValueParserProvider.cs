@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Application.Commands.Arguments
+namespace VoidMain.Application.Commands.Arguments.ValueParsers
 {
     public interface IValueParserProvider
     {
