@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Application.Commands.Execution
+namespace VoidMain.Application.Commands.Internal
 {
     public interface ITypeActivator
     {

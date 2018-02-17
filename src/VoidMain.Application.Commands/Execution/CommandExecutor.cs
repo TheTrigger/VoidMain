@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 using VoidMain.CommandLineIinterface;
 

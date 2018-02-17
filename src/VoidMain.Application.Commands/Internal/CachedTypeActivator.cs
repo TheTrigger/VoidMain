@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace VoidMain.Application.Commands.Execution
+namespace VoidMain.Application.Commands.Internal
 {
     public class CachedTypeActivator : ITypeActivator
     {
