@@ -26,6 +26,10 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
 
             // Default parsers.
             parsers[typeof(string)] = new StringValueParser();
+            parsers[typeof(Guid)] = new GuidValueParser();
+            parsers[typeof(IntPtr)] = new IntPtrValueParser();
+            parsers[typeof(TimeSpan)] = new TimeSpanValueParser();
+            parsers[typeof(Uri)] = new UriValueParser();
 
             // Custom parsers.
             if (customParsers?.Count > 0)
