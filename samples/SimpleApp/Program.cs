@@ -27,7 +27,7 @@ namespace SimpleApp
         static void Main(string[] args)
         {
             PrintDevelopmentNote();
-            CommandsApp.Start<Program>();
+            CliApp.Run<Program>();
         }
 
         public void ConfigureServices(IServiceCollection services)

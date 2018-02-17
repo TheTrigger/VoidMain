@@ -53,7 +53,7 @@ class Program : IStartup
 {
     static void Main(string[] args)
     {
-        CommandsApp.Start<Program>();
+        CliApp.Run<Program>();
     }
 
     public void ConfigureServices(IServiceCollection services)
