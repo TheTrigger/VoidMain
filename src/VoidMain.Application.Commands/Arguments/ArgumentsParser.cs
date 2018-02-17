@@ -247,8 +247,9 @@ namespace VoidMain.Application.Commands.Arguments
                     valuesUsed = 1;
                 }
 
-                var parser = _parserProvider.GetParser(argType, arg.ValueParser);
-                return ParseValue(stringValue, argType, parser);
+                var valueType = argType.UnwrapIfNullable();
+                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
+                return ParseValue(stringValue, valueType, parser);
             }
         }
 
