@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace VoidMain.Application.Commands.Arguments.ValueParsers
 {
     public class ValueParserProvider : IValueParserProvider
     {
         private readonly IValueParser _defaultParser;
+        private readonly IValueParser _enumParser;
         private readonly Dictionary<Type, IValueParser> _standardParsers;
         private readonly Dictionary<Type, IValueParser> _customParsersCache;
 
         public ValueParserProvider(ValueParserProviderOptions options = null)
         {
             _defaultParser = options?.DefaultParser ?? new ChangeTypeValueParser();
+            _enumParser = options?.EnumParser ?? new EnumValueParser();
             _standardParsers = InitParsers(options?.ValueParsers);
             _customParsersCache = new Dictionary<Type, IValueParser>();
         }
@@ -48,6 +51,10 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
             IValueParser parser = null;
             if (parserType == null)
             {
+                if (valueType.GetTypeInfo().IsEnum)
+                {
+                    return _enumParser;
+                }
                 if (!_standardParsers.TryGetValue(valueType, out parser))
                 {
                     parser = _defaultParser;
