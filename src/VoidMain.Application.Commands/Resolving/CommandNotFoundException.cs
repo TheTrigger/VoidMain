@@ -8,14 +8,13 @@ namespace VoidMain.Application.Commands.Resolving
         public CommandName CommandName { get; }
 
         public CommandNotFoundException(CommandName commandName)
-            : base(FormatMessage(commandName))
+            : this(commandName, null, null)
         {
-            CommandName = commandName;
         }
+
         public CommandNotFoundException(CommandName commandName, string message)
-            : base(FormatMessage(commandName, message))
+            : this(commandName, message, null)
         {
-            CommandName = commandName;
         }
 
         public CommandNotFoundException(CommandName commandName, string message, Exception inner)

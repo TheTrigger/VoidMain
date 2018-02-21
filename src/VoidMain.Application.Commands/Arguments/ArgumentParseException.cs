@@ -7,10 +7,14 @@ namespace VoidMain.Application.Commands.Arguments
     {
         public ArgumentModel Argument { get; }
 
-        public ArgumentParseException(ArgumentModel argument, string message)
-            : base(FormatMessage(argument, message))
+        public ArgumentParseException(ArgumentModel argument)
+            : this(argument, null, null)
         {
-            Argument = argument;
+        }
+
+        public ArgumentParseException(ArgumentModel argument, string message)
+            : this(argument, message, null)
+        {
         }
 
         public ArgumentParseException(ArgumentModel argument, string message, Exception innerException)
@@ -19,8 +23,12 @@ namespace VoidMain.Application.Commands.Arguments
             Argument = argument;
         }
 
-        private static string FormatMessage(ArgumentModel argument, string message)
+        private static string FormatMessage(ArgumentModel argument, string message = null)
         {
+            if (String.IsNullOrWhiteSpace(message))
+            {
+                return $"Could not parse argument '{argument.Name}'.";
+            }
             return $"Could not parse argument '{argument.Name}': {message}";
         }
     }
