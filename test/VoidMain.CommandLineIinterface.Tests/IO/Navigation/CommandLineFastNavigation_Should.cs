@@ -61,9 +61,9 @@ namespace VoidMain.CommandLineIinterface.IO.Navigation.Tests
 
         #region Helpers
 
-        private static CommandLineHiddenView InitView(string startValue, int startPos)
+        private static CommandLineInMemoryView InitView(string startValue, int startPos)
         {
-            var lineView = new CommandLineHiddenView();
+            var lineView = new CommandLineInMemoryView();
             lineView.Type(startValue);
             lineView.MoveTo(startPos);
             return lineView;

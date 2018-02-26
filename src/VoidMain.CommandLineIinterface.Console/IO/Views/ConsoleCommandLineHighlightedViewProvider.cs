@@ -35,7 +35,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Console
                 case CommandLineViewType.Masked:
                     return new ConsoleCommandLineMaskedView(_console, _cursor, options.MaskSymbol);
                 case CommandLineViewType.Hidden:
-                    return new CommandLineHiddenView();
+                    return new CommandLineInMemoryView();
                 default:
                     throw new NotSupportedException($"{options.ViewType} view is not supported.");
             }

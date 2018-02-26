@@ -3,11 +3,11 @@ using VoidMain.CommandLineIinterface.Internal;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class CommandLineHiddenView : ICommandLineView
+    public class CommandLineInMemoryView : ICommandLineView
     {
         private readonly CommandLineBuilder _lineBuilder;
 
-        public CommandLineHiddenView()
+        public CommandLineInMemoryView()
         {
             _lineBuilder = new CommandLineBuilder();
             ViewType = CommandLineViewType.Hidden;
