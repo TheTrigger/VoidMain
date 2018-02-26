@@ -34,7 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
             services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
 
-            services.AddSingleton<ICommandLineFastNavigation, CommandLineFastNavigation>();
+            services.AddSingleton<ICommandLineViewNavigation, CommandLineViewNavigation>();
 
             services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
 

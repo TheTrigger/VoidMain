@@ -3,12 +3,12 @@ using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.IO.Navigation
 {
-    public class CommandLineFastNavigation : ICommandLineFastNavigation
+    public class CommandLineViewNavigation : ICommandLineViewNavigation
     {
         private static Predicate<char> IsWhitespace = Char.IsWhiteSpace;
         private static Predicate<char> IsNotWhitespace = c => !Char.IsWhiteSpace(c);
 
-        public int FindNext(ICommandLineReadOnlyView lineView)
+        public int FindNextPosition(ICommandLineReadOnlyView lineView)
         {
             if (lineView.Position >= lineView.Length - 1)
             {
@@ -24,7 +24,7 @@ namespace VoidMain.CommandLineIinterface.IO.Navigation
             return SkipWhileForward(lineView, currPos, predicate);
         }
 
-        public int FindPrev(ICommandLineReadOnlyView lineView)
+        public int FindPrevPosition(ICommandLineReadOnlyView lineView)
         {
             if (lineView.Position == 0) return 0;
 

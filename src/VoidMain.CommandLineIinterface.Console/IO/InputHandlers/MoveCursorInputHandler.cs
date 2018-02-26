@@ -7,11 +7,11 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 {
     public class MoveCursorInputHandler : IConsoleInputHandler
     {
-        private readonly ICommandLineFastNavigation _fastNavigation;
+        private readonly ICommandLineViewNavigation _fastNavigation;
 
         public int Order { get; set; } = 2048;
 
-        public MoveCursorInputHandler(ICommandLineFastNavigation fastNavigation)
+        public MoveCursorInputHandler(ICommandLineViewNavigation fastNavigation)
         {
             _fastNavigation = fastNavigation ?? throw new ArgumentNullException(nameof(fastNavigation));
         }
@@ -58,7 +58,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 
             if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
-                lineView.MoveTo(_fastNavigation.FindPrev(lineView));
+                lineView.MoveTo(_fastNavigation.FindPrevPosition(lineView));
                 args.IsHandledHint = true;
             }
             else if (lineView.Position > 0)
@@ -75,7 +75,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 
             if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
-                lineView.MoveTo(_fastNavigation.FindNext(lineView));
+                lineView.MoveTo(_fastNavigation.FindNextPosition(lineView));
                 args.IsHandledHint = true;
             }
             else if (lineView.Position < lineView.Length)

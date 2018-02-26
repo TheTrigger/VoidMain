@@ -7,11 +7,11 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 {
     public class DeleteCharacterInputHandler : IConsoleInputHandler
     {
-        private readonly ICommandLineFastNavigation _fastNavigation;
+        private readonly ICommandLineViewNavigation _fastNavigation;
 
         public int Order { get; set; } = 1024;
 
-        public DeleteCharacterInputHandler(ICommandLineFastNavigation fastNavigation)
+        public DeleteCharacterInputHandler(ICommandLineViewNavigation fastNavigation)
         {
             _fastNavigation = fastNavigation ?? throw new ArgumentNullException(nameof(fastNavigation));
         }
@@ -43,7 +43,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 
             if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
-                lineView.Delete(_fastNavigation.FindPrev(lineView) - lineView.Position);
+                lineView.Delete(_fastNavigation.FindPrevPosition(lineView) - lineView.Position);
                 args.IsHandledHint = true;
             }
             else if (lineView.Position > 0)
@@ -60,7 +60,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
 
             if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
-                lineView.Delete(_fastNavigation.FindNext(lineView) - lineView.Position);
+                lineView.Delete(_fastNavigation.FindNextPosition(lineView) - lineView.Position);
                 args.IsHandledHint = true;
             }
             else if (lineView.Position < lineView.Length)

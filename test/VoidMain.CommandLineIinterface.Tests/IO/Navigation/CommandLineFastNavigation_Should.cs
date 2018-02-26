@@ -20,11 +20,11 @@ namespace VoidMain.CommandLineIinterface.IO.Navigation.Tests
         public void FindNext(string startValue, int startPos, int expectedPos)
         {
             // Arrange
-            var navigation = new CommandLineFastNavigation();
+            var navigation = new CommandLineViewNavigation();
             var lineView = InitView(startValue, startPos);
 
             // Act
-            int actualPos = navigation.FindNext(lineView);
+            int actualPos = navigation.FindNextPosition(lineView);
 
             // Assert
             Assert.Equal(expectedPos, actualPos);
@@ -47,11 +47,11 @@ namespace VoidMain.CommandLineIinterface.IO.Navigation.Tests
         public void FindPrev(string startValue, int startPos, int expectedPos)
         {
             // Arrange
-            var navigation = new CommandLineFastNavigation();
+            var navigation = new CommandLineViewNavigation();
             var lineView = InitView(startValue, startPos);
 
             // Act
-            int actualPos = navigation.FindPrev(lineView);
+            int actualPos = navigation.FindPrevPosition(lineView);
 
             // Assert
             Assert.Equal(expectedPos, actualPos);
