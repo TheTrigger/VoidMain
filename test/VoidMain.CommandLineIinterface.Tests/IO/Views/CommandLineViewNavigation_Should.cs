@@ -3,7 +3,7 @@ using Xunit;
 
 namespace VoidMain.CommandLineIinterface.IO.Navigation.Tests
 {
-    public class CommandLineFastNavigation_Should
+    public class CommandLineViewNavigation_Should
     {
         #region FindNext tests
 

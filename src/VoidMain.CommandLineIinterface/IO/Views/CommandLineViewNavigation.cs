@@ -1,7 +1,6 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.IO.Navigation
+namespace VoidMain.CommandLineIinterface.IO.Views
 {
     public class CommandLineViewNavigation : ICommandLineViewNavigation
     {

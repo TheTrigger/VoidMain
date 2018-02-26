@@ -5,7 +5,6 @@ using VoidMain.CommandLineIinterface.IO;
 using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.IO.Console.InputHandlers;
 using VoidMain.CommandLineIinterface.IO.Console.Internal;
-using VoidMain.CommandLineIinterface.IO.Navigation;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.IO.Views.Console;
 using VoidMain.CommandLineIinterface.Parser;

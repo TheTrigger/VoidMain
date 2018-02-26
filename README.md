@@ -1,5 +1,5 @@
 # VoidMain
-VoidMain is a framework for building command-line applications, inspired by ASP.NET Core.
+VoidMain is a framework for building command-line applications. Inspired by ASP.NET Core.
 Almost every part of the framework can be extended or replaced.
 
 ![demo](demo.gif)

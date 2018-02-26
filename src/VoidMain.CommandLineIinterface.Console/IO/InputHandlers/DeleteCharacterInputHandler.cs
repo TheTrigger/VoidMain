@@ -1,6 +1,5 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.IO.Console.Internal;
-using VoidMain.CommandLineIinterface.IO.Navigation;
 using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
