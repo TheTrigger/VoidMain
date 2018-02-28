@@ -2,7 +2,7 @@
 
 namespace VoidMain.Application.Commands.Builder
 {
-    public static class CommandsApplicationBuilderExtensions
+    public static class StandardCommandsApplicationBuilderExtensions
     {
         /// <summary>
         /// Adds commands: 'quit', 'clear'
