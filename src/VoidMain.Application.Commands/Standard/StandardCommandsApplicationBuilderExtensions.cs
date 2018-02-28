@@ -13,23 +13,5 @@ namespace VoidMain.Application.Commands.Builder
             builder.AddModule<OutputModule>();
             return builder;
         }
-
-        /// <summary>
-        /// Adds commands: 'quit'
-        /// </summary>
-        public static ICommandsApplicationBuilder AddAppCommands(this ICommandsApplicationBuilder builder)
-        {
-            builder.AddModule<AppModule>();
-            return builder;
-        }
-
-        /// <summary>
-        /// Adds commands: 'clear'
-        /// </summary>
-        public static ICommandsApplicationBuilder AddOutputCommands(this ICommandsApplicationBuilder builder)
-        {
-            builder.AddModule<OutputModule>();
-            return builder;
-        }
     }
 }
