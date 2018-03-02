@@ -38,9 +38,11 @@ namespace SimpleApp
 
         public void ConfigureApplication(IApplicationBuilder app)
         {
+            app.UseHelpCommandsRewriter();
             app.RunCommands(commands =>
             {
                 commands.AddStandardCommands();
+                commands.AddHelpCommands();
                 commands.AddModule<ExampleModule>();
             });
         }

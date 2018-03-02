@@ -13,7 +13,9 @@ namespace AdvancedApp
 {
     public class ExampleModule : CommandsModule
     {
-        public void Hello([Operand(DefaultValue = "World")] string name)
+        [Command(Description = "Greets the specified person.")]
+        public void Hello(
+            [Operand(DefaultValue = "World", Description = "Name of a person")] string name)
         {
             Output.WriteLine($"Hello, {name}!");
         }
@@ -79,9 +81,11 @@ namespace AdvancedApp
 
         public void ConfigureApplication(IApplicationBuilder app)
         {
+            app.UseHelpCommandsRewriter();
             app.RunCommands(commands =>
             {
                 commands.AddStandardCommands();
+                commands.AddHelpCommands();
                 commands.AddModule<ExampleModule>(module =>
                 {
                     module.Name = "";

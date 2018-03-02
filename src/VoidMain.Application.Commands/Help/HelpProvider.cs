@@ -128,12 +128,12 @@ namespace VoidMain.Application.Commands.Help
             }
         }
 
-        public string GetUsage()
+        private string GetUsage()
         {
             return "command_name [options...] [operands...]";
         }
 
-        public string GetCommandSignature(CommandModel command)
+        private string GetCommandSignature(CommandModel command)
         {
             var signature = new StringBuilder();
             signature.Append(command.Name);
