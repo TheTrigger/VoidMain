@@ -14,11 +14,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection Configure<TOptions>(
             this IServiceCollection services, Action<TOptions> configure)
-            where TOptions : class, new()
+            where TOptions : class
         {
             services.AddTransient(s =>
             {
-                var options = new TOptions();
+                var options = ActivatorUtilities.CreateInstance<TOptions>(s);
                 configure(options);
                 return options;
             });
