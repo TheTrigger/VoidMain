@@ -5,6 +5,6 @@ namespace VoidMain.Application.Commands.Resolving
 {
     public interface ICommandResolver
     {
-        CommandModel Resolve(Dictionary<string, object> context, ICommandsCollection commands);
+        CommandModel Resolve(Dictionary<string, object> context, IReadOnlyList<CommandModel> commands);
     }
 }

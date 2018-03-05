@@ -18,7 +18,7 @@ namespace VoidMain.Application.Commands.Resolving
             _nameComparer = new CommandNameComparer(identifierComparer);
         }
 
-        public CommandModel Resolve(Dictionary<string, object> context, ICommandsCollection commands)
+        public CommandModel Resolve(Dictionary<string, object> context, IReadOnlyList<CommandModel> commands)
         {
             if (context == null)
             {

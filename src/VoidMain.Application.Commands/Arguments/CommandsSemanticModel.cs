@@ -9,7 +9,7 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public class CommandsSemanticModel : ISemanticModel
     {
-        private readonly ICommandsCollection _commands;
+        private readonly ApplicationModel _appModel;
         private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly IEqualityComparer<string> _identifierComparer;
         private readonly CommandNameComparer _nameComparer;
@@ -19,15 +19,11 @@ namespace VoidMain.Application.Commands.Arguments
             ICollectionConstructorProvider colCtorProvider,
             CommandLineSyntaxOptions syntaxOptions = null)
         {
-            if (appModel == null)
-            {
-                throw new ArgumentNullException(nameof(appModel));
-            }
+            _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
             if (appModel.Commands == null)
             {
                 throw new ArgumentNullException(nameof(appModel) + "." + nameof(appModel.Commands));
             }
-            _commands = appModel.Commands;
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
             _identifierComparer = syntaxOptions?.IdentifierComparer
                 ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
@@ -50,7 +46,7 @@ namespace VoidMain.Application.Commands.Arguments
             _nameBuffer.AddRange(commandName);
             _nameBuffer.Add(subcommand);
 
-            bool hasSubCommand = _commands.Any(_ => _nameComparer.StartsWith(_.Name, _nameBuffer));
+            bool hasSubCommand = _appModel.Commands.Any(_ => _nameComparer.StartsWith(_.Name, _nameBuffer));
             return hasSubCommand;
         }
 
@@ -65,7 +61,7 @@ namespace VoidMain.Application.Commands.Arguments
                 throw new ArgumentNullException(nameof(optionName));
             }
 
-            var commands = _commands
+            var commands = _appModel.Commands
                 .Where(_ => _nameComparer.StartsWith(_.Name, commandName))
                 .ToArray();
 
@@ -99,7 +95,7 @@ namespace VoidMain.Application.Commands.Arguments
                 throw new ArgumentOutOfRangeException(nameof(operandIndex));
             }
 
-            var commands = _commands
+            var commands = _appModel.Commands
                 .Where(_ => _nameComparer.StartsWith(_.Name, commandName))
                 .ToArray();
 

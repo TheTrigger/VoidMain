@@ -1,7 +1,9 @@
-﻿namespace VoidMain.Application.Commands.Model
+﻿using System.Collections.Generic;
+
+namespace VoidMain.Application.Commands.Model
 {
     public class ApplicationModel
     {
-        public CommandsCollection Commands { get; set; }
+        public List<CommandModel> Commands { get; set; }
     }
 }

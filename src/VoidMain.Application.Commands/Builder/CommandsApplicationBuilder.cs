@@ -9,17 +9,18 @@ namespace VoidMain.Application.Commands.Builder
 {
     public class CommandsApplicationBuilder : ICommandsApplicationBuilder
     {
-        private readonly IServiceProvider _services;
         private readonly IModuleModelConstructor _moduleConstructor;
         private readonly ICommandModelConstructor _commandsConstructor;
         private readonly IModuleConfigurationFactory _configFactory;
         private readonly Dictionary<TypeInfo, ModuleModel> _modules;
 
+        public IServiceProvider Services { get; }
+
         public CommandsApplicationBuilder(IServiceProvider services,
             IModuleModelConstructor moduleConstructor, ICommandModelConstructor commandsConstructor,
             IModuleConfigurationFactory configFactory)
         {
-            _services = services ?? throw new ArgumentNullException(nameof(services));
+            Services = services ?? throw new ArgumentNullException(nameof(services));
             _moduleConstructor = moduleConstructor ?? throw new ArgumentNullException(nameof(moduleConstructor));
             _commandsConstructor = commandsConstructor ?? throw new ArgumentNullException(nameof(commandsConstructor));
             _configFactory = configFactory ?? throw new ArgumentNullException(nameof(configFactory));
@@ -95,9 +96,9 @@ namespace VoidMain.Application.Commands.Builder
 
         public ICommandsApplication Build()
         {
-            var appModel = _services.GetRequiredService<ApplicationModel>();
-            appModel.Commands = new CommandsCollection(_modules.Values.SelectMany(_ => _.Commands));
-            var app = ActivatorUtilities.CreateInstance<CommandsApplication>(_services, Type.EmptyTypes);
+            var appModel = Services.GetRequiredService<ApplicationModel>();
+            appModel.Commands = _modules.Values.SelectMany(_ => _.Commands).ToList();
+            var app = ActivatorUtilities.CreateInstance<CommandsApplication>(Services);
             return app;
         }
     }
