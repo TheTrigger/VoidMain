@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VoidMain.Application.Commands.Model;
 using VoidMain.Application.Commands.Resolving;
-using VoidMain.CommandLineIinterface.Parser;
+using VoidMain.CommandLineIinterface;
 using VoidMain.Hosting;
 
 namespace VoidMain.Application.Commands.Help

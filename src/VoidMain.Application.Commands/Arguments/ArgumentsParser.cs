@@ -5,7 +5,7 @@ using System.Reflection;
 using VoidMain.Application.Commands.Arguments.ValueParsers;
 using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
-using VoidMain.CommandLineIinterface.Parser;
+using VoidMain.CommandLineIinterface;
 
 namespace VoidMain.Application.Commands.Arguments
 {

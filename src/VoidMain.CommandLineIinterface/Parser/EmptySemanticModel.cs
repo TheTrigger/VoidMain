@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VoidMain.Application;
 
 namespace VoidMain.CommandLineIinterface.Parser
 {

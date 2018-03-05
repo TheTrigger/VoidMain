@@ -1,5 +1,6 @@
 ﻿using Moq;
 using System;
+using VoidMain.Application;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 using Xunit;
 

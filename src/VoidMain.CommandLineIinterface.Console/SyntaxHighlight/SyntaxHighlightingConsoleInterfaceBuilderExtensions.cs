@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VoidMain.Application;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.IO.Views.Console;
 using VoidMain.CommandLineIinterface.Parser;

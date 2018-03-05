@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.Parser
+namespace VoidMain.CommandLineIinterface
 {
     public class CommandLineSyntaxOptions
     {

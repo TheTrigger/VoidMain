@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using VoidMain.Application;
 using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.Console;
 using VoidMain.CommandLineIinterface.IO;
