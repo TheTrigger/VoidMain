@@ -7,5 +7,6 @@ namespace VoidMain.Application.Commands.Builder
     {
         bool IsModule(TypeInfo type);
         ModuleModel Create(TypeInfo type);
+        bool TryCreate(TypeInfo type, out ModuleModel module);
     }
 }

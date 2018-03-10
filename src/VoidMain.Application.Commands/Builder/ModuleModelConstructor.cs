@@ -14,10 +14,26 @@ namespace VoidMain.Application.Commands.Builder
             return GetError(type) == null;
         }
 
+        public bool TryCreate(TypeInfo type, out ModuleModel module)
+        {
+            if (!IsModule(type))
+            {
+                module = null;
+                return false;
+            }
+
+            module = CreateInternal(type);
+            return true;
+        }
+
         public ModuleModel Create(TypeInfo type)
         {
             Validate(type);
+            return CreateInternal(type);
+        }
 
+        private ModuleModel CreateInternal(TypeInfo type)
+        {
             var module = new ModuleModel();
             module.Type = type.AsType();
             module.Commands = new List<CommandModel>();
