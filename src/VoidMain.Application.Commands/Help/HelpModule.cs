@@ -12,7 +12,6 @@ namespace VoidMain.Application.Commands.Help
     {
         private readonly ApplicationModel _appModel;
         private readonly ICommandResolver _commandResolver;
-        private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly HelpProvider _helpProvider;
 
         public HelpModule(ApplicationModel appModel,
@@ -20,7 +19,10 @@ namespace VoidMain.Application.Commands.Help
         {
             _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
             _commandResolver = commandResolver ?? throw new ArgumentNullException(nameof(commandResolver));
-            _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
+            if (colCtorProvider == null)
+            {
+                throw new ArgumentNullException(nameof(colCtorProvider));
+            }
             _helpProvider = new HelpProvider(colCtorProvider);
         }
 

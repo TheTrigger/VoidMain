@@ -60,8 +60,7 @@ namespace VoidMain.Application.Commands.Builder
 
         private ArgumentKind GetKindFromType(Type paramType)
         {
-            bool isCollection = _colCtorProvider.TryGetCollectionConstructor(paramType, out var _);
-            if (isCollection)
+            if (_colCtorProvider.IsCollection(paramType))
             {
                 return ArgumentKind.Operand;
             }

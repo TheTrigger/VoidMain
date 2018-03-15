@@ -48,6 +48,27 @@ namespace VoidMain.Application.Commands.Arguments
             return ctors;
         }
 
+        public bool IsCollection(Type collectionType)
+        {
+            if (_colCtors.ContainsKey(collectionType))
+            {
+                return true;
+            }
+
+            if (collectionType.IsArray)
+            {
+                return _arrayCtor != null;
+            }
+
+            if (!collectionType.GetTypeInfo().IsGenericType)
+            {
+                return false;
+            }
+
+            var genericDefinition = collectionType.GetGenericTypeDefinition();
+            return _colCtors.ContainsKey(genericDefinition);
+        }
+
         public bool TryGetCollectionConstructor(Type collectionType, out ICollectionConstructor constructor)
         {
             if (_colCtors.TryGetValue(collectionType, out constructor))
@@ -58,7 +79,7 @@ namespace VoidMain.Application.Commands.Arguments
             if (collectionType.IsArray)
             {
                 constructor = _arrayCtor;
-                return true;
+                return constructor != null;
             }
 
             if (!collectionType.GetTypeInfo().IsGenericType)

@@ -163,8 +163,7 @@ namespace VoidMain.Application.Commands.Help
             string name = option.Name;
             string value = GetOptionValuePlaceholer(option);
 
-            bool isCollection = _colCtorProvider.TryGetCollectionConstructor(option.Type, out var _);
-            if (isCollection)
+            if (_colCtorProvider.IsCollection(option.Type))
             {
                 if (option.Optional)
                 {
@@ -197,8 +196,7 @@ namespace VoidMain.Application.Commands.Help
         {
             string name = operand.Name;
 
-            bool isCollection = _colCtorProvider.TryGetCollectionConstructor(operand.Type, out var _);
-            if (isCollection)
+            if (_colCtorProvider.IsCollection(operand.Type))
             {
                 if (operand.Optional)
                 {
