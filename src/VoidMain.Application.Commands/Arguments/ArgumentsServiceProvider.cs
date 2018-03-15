@@ -5,7 +5,7 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public class ArgumentsServiceProvider : IServiceProvider
     {
-        private static readonly Type TokenType = typeof(CancellationToken);
+        private static readonly Type CancelTokenType = typeof(CancellationToken);
         private readonly IServiceProvider _services;
         private readonly CancellationToken _token;
 
@@ -18,7 +18,7 @@ namespace VoidMain.Application.Commands.Arguments
 
         public object GetService(Type serviceType)
         {
-            if (serviceType == TokenType)
+            if (serviceType == CancelTokenType)
             {
                 return _token;
             }

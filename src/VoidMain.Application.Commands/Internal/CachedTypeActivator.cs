@@ -10,7 +10,7 @@ namespace VoidMain.Application.Commands.Internal
         private readonly ConcurrentDictionary<Type, ObjectFactory> _cache =
                new ConcurrentDictionary<Type, ObjectFactory>();
 
-        private readonly Func<Type, ObjectFactory> _factory =
+        private readonly Func<Type, ObjectFactory> _factoryOfFactory =
             (implType) => ActivatorUtilities.CreateFactory(implType, Type.EmptyTypes);
 
         public object CreateInstance(IServiceProvider services, Type implType)
@@ -29,7 +29,7 @@ namespace VoidMain.Application.Commands.Internal
                 return null;
             }
 
-            var factory = _cache.GetOrAdd(implType, _factory);
+            var factory = _cache.GetOrAdd(implType, _factoryOfFactory);
             var instance = factory(services, arguments: null);
 
             return instance;

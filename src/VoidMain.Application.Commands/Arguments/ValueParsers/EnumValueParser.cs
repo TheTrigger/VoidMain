@@ -5,6 +5,7 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
     public class EnumValueParser : IValueParser
     {
         private readonly bool _ignoreCase;
+
         public EnumValueParser(bool ignoreCase = true)
         {
             _ignoreCase = ignoreCase;

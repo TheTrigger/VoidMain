@@ -116,7 +116,7 @@ namespace VoidMain.Application.Commands.Arguments
 
                 if (isCollection)
                 {
-                    // Array consumes all operands to the end.
+                    // Array consumes all operands till the end.
                     valueType = colCtor
                         .GetElementType(operand.Type)
                         .UnwrapIfNullable();
