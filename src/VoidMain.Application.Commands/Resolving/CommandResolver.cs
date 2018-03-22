@@ -29,26 +29,43 @@ namespace VoidMain.Application.Commands.Resolving
                 throw new ArgumentNullException(nameof(commands));
             }
 
-            if (!context.TryGetValue(ContextKey.CommandName, out var value))
+            if (!ContextHelper.TryGetCommandName(context, out var commandNameParts) || commandNameParts.Length == 0)
             {
                 throw new InvalidCommandNameException("Command name is not specified.");
             }
 
-            var nameParts = (string[])value;
-            if (nameParts.Length == 0)
-            {
-                throw new InvalidCommandNameException("Command name is empty.");
-            }
+            var commandName = new CommandName(commandNameParts);
 
-            var name = new CommandName(nameParts);
-
-            var command = commands.FirstOrDefault(_ => _nameComparer.Equals(_.Name, name));
+            var command = commands.FirstOrDefault(_ => _nameComparer.Equals(_.Name, commandName));
             if (command == null)
             {
-                throw new CommandNotFoundException(name);
+                throw new CommandNotFoundException(commandName);
             }
 
             return command;
+        }
+
+        public bool TryResolve(Dictionary<string, object> context, IReadOnlyList<CommandModel> commands, out CommandModel command)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            if (commands == null)
+            {
+                throw new ArgumentNullException(nameof(commands));
+            }
+
+            if (!ContextHelper.TryGetCommandName(context, out var commandNameParts) || commandNameParts.Length == 0)
+            {
+                command = null;
+                return false;
+            }
+
+            var commandName = new CommandName(commandNameParts);
+
+            command = commands.FirstOrDefault(_ => _nameComparer.Equals(_.Name, commandName));
+            return command != null;
         }
     }
 }
