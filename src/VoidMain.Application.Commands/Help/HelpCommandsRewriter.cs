@@ -28,39 +28,35 @@ namespace VoidMain.Application.Commands.Help
 
         public bool TryRewrite(Dictionary<string, object> context)
         {
-            if (!context.TryGetValue(ContextKey.CommandOptions, out var optionsValue))
+            if (!ContextHelper.TryGetOptions(context, out var options))
             {
                 return false;
             }
 
-            var options = (KeyValuePair<string, string>[])optionsValue;
-
-            bool hasHelpOption = options.Any(IsHelpOption);
-            if (!hasHelpOption)
+            if (!options.Any(IsHelpOption))
             {
                 return false;
             }
 
-            if (!context.TryGetValue(ContextKey.CommandName, out var commandNameValue))
+            if (ContextHelper.TryGetCommandName(context, out var commandNameParts) && commandNameParts.Length > 0)
             {
-                return false;
+                if (_commandResolver.TryResolve(context, _appModel.Commands, out var command)
+                    && command.Arguments.Any(IsHelpOption))
+                {
+                    return false;
+                }
+
+                var commandName = new CommandName(commandNameParts);
+                ContextHelper.SetOperands(context, new[] { commandName.ToString() });
+            }
+            else
+            {
+                // General help
+                ContextHelper.SetOperands(context, ContextHelper.EmptyOperands);
             }
 
-            var name = new CommandName((string[])commandNameValue);
-            if (name.Parts.Count == 0)
-            {
-                return false;
-            }
-
-            var command = _commandResolver.Resolve(context, _appModel.Commands);
-            bool hasSelfHelpOption = command.Arguments.Any(IsHelpOption);
-            if (hasSelfHelpOption)
-            {
-                return false;
-            }
-
-            context[ContextKey.CommandName] = new[] { "help" };
-            context[ContextKey.CommandOperands] = new[] { name.ToString() };
+            ContextHelper.SetCommandName(context, new[] { "help" });
+            ContextHelper.SetOptions(context, ContextHelper.EmptyOptions);
 
             return true;
         }

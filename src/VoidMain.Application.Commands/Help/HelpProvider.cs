@@ -52,13 +52,18 @@ namespace VoidMain.Application.Commands.Help
             string signature = GetCommandSignature(command);
             help.AppendLine(signature);
 
-            int maxNameLength = command.Arguments
+            var arguments = command.Arguments
                 .Where(_ => _.Kind == ArgumentKind.Option
                          || _.Kind == ArgumentKind.Operand)
-                .Max(_ => _.Name.Length + (_.Alias?.Length ?? 0));
+                .ToArray();
 
-            AppendOptionsList(help, command, maxNameLength);
-            AppendOperandsList(help, command, maxNameLength);
+            if (arguments.Length > 0)
+            {
+                int maxNameLength = arguments.Max(_ => _.Name.Length + (_.Alias?.Length ?? 0));
+
+                AppendOptionsList(help, command, maxNameLength);
+                AppendOperandsList(help, command, maxNameLength);
+            }
 
             return help.ToString();
         }
