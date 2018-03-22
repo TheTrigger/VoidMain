@@ -112,7 +112,7 @@ namespace VoidMain.Application.Commands.Arguments
 
             foreach (var operand in operands)
             {
-                bool isCollection = _colCtorProvider.TryGetCollectionConstructor(operand.Type, out var colCtor);
+                bool isCollection = _colCtorProvider.TryGetConstructor(operand.Type, out var colCtor);
 
                 if (isCollection)
                 {

@@ -167,8 +167,8 @@ namespace VoidMain.Application.Commands.Arguments
             var argType = arg.Type;
             var valueType = value.GetType();
 
-            bool isArgCollection = _colCtorProvider.TryGetCollectionConstructor(argType, out var argColCtor);
-            bool isValueCollection = _colCtorProvider.TryGetCollectionConstructor(valueType, out var valueColCtor);
+            bool isArgCollection = _colCtorProvider.TryGetConstructor(argType, out var argColCtor);
+            bool isValueCollection = _colCtorProvider.TryGetConstructor(valueType, out var valueColCtor);
 
             if (isArgCollection && isValueCollection)
             {
@@ -211,7 +211,7 @@ namespace VoidMain.Application.Commands.Arguments
             int valuesOffset, out int valuesUsed, bool useLastValue = false)
         {
             var argType = arg.Type;
-            bool isCollection = _colCtorProvider.TryGetCollectionConstructor(
+            bool isCollection = _colCtorProvider.TryGetConstructor(
                 argType, out ICollectionConstructor colCtor);
 
             if (isCollection)

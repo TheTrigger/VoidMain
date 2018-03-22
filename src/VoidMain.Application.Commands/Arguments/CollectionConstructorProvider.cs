@@ -69,7 +69,7 @@ namespace VoidMain.Application.Commands.Arguments
             return _colCtors.ContainsKey(genericDefinition);
         }
 
-        public bool TryGetCollectionConstructor(Type collectionType, out ICollectionConstructor constructor)
+        public bool TryGetConstructor(Type collectionType, out ICollectionConstructor constructor)
         {
             if (_colCtors.TryGetValue(collectionType, out constructor))
             {
