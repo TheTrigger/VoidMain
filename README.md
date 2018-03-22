@@ -19,7 +19,7 @@ The framework is still in early development. The API is not final and some featu
 - Standard commands
   - Clear output **(done)**
   - Close application **(done)**
-  - Show help
+  - Show help **(done)**
   - Show version
 - Configuration
   - Method signature **(done)**
