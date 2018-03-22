@@ -57,7 +57,7 @@ namespace VoidMain.Application.Commands
 
         private CancellationToken GetCancellationToken(Dictionary<string, object> context)
         {
-            if (context.TryGetValue(ContextKey.CommandCanceled, out var value))
+            if (context.TryGetValue(ContextKey.CommandCancelToken, out var value))
             {
                 return (CancellationToken)value;
             }
