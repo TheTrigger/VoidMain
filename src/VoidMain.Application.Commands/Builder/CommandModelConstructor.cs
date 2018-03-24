@@ -7,10 +7,12 @@ namespace VoidMain.Application.Commands.Builder
 {
     public class CommandModelConstructor : ICommandModelConstructor
     {
+        private readonly ICommandNameParser _commandNameParser;
         private readonly IArgumentModelConstructor _argumentConstructor;
 
-        public CommandModelConstructor(IArgumentModelConstructor argumentConstructor)
+        public CommandModelConstructor(ICommandNameParser commandNameParser, IArgumentModelConstructor argumentConstructor)
         {
+            _commandNameParser = commandNameParser ?? throw new ArgumentNullException(nameof(commandNameParser));
             _argumentConstructor = argumentConstructor ?? throw new ArgumentNullException(nameof(argumentConstructor));
         }
 
@@ -59,7 +61,7 @@ namespace VoidMain.Application.Commands.Builder
             {
                 name = module.Name + " " + name;
             }
-            command.Name = CommandName.Parse(name);
+            command.Name = _commandNameParser.Parse(name);
 
             var parameters = method.GetParameters();
             var arguments = new ArgumentModel[parameters.Length];

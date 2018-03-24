@@ -11,9 +11,17 @@ namespace VoidMain.Application.Commands.Builder.Tests
         #region Ctor tests
 
         [Fact]
+        public void RequireCommandNameParser()
+        {
+            var argumentConstructor = new Mock<IArgumentModelConstructor>().Object;
+            Assert.Throws<ArgumentNullException>(() => new CommandModelConstructor(null, argumentConstructor));
+        }
+
+        [Fact]
         public void RequireArgumentModelConstructor()
         {
-            Assert.Throws<ArgumentNullException>(() => new CommandModelConstructor(null));
+            var commandNameParser = new Mock<ICommandNameParser>().Object;
+            Assert.Throws<ArgumentNullException>(() => new CommandModelConstructor(commandNameParser, null));
         }
 
         #endregion
@@ -140,7 +148,7 @@ namespace VoidMain.Application.Commands.Builder.Tests
             var module = GetModule(moduleType);
             module.Name = moduleName;
             var method = GetMethod(moduleType, methodName);
-            var name = CommandName.Parse(moduleName + " " + commandName);
+            var name = CommandNameParser.Parse(moduleName + " " + commandName);
 
             // Act
             var command = ctor.Create(method, module);
@@ -177,13 +185,15 @@ namespace VoidMain.Application.Commands.Builder.Tests
             = new CommandNameComparer(StringComparer.InvariantCultureIgnoreCase);
         private static readonly IModuleModelConstructor ModuleConstructor
             = new ModuleModelConstructor();
+        private static readonly ICommandNameParser CommandNameParser
+            = new CommandNameParser();
 
         private CommandModelConstructor NewCommandModelConstructor()
         {
             var ctor = new Mock<IArgumentModelConstructor>();
             ctor.Setup(c => c.Create(It.IsAny<ParameterInfo>(), It.IsAny<CommandModel>()))
                 .Returns(new ArgumentModel());
-            return new CommandModelConstructor(ctor.Object);
+            return new CommandModelConstructor(CommandNameParser, ctor.Object);
         }
 
         private ModuleModel GetModule(Type type)

@@ -17,6 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IModuleModelConstructor, ModuleModelConstructor>();
             services.AddTransient<ICommandModelConstructor, CommandModelConstructor>();
             services.AddTransient<IArgumentModelConstructor, ArgumentModelConstructor>();
+            services.AddTransient<ICommandNameParser, CommandNameParser>();
             services.AddTransient<IModuleConfigurationFactory, ModuleConfigurationFactory>();
             services.AddSingleton<ApplicationModel>();
             services.AddTransient<ICommandResolver, CommandResolver>();

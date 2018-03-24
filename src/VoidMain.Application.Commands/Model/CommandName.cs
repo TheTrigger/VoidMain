@@ -27,16 +27,6 @@ namespace VoidMain.Application.Commands.Model
             return String.Join(" ", Parts);
         }
 
-        public static CommandName Parse(string routeString)
-        {
-            if (routeString == null)
-            {
-                throw new ArgumentNullException(nameof(routeString));
-            }
-            var parts = routeString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            return new CommandName(parts);
-        }
-
         public static CommandName Combine(CommandName first, CommandName second)
         {
             if (first == null)

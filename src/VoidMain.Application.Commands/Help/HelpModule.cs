@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VoidMain.Application.Commands.Arguments;
+using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Model;
 using VoidMain.Application.Commands.Resolving;
 using VoidMain.Hosting;
@@ -12,13 +13,17 @@ namespace VoidMain.Application.Commands.Help
     {
         private readonly ApplicationModel _appModel;
         private readonly ICommandResolver _commandResolver;
+        private readonly ICommandNameParser _commandNameParser;
         private readonly HelpProvider _helpProvider;
 
         public HelpModule(ApplicationModel appModel,
-            ICommandResolver commandResolver, ICollectionConstructorProvider colCtorProvider)
+            ICommandResolver commandResolver,
+            ICommandNameParser commandNameParser,
+            ICollectionConstructorProvider colCtorProvider)
         {
             _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
             _commandResolver = commandResolver ?? throw new ArgumentNullException(nameof(commandResolver));
+            _commandNameParser = commandNameParser ?? throw new ArgumentNullException(nameof(commandNameParser));
             if (colCtorProvider == null)
             {
                 throw new ArgumentNullException(nameof(colCtorProvider));
@@ -37,7 +42,7 @@ namespace VoidMain.Application.Commands.Help
 
         private CommandModel FindCommand(string commandName)
         {
-            var name = CommandName.Parse(commandName);
+            var name = _commandNameParser.Parse(commandName);
             var context = new Dictionary<string, object>
             {
                 [ContextKey.CommandName] = name.Parts
