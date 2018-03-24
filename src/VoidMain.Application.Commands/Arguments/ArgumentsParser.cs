@@ -17,6 +17,7 @@ namespace VoidMain.Application.Commands.Arguments
         private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly IValueParserProvider _parserProvider;
         private readonly IFormatProvider _formatProvider;
+        private readonly MultiValueStrategy _multiValueStrategy;
         private readonly IEqualityComparer<string> _identifierComparer;
 
         public ArgumentsParser(
@@ -28,6 +29,7 @@ namespace VoidMain.Application.Commands.Arguments
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
             _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
             _formatProvider = options?.FormatProvider ?? CultureInfo.CurrentCulture;
+            _multiValueStrategy = options?.MultiValueStrategy ?? MultiValueStrategy.UseLastValue;
             _identifierComparer = syntaxOptions?.IdentifierComparer
                 ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
         }
@@ -66,10 +68,12 @@ namespace VoidMain.Application.Commands.Arguments
                         break;
                     case ArgumentKind.Option:
                         string[] optionValues = GetOptionValues(options, arg);
-                        values[i] = ParseValueOrGetDefault(arg, optionValues, 0, out int _, useLastValue: true);
+                        values[i] = ParseValueOrGetDefault(
+                            arg, optionValues, 0, out int _, _multiValueStrategy);
                         break;
                     case ArgumentKind.Operand:
-                        values[i] = ParseValueOrGetDefault(arg, operands, operandsOffset, out int operandsUsed);
+                        values[i] = ParseValueOrGetDefault(arg, operands, operandsOffset,
+                            out int operandsUsed, MultiValueStrategy.UseFirstValue);
                         operandsOffset += operandsUsed;
                         break;
                     default:
@@ -117,19 +121,20 @@ namespace VoidMain.Application.Commands.Arguments
             throw new ArgumentParseException(arg, $"Service '{arg.Type}' is not registered.");
         }
 
-        private object ParseValueOrGetDefault(ArgumentModel arg, string[] stringValues,
-            int valuesOffset, out int valuesUsed, bool useLastValue = false)
+        private object ParseValueOrGetDefault(ArgumentModel arg,
+            string[] stringValues, int valuesOffset, out int valuesUsed,
+            MultiValueStrategy multiValueStrategy)
         {
             if (stringValues == null || valuesOffset == stringValues.Length)
             {
                 valuesUsed = 0;
-                return GetDefaultValue(arg, useLastValue);
+                return GetDefaultValue(arg, multiValueStrategy);
             }
 
-            return ParseValue(arg, stringValues, valuesOffset, out valuesUsed, useLastValue);
+            return ParseValue(arg, stringValues, valuesOffset, out valuesUsed, multiValueStrategy);
         }
 
-        private object GetDefaultValue(ArgumentModel arg, bool useLastValue)
+        private object GetDefaultValue(ArgumentModel arg, MultiValueStrategy multiValueStrategy)
         {
             var defaultValue = arg.DefaultValue;
             if (defaultValue == null)
@@ -154,9 +159,9 @@ namespace VoidMain.Application.Commands.Arguments
             switch (defaultValue)
             {
                 case string stringValue:
-                    return ParseValue(arg, new[] { stringValue }, 0, out var _, useLastValue);
+                    return ParseValue(arg, new[] { stringValue }, 0, out var _, multiValueStrategy);
                 case string[] stringValues when stringValues.Length > 0:
-                    return ParseValue(arg, stringValues, 0, out var _, useLastValue);
+                    return ParseValue(arg, stringValues, 0, out var _, multiValueStrategy);
                 default:
                     return TryToCast(arg, defaultValue);
             }
@@ -208,7 +213,7 @@ namespace VoidMain.Application.Commands.Arguments
         }
 
         private object ParseValue(ArgumentModel arg, string[] stringValues,
-            int valuesOffset, out int valuesUsed, bool useLastValue = false)
+            int valuesOffset, out int valuesUsed, MultiValueStrategy multiValueStrategy)
         {
             var argType = arg.Type;
             bool isCollection = _colCtorProvider.TryGetConstructor(
@@ -236,15 +241,20 @@ namespace VoidMain.Application.Commands.Arguments
             else
             {
                 string stringValue = null;
-                if (useLastValue)
+
+                if (multiValueStrategy == MultiValueStrategy.UseFirstValue)
+                {
+                    stringValue = stringValues[valuesOffset];
+                    valuesUsed = 1;
+                }
+                else if (multiValueStrategy == MultiValueStrategy.UseLastValue)
                 {
                     stringValue = stringValues[stringValues.Length - 1];
                     valuesUsed = stringValues.Length - valuesOffset;
                 }
                 else
                 {
-                    stringValue = stringValues[valuesOffset];
-                    valuesUsed = 1;
+                    throw new NotSupportedException($"Unknown multivalue strategy '{multiValueStrategy}'.");
                 }
 
                 var valueType = argType.UnwrapIfNullable();
