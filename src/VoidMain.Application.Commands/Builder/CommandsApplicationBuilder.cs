@@ -12,7 +12,7 @@ namespace VoidMain.Application.Commands.Builder
         private readonly IModuleModelConstructor _moduleConstructor;
         private readonly ICommandModelConstructor _commandsConstructor;
         private readonly IModuleConfigurationFactory _configFactory;
-        private readonly Dictionary<TypeInfo, ModuleModel> _modules;
+        private readonly List<CommandModel> _commands;
 
         public IServiceProvider Services { get; }
 
@@ -24,62 +24,35 @@ namespace VoidMain.Application.Commands.Builder
             _moduleConstructor = moduleConstructor ?? throw new ArgumentNullException(nameof(moduleConstructor));
             _commandsConstructor = commandsConstructor ?? throw new ArgumentNullException(nameof(commandsConstructor));
             _configFactory = configFactory ?? throw new ArgumentNullException(nameof(configFactory));
-            _modules = new Dictionary<TypeInfo, ModuleModel>();
+            _commands = new List<CommandModel>();
         }
 
         public void AddModule<TModule>(Action<IModuleConfiguration<TModule>> configure = null)
         {
             var moduleType = typeof(TModule).GetTypeInfo();
-            if (_modules.TryGetValue(moduleType, out ModuleModel module))
-            {
-                throw new ArgumentException(
-                    $"Module {module.Type.FullName} is already configured.",
-                    nameof(TModule));
-            }
+            var module = _moduleConstructor.Create(moduleType);
 
-            module = _moduleConstructor.Create(moduleType);
-
-            if (configure == null)
-            {
-                AddCommandsToModule(moduleType, module);
-            }
-            else
-            {
-                AddCommandsAndConfigureModule(moduleType, module, configure);
-            }
-
-            _modules.Add(moduleType, module);
-        }
-
-        private void AddCommandsToModule(TypeInfo moduleType, ModuleModel module)
-        {
-            var methods = moduleType.GetMethods();
-            foreach (var method in methods)
-            {
-                if (_commandsConstructor.TryCreate(method, module, out var command))
-                {
-                    module.Commands.Add(command);
-                }
-            }
-        }
-
-        private void AddCommandsAndConfigureModule<TModule>(
-            TypeInfo moduleType, ModuleModel module,
-            Action<IModuleConfiguration<TModule>> configure)
-        {
             var config = _configFactory.Create<TModule>();
-            configure(config);
+            config.Name = module.Name;
+            config.Description = module.Description;
 
-            if (config.Name != null)
+            configure?.Invoke(config);
+
+            AddModuleInternal(module, config);
+        }
+
+        private void AddModuleInternal<TModule>(ModuleModel module, IModuleConfiguration<TModule> config)
+        {
+            if (config.Name != module.Name)
             {
                 module.Name = config.Name;
             }
-            if (config.Description != null)
+            if (config.Description != module.Description)
             {
                 module.Description = config.Description;
             }
 
-            var methods = moduleType.GetMethods();
+            var methods = module.Type.GetTypeInfo().GetMethods();
             foreach (var method in methods)
             {
                 if (config.IsRemoved(method))
@@ -90,6 +63,7 @@ namespace VoidMain.Application.Commands.Builder
                 if (_commandsConstructor.TryCreate(method, module, out var command))
                 {
                     module.Commands.Add(command);
+                    _commands.Add(command);
                 }
             }
         }
@@ -97,7 +71,7 @@ namespace VoidMain.Application.Commands.Builder
         public ICommandsApplication Build()
         {
             var appModel = Services.GetRequiredService<ApplicationModel>();
-            appModel.Commands = _modules.Values.SelectMany(_ => _.Commands).ToList();
+            appModel.Commands = _commands.ToList();
             var app = ActivatorUtilities.CreateInstance<CommandsApplication>(Services);
             return app;
         }
