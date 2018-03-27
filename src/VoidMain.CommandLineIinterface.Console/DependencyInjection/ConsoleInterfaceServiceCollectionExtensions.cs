@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static ConsoleInterfaceBuilder AddConsoleInterfaceCore(
             this IServiceCollection services)
         {
-            services.AddSingleton<ICommandLineIinterface, ConsoleInterface>();
+            services.AddSingleton<ICommandLineInterface, ConsoleInterface>();
 
             services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
             services.AddSingleton<ConsoleOutputLock>();

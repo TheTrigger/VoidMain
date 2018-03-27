@@ -34,7 +34,7 @@ namespace VoidMain.Application.Commands.Arguments
                 ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
         }
 
-        public object[] Parse(IReadOnlyList<ArgumentModel> argsModel,
+        private static void Validate(IReadOnlyList<ArgumentModel> argsModel,
             KeyValuePair<string, string>[] options, string[] operands, IServiceProvider services)
         {
             if (argsModel == null)
@@ -53,6 +53,12 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 throw new ArgumentNullException(nameof(services));
             }
+        }
+
+        public object[] Parse(IReadOnlyList<ArgumentModel> argsModel,
+            KeyValuePair<string, string>[] options, string[] operands, IServiceProvider services)
+        {
+            Validate(argsModel, options, operands, services);
 
             var values = new object[argsModel.Count];
             int operandsOffset = 0;
@@ -118,7 +124,7 @@ namespace VoidMain.Application.Commands.Arguments
                 return arg.Type.GetEmptyValue();
             }
 
-            throw new ArgumentParseException(arg, $"Service '{arg.Type}' is not registered.");
+            throw new ArgumentParseException(arg, $"Service '{arg.Type.Name}' is not registered.");
         }
 
         private object ParseValueOrGetDefault(ArgumentModel arg,
@@ -144,13 +150,6 @@ namespace VoidMain.Application.Commands.Arguments
                     return arg.Type.GetEmptyValue();
                 }
 
-                var valueType = arg.Type.UnwrapIfNullable();
-                if (valueType == BooleanType)
-                {
-                    // Flag without a value is true by default.
-                    return TrueValue;
-                }
-
                 throw new ArgumentParseException(arg, "Value is missing.");
                 // TODO: Or prompt value.
                 // Use double Enter to end filling collection.
@@ -163,11 +162,11 @@ namespace VoidMain.Application.Commands.Arguments
                 case string[] stringValues when stringValues.Length > 0:
                     return ParseValue(arg, stringValues, 0, out var _, multiValueStrategy);
                 default:
-                    return TryToCast(arg, defaultValue);
+                    return CastValue(arg, defaultValue);
             }
         }
 
-        private object TryToCast(ArgumentModel arg, object value)
+        private object CastValue(ArgumentModel arg, object value)
         {
             var argType = arg.Type;
             var valueType = value.GetType();
@@ -242,19 +241,18 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 string stringValue = null;
 
-                if (multiValueStrategy == MultiValueStrategy.UseFirstValue)
+                switch (multiValueStrategy)
                 {
-                    stringValue = stringValues[valuesOffset];
-                    valuesUsed = 1;
-                }
-                else if (multiValueStrategy == MultiValueStrategy.UseLastValue)
-                {
-                    stringValue = stringValues[stringValues.Length - 1];
-                    valuesUsed = stringValues.Length - valuesOffset;
-                }
-                else
-                {
-                    throw new NotSupportedException($"Unknown multivalue strategy '{multiValueStrategy}'.");
+                    case MultiValueStrategy.UseFirstValue:
+                        stringValue = stringValues[valuesOffset];
+                        valuesUsed = 1;
+                        break;
+                    case MultiValueStrategy.UseLastValue:
+                        stringValue = stringValues[stringValues.Length - 1];
+                        valuesUsed = stringValues.Length - valuesOffset;
+                        break;
+                    default:
+                        throw new NotSupportedException($"Unknown multivalue strategy '{multiValueStrategy}'.");
                 }
 
                 var valueType = argType.UnwrapIfNullable();
@@ -269,6 +267,7 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 if (valueType == BooleanType)
                 {
+                    // Flag without a value is true by default.
                     return TrueValue;
                 }
                 stringValue = String.Empty;

@@ -4,7 +4,7 @@ using VoidMain.Application.Builder;
 
 namespace VoidMain.CommandLineIinterface
 {
-    public interface ICommandLineIinterface
+    public interface ICommandLineInterface
     {
         Task StartAsync(CommandDelegate application, CancellationToken token = default(CancellationToken));
         Task StopAsync(CancellationToken token = default(CancellationToken));

@@ -12,7 +12,7 @@ using VoidMain.CommandLineIinterface.Parser.Syntax;
 
 namespace VoidMain.CommandLineIinterface.Console
 {
-    public class ConsoleInterface : ICommandLineIinterface
+    public class ConsoleInterface : ICommandLineInterface
     {
         private readonly IConsole _console;
         private readonly ConsoleOutputLock _outputLock;

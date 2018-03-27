@@ -9,12 +9,12 @@ namespace VoidMain.Hosting
     public class CommandsHost : ICommandsHost
     {
         private readonly IServiceProvider _services;
-        private readonly ICommandLineIinterface _cli;
+        private readonly ICommandLineInterface _cli;
         private readonly CommandDelegate _app;
         private bool _isDisposed;
 
         public CommandsHost(IServiceProvider services,
-            ICommandLineIinterface cli, CommandDelegate app)
+            ICommandLineInterface cli, CommandDelegate app)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _cli = cli ?? throw new ArgumentNullException(nameof(cli));

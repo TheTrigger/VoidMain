@@ -52,7 +52,7 @@ namespace VoidMain.Hosting
                 startup.ConfigureApplication(appBuilder);
 
                 var app = appBuilder.Build();
-                var cli = services.GetRequiredService<ICommandLineIinterface>();
+                var cli = services.GetRequiredService<ICommandLineInterface>();
 
                 var host = new CommandsHost(services, cli, app);
                 return host;
