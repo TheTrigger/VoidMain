@@ -2,6 +2,7 @@
 using VoidMain.Application.Commands.Arguments;
 using VoidMain.Application.Commands.Arguments.ValueParsers;
 using VoidMain.Application.Commands.Builder;
+using VoidMain.Application.Commands.Builder.Validation;
 using VoidMain.Application.Commands.Execution;
 using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
@@ -19,6 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IArgumentModelConstructor, ArgumentModelConstructor>();
             services.AddTransient<ICommandNameParser, CommandNameParser>();
             services.AddTransient<IModuleConfigurationFactory, ModuleConfigurationFactory>();
+            services.AddTransient<ICommandModelValidator, CommandModelValidator>();
             services.AddSingleton<ApplicationModel>();
             services.AddTransient<ICommandResolver, CommandResolver>();
             services.AddTransient<IArgumentsParser, ArgumentsParser>();

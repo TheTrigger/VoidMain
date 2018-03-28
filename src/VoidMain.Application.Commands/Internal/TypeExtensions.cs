@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Text;
 
 namespace VoidMain.Application.Commands.Internal
 {
@@ -46,6 +47,36 @@ namespace VoidMain.Application.Commands.Internal
                 return Activator.CreateInstance(type);
             }
             return null;
+        }
+
+        public static string ToDisplayString(this MethodInfo method)
+        {
+            var result = new StringBuilder();
+
+            result.Append(method.ReturnType.Name)
+                .Append(' ')
+                .Append(method.DeclaringType.Name)
+                .Append('.')
+                .Append(method.Name)
+                .Append('(');
+
+            var parameters = method.GetParameters();
+            foreach (var param in parameters)
+            {
+                result.Append(param.ParameterType.Name)
+                    .Append(' ')
+                    .Append(param.Name)
+                    .Append(", ");
+            }
+
+            if (parameters.Length > 0)
+            {
+                result.Length -= 2;
+            }
+
+            result.Append(')');
+
+            return result.ToString();
         }
     }
 }

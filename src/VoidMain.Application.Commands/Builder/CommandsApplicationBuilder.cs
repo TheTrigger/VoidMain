@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using VoidMain.Application.Commands.Builder.Validation;
 using VoidMain.Application.Commands.Model;
 
 namespace VoidMain.Application.Commands.Builder
@@ -12,18 +13,20 @@ namespace VoidMain.Application.Commands.Builder
         private readonly IModuleModelConstructor _moduleConstructor;
         private readonly ICommandModelConstructor _commandsConstructor;
         private readonly IModuleConfigurationFactory _configFactory;
+        private readonly ICommandModelValidator _commandValidator;
         private readonly List<CommandModel> _commands;
 
         public IServiceProvider Services { get; }
 
         public CommandsApplicationBuilder(IServiceProvider services,
             IModuleModelConstructor moduleConstructor, ICommandModelConstructor commandsConstructor,
-            IModuleConfigurationFactory configFactory)
+            IModuleConfigurationFactory configFactory, ICommandModelValidator commandValidator)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
             _moduleConstructor = moduleConstructor ?? throw new ArgumentNullException(nameof(moduleConstructor));
             _commandsConstructor = commandsConstructor ?? throw new ArgumentNullException(nameof(commandsConstructor));
             _configFactory = configFactory ?? throw new ArgumentNullException(nameof(configFactory));
+            _commandValidator = commandValidator ?? throw new ArgumentNullException(nameof(commandValidator));
             _commands = new List<CommandModel>();
         }
 
@@ -35,7 +38,6 @@ namespace VoidMain.Application.Commands.Builder
             var config = _configFactory.Create<TModule>();
             config.Name = module.Name;
             config.Description = module.Description;
-
             configure?.Invoke(config);
 
             AddModuleInternal(module, config);
@@ -52,7 +54,9 @@ namespace VoidMain.Application.Commands.Builder
                 module.Description = config.Description;
             }
 
+            var newCommands = new List<CommandModel>();
             var methods = module.Type.GetTypeInfo().GetMethods();
+
             foreach (var method in methods)
             {
                 if (config.IsRemoved(method))
@@ -62,10 +66,20 @@ namespace VoidMain.Application.Commands.Builder
 
                 if (_commandsConstructor.TryCreate(method, module, out var command))
                 {
+                    var result = _commandValidator.Validate(command);
+                    if (!result.IsValid)
+                    {
+                        throw new InvalidCommandException(command, result.Errors);
+                    }
+
                     module.Commands.Add(command);
-                    _commands.Add(command);
+                    newCommands.Add(command);
                 }
             }
+
+            // TODO: test for command duplicates
+
+            _commands.AddRange(newCommands);
         }
 
         public ICommandsApplication Build()
