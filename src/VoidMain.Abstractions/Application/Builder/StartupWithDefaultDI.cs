@@ -3,7 +3,7 @@ using System;
 
 namespace VoidMain.Application.Builder
 {
-    class StartupWithDefaultDI : IStartupWithCustomDI
+    public class StartupWithDefaultDI : IStartupWithCustomDI
     {
         private readonly IStartup _startup;
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2008
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{58517825-D495-41AC-8027-91EDDA9C0D3C}"
 EndProject
@@ -13,13 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleApp", "samples\Simple
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Hosting", "src\VoidMain.Hosting\VoidMain.Hosting.csproj", "{834DE313-B35B-4962-AE9B-56D04B778A77}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface", "src\VoidMain.CommandLineIinterface\VoidMain.CommandLineIinterface.csproj", "{3F25F0BF-557D-4434-99F1-BF5EBFCF3CE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface.Core", "src\VoidMain.CommandLineIinterface.Core\VoidMain.CommandLineIinterface.Core.csproj", "{3F25F0BF-557D-4434-99F1-BF5EBFCF3CE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Application.Commands", "src\VoidMain.Application.Commands\VoidMain.Application.Commands.csproj", "{6C012817-11D4-49E5-8731-F7C7DE0EAF41}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Hosting.Tests", "test\VoidMain.Hosting.Tests\VoidMain.Hosting.Tests.csproj", "{EF98BFFB-C59C-477F-94C9-C3E77FAE0E22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface.Tests", "test\VoidMain.CommandLineIinterface.Tests\VoidMain.CommandLineIinterface.Tests.csproj", "{D38CE9F0-0526-4CC1-A0BF-5EA34128C0BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface.Core.Tests", "test\VoidMain.CommandLineIinterface.Core.Tests\VoidMain.CommandLineIinterface.Core.Tests.csproj", "{D38CE9F0-0526-4CC1-A0BF-5EA34128C0BA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3E6E63F-93F0-450B-978C-050CFE51027B}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,6 +32,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedApp", "samples\AdvancedApp\AdvancedApp.csproj", "{16F24161-F537-40A6-ACFB-96581680FAC1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Application.Commands.Tests", "test\VoidMain.Application.Commands.Tests\VoidMain.Application.Commands.Tests.csproj", "{7401E456-BE43-4FE7-925C-B9DFD4CFED5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidMain.Abstractions", "src\VoidMain.Abstractions\VoidMain.Abstractions.csproj", "{E740C5DF-4A2C-464B-B051-6C280C844572}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{7401E456-BE43-4FE7-925C-B9DFD4CFED5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7401E456-BE43-4FE7-925C-B9DFD4CFED5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7401E456-BE43-4FE7-925C-B9DFD4CFED5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E740C5DF-4A2C-464B-B051-6C280C844572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E740C5DF-4A2C-464B-B051-6C280C844572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E740C5DF-4A2C-464B-B051-6C280C844572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E740C5DF-4A2C-464B-B051-6C280C844572}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +95,7 @@ Global
 		{C138A66F-CDB5-4400-A2C9-F20ABB0C94AC} = {58517825-D495-41AC-8027-91EDDA9C0D3C}
 		{16F24161-F537-40A6-ACFB-96581680FAC1} = {CD99D3BE-D21D-44ED-955C-2A7C0490DFC5}
 		{7401E456-BE43-4FE7-925C-B9DFD4CFED5A} = {B34AF4DF-2E3D-4433-9FBA-4955DC2D4396}
+		{E740C5DF-4A2C-464B-B051-6C280C844572} = {58517825-D495-41AC-8027-91EDDA9C0D3C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D369340B-B358-406A-86D7-2C0AA631EC2A}

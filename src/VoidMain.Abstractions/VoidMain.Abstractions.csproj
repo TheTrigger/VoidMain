@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <Version>0.8.0</Version>
+    <Version>0.1.0</Version>
     <Authors>Maxim Kornilov</Authors>
     <PackageLicenseUrl>https://github.com/Maxim-Kornilov/VoidMain/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Maxim-Kornilov/VoidMain</PackageProjectUrl>
@@ -12,10 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.Analyzers.Compatibility" Version="0.1.2-alpha" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\VoidMain.Hosting\VoidMain.Hosting.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.1" />
   </ItemGroup>
 
 </Project>
