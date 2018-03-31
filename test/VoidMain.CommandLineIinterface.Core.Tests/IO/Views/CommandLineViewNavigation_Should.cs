@@ -1,7 +1,6 @@
-﻿using VoidMain.CommandLineIinterface.IO.Views;
-using Xunit;
+﻿using Xunit;
 
-namespace VoidMain.CommandLineIinterface.IO.Navigation.Tests
+namespace VoidMain.CommandLineIinterface.IO.Views.Tests
 {
     public class CommandLineViewNavigation_Should
     {

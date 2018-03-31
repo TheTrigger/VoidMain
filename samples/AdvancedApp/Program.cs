@@ -6,7 +6,6 @@ using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
-using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
 using VoidMain.Hosting;
 
 namespace AdvancedApp

@@ -1,8 +1,8 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.IO.Console.Internal;
+using VoidMain.CommandLineIinterface.IO;
+using VoidMain.CommandLineIinterface.IO.Internal;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface
 {
 
     public class ConsoleLockingOutput : ICommandLineOutput

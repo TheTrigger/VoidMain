@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace VoidMain.CommandLineIinterface.IO.Console.Internal
+namespace VoidMain.CommandLineIinterface.IO.Internal
 {
     public class ConsoleCancelEventTokenSource : IDisposable
     {

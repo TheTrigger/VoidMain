@@ -2,11 +2,9 @@
 using System.Linq;
 using VoidMain.Application;
 using VoidMain.CommandLineIinterface.IO.Views;
-using VoidMain.CommandLineIinterface.IO.Views.Console;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
-using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

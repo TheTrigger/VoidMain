@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace VoidMain.CommandLineIinterface.IO.Console.Internal
+namespace VoidMain.CommandLineIinterface.IO.Internal
 {
     public interface IConsole
     {

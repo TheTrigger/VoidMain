@@ -1,11 +1,10 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.Internal;
-using VoidMain.CommandLineIinterface.IO.Console.Internal;
+using VoidMain.CommandLineIinterface.IO.Internal;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
-using VoidMain.CommandLineIinterface.SyntaxHighlight.Console;
 
-namespace VoidMain.CommandLineIinterface.IO.Views.Console
+namespace VoidMain.CommandLineIinterface.IO.Views
 {
     public class ConsoleCommandLineHighlightedView : ICommandLineView, ICommandLineViewLifecycle
     {

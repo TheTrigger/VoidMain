@@ -1,7 +1,7 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Console.Internal;
+using VoidMain.CommandLineIinterface.IO.Internal;
 
-namespace VoidMain.CommandLineIinterface.IO.Views.Console
+namespace VoidMain.CommandLineIinterface.IO.Views
 {
     public class ConsoleCommandLineViewProvider : ICommandLineViewProvider
     {

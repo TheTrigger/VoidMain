@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\VoidMain.Hosting\VoidMain.Hosting.csproj" />
+    <ProjectReference Include="..\..\src\VoidMain.Abstractions\VoidMain.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using VoidMain.Application.Builder;
 using VoidMain.CommandLineIinterface.Internal;
 using VoidMain.CommandLineIinterface.IO;
-using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.IO.Console.Internal;
+using VoidMain.CommandLineIinterface.IO.Internal;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.Console
+namespace VoidMain.CommandLineIinterface
 {
     public class ConsoleInterface : ICommandLineInterface
     {

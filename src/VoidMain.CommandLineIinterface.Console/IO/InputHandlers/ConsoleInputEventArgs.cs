@@ -1,7 +1,7 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.IO.Console.InputHandlers
+namespace VoidMain.CommandLineIinterface.IO.InputHandlers
 {
     public class ConsoleInputEventArgs
     {
