@@ -3,7 +3,7 @@ using VoidMain.Application;
 using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.IO;
 using VoidMain.CommandLineIinterface.IO.InputHandlers;
-using VoidMain.CommandLineIinterface.IO.Internal;
+using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;

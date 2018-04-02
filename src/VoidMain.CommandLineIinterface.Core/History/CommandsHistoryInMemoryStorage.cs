@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VoidMain.CommandLineIinterface.History
@@ -13,12 +14,12 @@ namespace VoidMain.CommandLineIinterface.History
             _commands = options?.Commands ?? Array.Empty<string>();
         }
 
-        public string[] Load()
+        public IReadOnlyList<string> Load()
         {
             return _commands.ToArray();
         }
 
-        public void Save(string[] commands)
+        public void Save(IReadOnlyList<string> commands)
         {
             if (commands == null)
             {

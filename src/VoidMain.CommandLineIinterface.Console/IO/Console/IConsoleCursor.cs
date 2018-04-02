@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.IO.Internal
+﻿namespace VoidMain.CommandLineIinterface.IO.Console
 {
     public interface IConsoleCursor
     {

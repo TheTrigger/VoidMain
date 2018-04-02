@@ -6,10 +6,9 @@ namespace VoidMain.CommandLineIinterface.Internal
     public class CommandLineBuilder
     {
         private readonly StringBuilder _builder;
-        private int _position;
         private string _cache;
 
-        public int Position => _position;
+        public int Position { get; private set; }
         public int Length => _builder.Length;
 
         public char this[int index]
@@ -29,12 +28,12 @@ namespace VoidMain.CommandLineIinterface.Internal
 
         public void Move(int offset)
         {
-            int newPos = _position + offset;
+            int newPos = Position + offset;
             if (newPos < 0 || newPos > _builder.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(offset));
             }
-            _position = newPos;
+            Position = newPos;
         }
 
         public void MoveTo(int newPos)
@@ -43,20 +42,20 @@ namespace VoidMain.CommandLineIinterface.Internal
             {
                 throw new ArgumentOutOfRangeException(nameof(newPos));
             }
-            _position = newPos;
+            Position = newPos;
         }
 
         public void Insert(char value)
         {
-            if (_position == _builder.Length)
+            if (Position == _builder.Length)
             {
                 _builder.Append(value);
             }
             else
             {
-                _builder.Insert(_position, value);
+                _builder.Insert(Position, value);
             }
-            _position++;
+            Position++;
             _cache = null;
         }
 
@@ -64,16 +63,16 @@ namespace VoidMain.CommandLineIinterface.Internal
         {
             if (String.IsNullOrEmpty(value)) return;
 
-            if (_position == _builder.Length)
+            if (Position == _builder.Length)
             {
                 _builder.Append(value);
             }
             else
             {
-                _builder.Insert(_position, value);
+                _builder.Insert(Position, value);
             }
 
-            _position += value.Length;
+            Position += value.Length;
             _cache = null;
         }
 
@@ -81,7 +80,7 @@ namespace VoidMain.CommandLineIinterface.Internal
         {
             if (count == 0) return;
 
-            int newPos = _position + count;
+            int newPos = Position + count;
             if (newPos < 0 || newPos > _builder.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -89,18 +88,18 @@ namespace VoidMain.CommandLineIinterface.Internal
 
             if (count < 0)
             {
-                _position = newPos;
+                Position = newPos;
                 count = -count;
             }
 
-            _builder.Remove(_position, count);
+            _builder.Remove(Position, count);
             _cache = null;
         }
 
         public void Clear()
         {
             _builder.Clear();
-            _position = 0;
+            Position = 0;
             _cache = null;
         }
 

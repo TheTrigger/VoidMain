@@ -5,21 +5,19 @@ using System.Diagnostics;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
-    [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
+    [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
     public class CharsReadOnlyList : IReadOnlyList<char>
     {
-        private readonly string _value;
-
-        public string Value => _value;
-        public char this[int index] => _value[index];
-        public int Count => _value.Length;
+        public string Value { get; }
+        public char this[int index] => Value[index];
+        public int Count => Value.Length;
 
         public CharsReadOnlyList(string value)
         {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public IEnumerator<char> GetEnumerator() => ((IEnumerable<char>)_value).GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_value).GetEnumerator();
+        public IEnumerator<char> GetEnumerator() => ((IEnumerable<char>)Value).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Value).GetEnumerator();
     }
 }

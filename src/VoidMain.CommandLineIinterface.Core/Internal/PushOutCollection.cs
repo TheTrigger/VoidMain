@@ -6,11 +6,20 @@ using System.Linq;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {
-    [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
+    [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
     public class PushOutCollection<T> : IEnumerable<T>
     {
         private readonly T[] _elements;
         private int _start;
+
+        public int Count { get; private set; }
+        public int MaxCount => _elements.Length;
+
+        public T this[int index]
+        {
+            get => GetElement(index);
+            set => GetElement(index) = value;
+        }
 
         public PushOutCollection(int capacity)
         {
@@ -39,15 +48,6 @@ namespace VoidMain.CommandLineIinterface.Internal
 
             _start = 0;
             Count = _elements.Length;
-        }
-
-        public int Count { get; private set; }
-        public int MaxCount => _elements.Length;
-
-        public T this[int index]
-        {
-            get => GetElement(index);
-            set => GetElement(index) = value;
         }
 
         public void Add(T elem)

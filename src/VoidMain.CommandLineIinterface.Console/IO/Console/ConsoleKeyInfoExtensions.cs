@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.IO.Internal
+namespace VoidMain.CommandLineIinterface.IO.Console
 {
     public static class ConsoleKeyInfoExtensions
     {

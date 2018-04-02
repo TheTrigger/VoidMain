@@ -51,21 +51,21 @@ namespace VoidMain.CommandLineIinterface.History
 
             lock (_commandsWriteLock)
             {
-                string[] loaded = null;
+                IReadOnlyList<string> loaded = null;
                 lock (_storage)
                 {
                     loaded = _storage.Load();
                 }
                 loaded = loaded.Where(_ => !String.IsNullOrWhiteSpace(_)).ToArray();
 
-                if (loaded.Length > MaxCount)
+                if (loaded.Count > MaxCount)
                 {
-                    _commands = new PushOutCollection<string>(loaded.Skip(loaded.Length - MaxCount));
+                    _commands = new PushOutCollection<string>(loaded.Skip(loaded.Count - MaxCount));
                 }
                 else
                 {
                     _commands = new PushOutCollection<string>(MaxCount);
-                    for (int i = 0; i < loaded.Length; i++)
+                    for (int i = 0; i < loaded.Count; i++)
                     {
                         _commands.Add(loaded[i]);
                     }

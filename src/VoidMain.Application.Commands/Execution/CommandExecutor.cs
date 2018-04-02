@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Commands.Internal;
@@ -52,6 +54,11 @@ namespace VoidMain.Application.Commands.Execution
                 var result = await invoker.Invoke(moduleInstance, method, arguments)
                     .ConfigureAwait(false);
                 return result;
+            }
+            catch(TargetInvocationException ex)
+            {
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+                throw; // To suppress error CS0161: not all code paths return a value.
             }
             finally
             {

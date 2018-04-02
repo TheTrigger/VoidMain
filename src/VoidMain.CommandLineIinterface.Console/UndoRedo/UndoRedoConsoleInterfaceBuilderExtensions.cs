@@ -17,6 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 services.Configure(options);
             }
+
             return builer;
         }
     }

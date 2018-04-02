@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -26,7 +27,7 @@ namespace VoidMain.CommandLineIinterface.History
             _encoding = options?.Encoding ?? Encoding.UTF8;
         }
 
-        public string[] Load()
+        public IReadOnlyList<string> Load()
         {
             if (!File.Exists(_filePath))
             {
@@ -39,7 +40,7 @@ namespace VoidMain.CommandLineIinterface.History
             return commands.ToArray();
         }
 
-        public void Save(string[] commands)
+        public void Save(IReadOnlyList<string> commands)
         {
             if (commands == null)
             {
