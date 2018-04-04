@@ -3,7 +3,6 @@
     public interface ICommandLineView : ICommandLineReadOnlyView
     {
         CommandLineViewType ViewType { get; }
-        char MaskSymbol { get; }
 
         void Move(int offset);
         void MoveTo(int position);

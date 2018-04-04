@@ -11,12 +11,9 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         {
             _lineBuilder = new CommandLineBuilder();
             ViewType = CommandLineViewType.Hidden;
-            MaskSymbol = Char.MinValue;
         }
 
         public CommandLineViewType ViewType { get; }
-        public char MaskSymbol { get; }
-
         public int Position => _lineBuilder.Position;
         public int Length => _lineBuilder.Length;
         public char this[int index] => _lineBuilder[index];

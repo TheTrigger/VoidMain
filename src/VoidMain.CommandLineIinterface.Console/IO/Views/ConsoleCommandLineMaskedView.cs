@@ -9,6 +9,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
         private readonly CommandLineBuilder _lineBuilder;
+        private readonly char _maskSymbol;
 
         public ConsoleCommandLineMaskedView(IConsole console, IConsoleCursor cursor, char maskSymbol)
         {
@@ -16,12 +17,10 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
             _lineBuilder = new CommandLineBuilder();
             ViewType = CommandLineViewType.Masked;
-            MaskSymbol = maskSymbol;
+            _maskSymbol = maskSymbol;
         }
 
         public CommandLineViewType ViewType { get; }
-        public char MaskSymbol { get; }
-
         public int Position => _lineBuilder.Position;
         public int Length => _lineBuilder.Length;
         public char this[int index] => _lineBuilder[index];
@@ -79,13 +78,13 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         {
             if (_lineBuilder.Position == _lineBuilder.Length)
             {
-                _console.Write(MaskSymbol);
+                _console.Write(_maskSymbol);
             }
             else
             {
                 int diff = _lineBuilder.Length - _lineBuilder.Position;
                 _cursor.Move(diff);
-                _console.Write(MaskSymbol);
+                _console.Write(_maskSymbol);
                 _cursor.Move(-diff);
             }
 
@@ -103,7 +102,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             else
             {
                 _lineBuilder.Insert(value);
-                _console.Write(MaskSymbol);
+                _console.Write(_maskSymbol);
             }
         }
 
@@ -113,13 +112,13 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
             if (_lineBuilder.Position == _lineBuilder.Length)
             {
-                _console.Write(MaskSymbol, value.Length);
+                _console.Write(_maskSymbol, value.Length);
             }
             else
             {
                 int diff = _lineBuilder.Length - _lineBuilder.Position;
                 _cursor.Move(diff);
-                _console.Write(MaskSymbol, value.Length);
+                _console.Write(_maskSymbol, value.Length);
                 _cursor.Move(-diff);
             }
 
@@ -142,7 +141,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             {
                 value = value.Substring(offset);
                 _lineBuilder.Insert(value);
-                _console.Write(MaskSymbol, value.Length);
+                _console.Write(_maskSymbol, value.Length);
             }
         }
     }

@@ -30,14 +30,11 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _pallete = pallete ?? throw new ArgumentNullException(nameof(pallete));
             _lineBuilder = new CommandLineBuilder();
             ViewType = CommandLineViewType.Normal;
-            MaskSymbol = Char.MinValue;
             _hasChanges = false;
             _prevLength = 0;
         }
 
         public CommandLineViewType ViewType { get; }
-        public char MaskSymbol { get; }
-
         public int Position => _lineBuilder.Position;
         public int Length => _lineBuilder.Length;
         public char this[int index] => _lineBuilder[index];
