@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Abstractions", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Abstractions.Tests", "test\VoidMain.Abstractions.Tests\VoidMain.Abstractions.Tests.csproj", "{7C7231FC-1A19-4FAE-B120-19454D72F59D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidMain.PerformanceTests", "test\VoidMain.PerformanceTests\VoidMain.PerformanceTests.csproj", "{671C872C-4A50-4CB2-8F38-7215988F77C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{7C7231FC-1A19-4FAE-B120-19454D72F59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C7231FC-1A19-4FAE-B120-19454D72F59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C7231FC-1A19-4FAE-B120-19454D72F59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{671C872C-4A50-4CB2-8F38-7215988F77C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{671C872C-4A50-4CB2-8F38-7215988F77C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{671C872C-4A50-4CB2-8F38-7215988F77C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{671C872C-4A50-4CB2-8F38-7215988F77C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +102,7 @@ Global
 		{7401E456-BE43-4FE7-925C-B9DFD4CFED5A} = {B34AF4DF-2E3D-4433-9FBA-4955DC2D4396}
 		{E740C5DF-4A2C-464B-B051-6C280C844572} = {58517825-D495-41AC-8027-91EDDA9C0D3C}
 		{7C7231FC-1A19-4FAE-B120-19454D72F59D} = {B34AF4DF-2E3D-4433-9FBA-4955DC2D4396}
+		{671C872C-4A50-4CB2-8F38-7215988F77C6} = {B34AF4DF-2E3D-4433-9FBA-4955DC2D4396}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D369340B-B358-406A-86D7-2C0AA631EC2A}
