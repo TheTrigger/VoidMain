@@ -11,8 +11,8 @@ Frequency=2929352 Hz, Resolution=341.3724 ns, Timer=TSC
 ```
 |          Method |      Mean |     Error |    StdDev |  Gen 0 | Allocated |
 |---------------- |----------:|----------:|----------:|-------:|----------:|
-| CommandNameOnly |  4.788 us | 0.0169 us | 0.0141 us | 0.9842 |   3.03 KB |
-|     OptionsOnly | 13.020 us | 0.0627 us | 0.0586 us | 2.6245 |   8.09 KB |
-|    OperandsOnly |  9.121 us | 0.0760 us | 0.0674 us | 1.6327 |   5.05 KB |
-|    ShortCommand | 10.093 us | 0.0578 us | 0.0513 us | 1.9379 |   5.96 KB |
-|     LongCommand | 23.899 us | 0.1318 us | 0.1101 us | 4.7302 |  14.59 KB |
+| CommandNameOnly |  4.988 us | 0.1166 us | 0.1034 us | 0.8926 |   2.76 KB |
+|     OptionsOnly | 12.602 us | 0.0704 us | 0.0659 us | 2.1362 |   6.61 KB |
+|    OperandsOnly |  9.218 us | 0.0869 us | 0.0770 us | 1.4801 |   4.56 KB |
+|    ShortCommand | 10.102 us | 0.0277 us | 0.0216 us | 1.6479 |    5.1 KB |
+|     LongCommand | 23.097 us | 0.1474 us | 0.1307 us | 4.0894 |  12.58 KB |

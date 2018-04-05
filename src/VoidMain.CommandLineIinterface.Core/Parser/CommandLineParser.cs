@@ -73,7 +73,7 @@ namespace VoidMain.CommandLineIinterface.Parser
                 string subcommand = token.StringValue;
                 if (!_semanticModel.HasSubCommand(command, subcommand)) break;
 
-                if (!HasSpaceAfterOrEnd(token, () => cursor.Peek(1)))
+                if (!HasSpaceAfterOrEnd(token, cursor.Peek(1)))
                 {
                     var builder = new SyntaxTokenBuilder(token);
                     builder.TrailingTrivia = _syntaxFactory.WhitespaceTriviaAfter(token, length: 0, missing: true);
@@ -105,22 +105,21 @@ namespace VoidMain.CommandLineIinterface.Parser
             {
                 var token = cursor.Peek();
 
-                if (!operandsOnly && IsOperandsSectionMarker(token, () => cursor.Peek(1)))
+                if (!operandsOnly && IsOperandsSectionMarker(token, cursor.Peek(1)))
                 {
                     cursor.MoveNext();
                     var operandsSectionMarker = new OperandsSectionMarkerSyntax(token);
                     arguments.Add(operandsSectionMarker);
                     operandsOnly = true;
                 }
-                else if (!operandsOnly && IsOptionName(token, () => cursor.Peek(1)))
+                else if (!operandsOnly && IsOptionName(token, cursor.Peek(1)))
                 {
                     var nameMarker = token;
                     var name = cursor.Peek(1);
                     cursor.MoveNext(2);
                     if (IsStackedOption(nameMarker, name))
                     {
-                        var stackedOptions = ScanStackedOptions(cursor, errors, nameMarker, name, commandName);
-                        arguments.AddRange(stackedOptions);
+                        ScanStackedOptions(cursor, errors, nameMarker, name, commandName, arguments);
                     }
                     else
                     {
@@ -141,9 +140,9 @@ namespace VoidMain.CommandLineIinterface.Parser
             return new ArgumentsSectionSyntax(arguments);
         }
 
-        private IEnumerable<OptionSyntax> ScanStackedOptions(
+        private void ScanStackedOptions(
             ElementsCursor<SyntaxToken> cursor, List<SyntaxError> errors,
-            SyntaxToken nameMarker, SyntaxToken name, IReadOnlyList<string> commandName)
+            SyntaxToken nameMarker, SyntaxToken name, IReadOnlyList<string> commandName, List<ArgumentSyntax> arguments)
         {
             var builder = new SyntaxTokenBuilder();
             var optionsSpan = name.Span;
@@ -152,14 +151,16 @@ namespace VoidMain.CommandLineIinterface.Parser
 
             GetShortOptionName(errors, builder, optionsSpan, optionNames, 0);
             var shortName = builder.Build();
-            yield return new OptionSyntax(nameMarker, shortName, valueMarker: null, value: null);
+            var option = new OptionSyntax(nameMarker, shortName, valueMarker: null, value: null);
+            arguments.Add(option);
             nameMarker = null;
 
             for (int i = 1; i < optionsCount - 1; i++)
             {
                 GetShortOptionName(errors, builder, optionsSpan, optionNames, i);
                 shortName = builder.Build();
-                yield return new OptionSyntax(nameMarker, shortName, valueMarker: null, value: null);
+                option = new OptionSyntax(nameMarker, shortName, valueMarker: null, value: null);
+                arguments.Add(option);
             }
 
             GetShortOptionName(errors, builder, optionsSpan, optionNames, optionsCount - 1);
@@ -169,7 +170,8 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
             name = builder.Build();
 
-            yield return ScanOption(cursor, errors, nameMarker, name, commandName);
+            option = ScanOption(cursor, errors, nameMarker, name, commandName);
+            arguments.Add(option);
         }
 
         private void GetShortOptionName(
@@ -209,7 +211,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
             else
             {
-                if (!HasSpaceAfterOrEnd(name, () => token))
+                if (!HasSpaceAfterOrEnd(name, token))
                 {
                     var builder = new SyntaxTokenBuilder(name);
                     builder.TrailingTrivia = _syntaxFactory.WhitespaceTriviaAfter(name, length: 0, missing: true);
@@ -229,7 +231,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
 
             bool missingValue = valueMarker != null &&
-                (!HasMoreTokens(cursor) || (valueMarker.HasTrailingTrivia && IsOptionNameOrSectionMarker(token, () => cursor.Peek(1))));
+                (!HasMoreTokens(cursor) || (valueMarker.HasTrailingTrivia && IsOptionNameOrSectionMarker(token, cursor.Peek(1))));
 
             if (missingValue)
             {
@@ -260,7 +262,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
 
             bool isValue = (valueMarker != null && !valueMarker.HasTrailingTrivia)
-                || !IsOptionNameOrSectionMarker(token, () => cursor.Peek(1));
+                || !IsOptionNameOrSectionMarker(token, cursor.Peek(1));
 
             if (isValue)
             {
@@ -285,7 +287,7 @@ namespace VoidMain.CommandLineIinterface.Parser
 
             if (token.Kind == SyntaxKind.QuotedLiteralToken || !HasMoreTokens(cursor))
             {
-                if (!HasSpaceAfterOrEnd(token, () => cursor.Peek(1)))
+                if (!HasSpaceAfterOrEnd(token, cursor.Peek(1)))
                 {
                     // Quoted literals do not merge with any other literal
                     // even if they don't have spaces between them.
@@ -337,7 +339,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             while (HasMoreTokens(cursor))
             {
                 var next = cursor.Peek();
-                if (HasSpaceAfterOrEnd(token, () => next)) break;
+                if (HasSpaceAfterOrEnd(token, next)) break;
 
                 if (next.Kind == SyntaxKind.QuotedLiteralToken)
                 {
@@ -388,13 +390,13 @@ namespace VoidMain.CommandLineIinterface.Parser
 
         private bool IsIdentifier(SyntaxToken token)
         {
-            return token.Kind.HasFlag(SyntaxKind.IdentifierToken);
+            return (token.Kind & SyntaxKind.IdentifierToken) == SyntaxKind.IdentifierToken;
         }
 
-        private bool IsOperandsSectionMarker(SyntaxToken token, Func<SyntaxToken> getNextToken)
+        private bool IsOperandsSectionMarker(SyntaxToken token, SyntaxToken nextToken)
         {
             return token.Kind == SyntaxKind.DashDashToken
-                && HasSpaceAfterOrEnd(token, getNextToken);
+                && HasSpaceAfterOrEnd(token, nextToken);
         }
 
         private bool IsOptionNameMarker(SyntaxToken token)
@@ -407,15 +409,11 @@ namespace VoidMain.CommandLineIinterface.Parser
             return token.Kind == SyntaxKind.EqualsToken || token.Kind == SyntaxKind.ColonToken;
         }
 
-        private bool IsOptionName(SyntaxToken token, Func<SyntaxToken> getNextToken)
+        private bool IsOptionName(SyntaxToken token, SyntaxToken nextToken)
         {
-            var nameMarker = token;
-            if (!IsOptionNameMarker(nameMarker)) return false;
-
-            var name = getNextToken();
-            if (HasSpaceAfterOrEnd(nameMarker, () => name)) return false;
-
-            return IsIdentifier(name);
+            if (!IsOptionNameMarker(token)) return false;
+            if (HasSpaceAfterOrEnd(token, nextToken)) return false;
+            return IsIdentifier(nextToken);
         }
 
         private bool IsStackedOption(SyntaxToken nameMarker, SyntaxToken name)
@@ -424,9 +422,9 @@ namespace VoidMain.CommandLineIinterface.Parser
             return name.StringValue.Length > 1;
         }
 
-        private bool IsOptionNameOrSectionMarker(SyntaxToken token, Func<SyntaxToken> getNextToken)
+        private bool IsOptionNameOrSectionMarker(SyntaxToken token, SyntaxToken nextToken)
         {
-            return IsOptionName(token, getNextToken) || IsOperandsSectionMarker(token, getNextToken);
+            return IsOptionName(token, nextToken) || IsOperandsSectionMarker(token, nextToken);
         }
 
         private bool IsFlag(Type valueType)
@@ -434,10 +432,9 @@ namespace VoidMain.CommandLineIinterface.Parser
             return valueType == typeof(bool);
         }
 
-        private bool HasSpaceAfterOrEnd(SyntaxToken token, Func<SyntaxToken> getNextToken)
+        private bool HasSpaceAfterOrEnd(SyntaxToken token, SyntaxToken nextToken)
         {
             if (token.HasTrailingTrivia && !token.TrailingTrivia.Span.IsEmpty) return true;
-            var nextToken = getNextToken();
             if (nextToken.Kind == SyntaxKind.EndOfInputToken) return true;
             return nextToken.HasLeadingTrivia && !nextToken.LeadingTrivia.Span.IsEmpty;
         }
