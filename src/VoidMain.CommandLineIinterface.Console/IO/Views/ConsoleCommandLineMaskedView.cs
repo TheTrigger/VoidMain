@@ -65,7 +65,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _cursor.Move(-diff - count);
         }
 
-        public void ClearAll()
+        public void Clear()
         {
             _cursor.Move(-_lineBuilder.Position);
             _console.Write(' ', _lineBuilder.Length);

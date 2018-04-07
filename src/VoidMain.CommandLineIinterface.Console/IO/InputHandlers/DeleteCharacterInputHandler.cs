@@ -28,7 +28,7 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
                     DeleteForward(args);
                     break;
                 case ConsoleKey.Escape:
-                    ClearAll(args);
+                    Clear(args);
                     break;
                 default:
                     break;
@@ -69,9 +69,9 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
             }
         }
 
-        private void ClearAll(ConsoleInputEventArgs args)
+        private void Clear(ConsoleInputEventArgs args)
         {
-            args.LineView.ClearAll();
+            args.LineView.Clear();
             args.IsHandledHint = true;
         }
     }

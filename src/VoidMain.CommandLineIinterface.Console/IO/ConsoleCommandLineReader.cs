@@ -67,10 +67,10 @@ namespace VoidMain.CommandLineIinterface.IO
             }
 
             var lineView = _viewProvider.GetView(viewOptions);
-            var lineViewLifecycle = lineView as ICommandLineViewLifecycle;
+            var lineViewLifecycle = lineView as ICommandLineInputLifecycle;
             var eventArgs = new ConsoleInputEventArgs();
 
-            lineViewLifecycle?.BeginReadingLine();
+            lineViewLifecycle?.BeforeLineReading();
             try
             {
                 while (!token.IsCancellationRequested)
@@ -84,12 +84,12 @@ namespace VoidMain.CommandLineIinterface.IO
                     eventArgs.IsNextKeyAvailable = isNextKeyAvailable;
                     eventArgs.IsHandledHint = false;
 
-                    lineViewLifecycle?.BeginHandlingInput(isNextKeyAvailable);
+                    lineViewLifecycle?.BeforeInputHandling(isNextKeyAvailable);
                     for (int i = 0; i < _inputHandlers.Length; i++)
                     {
                         _inputHandlers[i].Handle(eventArgs);
                     }
-                    lineViewLifecycle?.EndHandlingInput(isNextKeyAvailable);
+                    lineViewLifecycle?.AfterInputHandling(isNextKeyAvailable);
 
                     if (keyInfo.Key == ConsoleKey.Enter)
                     {
@@ -104,7 +104,7 @@ namespace VoidMain.CommandLineIinterface.IO
             }
             finally
             {
-                lineViewLifecycle?.EndReadingLine();
+                lineViewLifecycle?.AfterLineReading();
             }
 
             ThrowIfCancellationRequested(token, hadUserInput: lineView.Length > 0);

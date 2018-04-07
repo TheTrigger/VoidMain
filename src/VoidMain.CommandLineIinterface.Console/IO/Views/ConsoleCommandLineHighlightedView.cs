@@ -6,7 +6,7 @@ using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class ConsoleCommandLineHighlightedView : ICommandLineView, ICommandLineViewLifecycle
+    public class ConsoleCommandLineHighlightedView : ICommandLineView, ICommandLineInputLifecycle
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
@@ -74,7 +74,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _hasChanges = true;
         }
 
-        public void ClearAll()
+        public void Clear()
         {
             _cursor.Move(-_lineBuilder.Position);
             _lineBuilder.Clear();
@@ -184,23 +184,23 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         #region View Lifecycle
 
-        public void BeginReadingLine()
+        public void BeforeLineReading()
         {
             _foreground = _console.ForegroundColor;
             _background = _console.BackgroundColor;
         }
 
-        public void EndReadingLine()
+        public void AfterLineReading()
         {
             _console.ForegroundColor = _foreground;
             _console.BackgroundColor = _background;
         }
 
-        public void BeginHandlingInput(bool isNextKeyAvailable)
+        public void BeforeInputHandling(bool isNextKeyAvailable)
         {
         }
 
-        public void EndHandlingInput(bool isNextKeyAvailable)
+        public void AfterInputHandling(bool isNextKeyAvailable)
         {
             if (!_hasChanges || isNextKeyAvailable) return;
             RenderHighlightedLine();

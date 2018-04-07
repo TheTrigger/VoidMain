@@ -42,7 +42,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _lineBuilder.Delete(count);
         }
 
-        public void ClearAll()
+        public void Clear()
         {
             _lineBuilder.Clear();
         }

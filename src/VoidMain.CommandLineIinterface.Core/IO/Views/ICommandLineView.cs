@@ -8,7 +8,7 @@
         void MoveTo(int position);
 
         void Delete(int count);
-        void ClearAll();
+        void Clear();
 
         void Type(char value);
         void TypeOver(char value);
