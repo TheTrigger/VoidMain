@@ -10,14 +10,13 @@ namespace VoidMain.CommandLineIinterface.History
     public class CommandsHistoryManager : ICommandsHistoryManager, IDisposable
     {
         private readonly ICommandsHistoryStorage _storage;
-        private readonly IEqualityComparer<string> _comparer;
+        private readonly CommandsHistoryOptions _options;
         private readonly object _commandsWriteLock;
         private PushOutCollection<string> _commands;
         private int _isSchedulled = 0;
         private int _current;
 
-        private TimeSpan SavePeriod { get; }
-        public int MaxCount { get; }
+        public int MaxCount => _options.MaxCount;
         public int Count
         {
             get
@@ -28,21 +27,13 @@ namespace VoidMain.CommandLineIinterface.History
         }
 
         public CommandsHistoryManager(
-            ICommandsHistoryStorage storage, CommandsHistoryOptions options = null)
+            ICommandsHistoryStorage storage,
+            CommandsHistoryOptions options = null)
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            _options = options ?? new CommandsHistoryOptions();
+            _options.Validate();
             _commandsWriteLock = new object();
-            _comparer = options?.CommandsComparer ?? StringComparer.OrdinalIgnoreCase;
-            SavePeriod = options?.SavePeriod ?? TimeSpan.FromSeconds(10.0);
-            MaxCount = options?.MaxCount ?? 10;
-            if (SavePeriod.TotalMilliseconds < 1.0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(SavePeriod));
-            }
-            if (MaxCount < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(MaxCount));
-            }
         }
 
         private void EnsureCommandsLoaded()
@@ -150,7 +141,7 @@ namespace VoidMain.CommandLineIinterface.History
         {
             if (Interlocked.CompareExchange(ref _isSchedulled, 1, 0) == 0)
             {
-                Task.Delay(SavePeriod).ContinueWith(task =>
+                Task.Delay(_options.SavePeriod).ContinueWith(task =>
                 {
                     Interlocked.CompareExchange(ref _isSchedulled, 0, 1);
                     SaveCommands();
@@ -191,7 +182,7 @@ namespace VoidMain.CommandLineIinterface.History
         private bool IsEqualsToLastCommand(string command)
         {
             return _commands.Count > 0
-                && _comparer.Equals(command, _commands[_commands.Count - 1]);
+                && _options.CommandsComparer.Equals(command, _commands[_commands.Count - 1]);
         }
     }
 }

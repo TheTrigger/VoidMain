@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using VoidMain.CommandLineIinterface.Internal;
 using VoidMain.CommandLineIinterface.IO.Views;
 
@@ -7,28 +6,24 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
 {
     public class UndoRedoManager : IUndoRedoManager
     {
-        private readonly IEqualityComparer<CommandLineViewSnapshot> _comparer;
+        private readonly UndoRedoOptions _options;
         private readonly PushOutCollection<CommandLineViewSnapshot> _snapshots;
         private int _current;
 
-        public int MaxCount { get; }
+        public int MaxCount => _options.MaxCount;
         public int Count => _snapshots.Count;
 
         public UndoRedoManager(UndoRedoOptions options = null)
         {
-            _comparer = options?.SnapshotsComparer ?? CommandLineViewSnapshotComparer.IgnoreCursor;
-            MaxCount = options?.MaxCount ?? 10;
-            if (MaxCount < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(MaxCount));
-            }
-            _snapshots = new PushOutCollection<CommandLineViewSnapshot>(MaxCount);
+            _options = options ?? new UndoRedoOptions();
+            _options.Validate();
+            _snapshots = new PushOutCollection<CommandLineViewSnapshot>(_options.MaxCount);
             _current = 0;
         }
 
         public bool TryUndo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot prevSnapshot)
         {
-            if (_comparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
+            if (_options.SnapshotsComparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
             {
                 throw new ArgumentNullException(nameof(currentSnapshot));
             }
@@ -55,7 +50,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
 
         public bool TryRedo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot nextSnapshot)
         {
-            if (_comparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
+            if (_options.SnapshotsComparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
             {
                 throw new ArgumentNullException(nameof(currentSnapshot));
             }
@@ -78,7 +73,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
 
         public bool TryAddSnapshot(CommandLineViewSnapshot snapshot, bool deleteAfter = true)
         {
-            if (_comparer.Equals(snapshot, default(CommandLineViewSnapshot)))
+            if (_options.SnapshotsComparer.Equals(snapshot, default(CommandLineViewSnapshot)))
             {
                 throw new ArgumentNullException(nameof(snapshot));
             }
@@ -123,13 +118,13 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
         private bool IsEqualsToLastSnapshot(CommandLineViewSnapshot snapshot)
         {
             return _snapshots.Count > 0
-                && _comparer.Equals(snapshot, _snapshots[_snapshots.Count - 1]);
+                && _options.SnapshotsComparer.Equals(snapshot, _snapshots[_snapshots.Count - 1]);
         }
 
         private bool IsEqualsToCurrentSnapshot(CommandLineViewSnapshot snapshot)
         {
             return _current >= 0 && _current < _snapshots.Count
-                && _comparer.Equals(snapshot, _snapshots[_current]);
+                && _options.SnapshotsComparer.Equals(snapshot, _snapshots[_current]);
         }
     }
 }

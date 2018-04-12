@@ -7,7 +7,20 @@ namespace VoidMain.CommandLineIinterface
     {
         public IEqualityComparer<string> IdentifierComparer { get; set; }
 
-        public static IEqualityComparer<string> DefaultIdentifierComparer
-            => StringComparer.OrdinalIgnoreCase;
+        public CommandLineSyntaxOptions(bool defaults = true)
+        {
+            if (defaults)
+            {
+                IdentifierComparer = StringComparer.OrdinalIgnoreCase;
+            }
+        }
+
+        public void Validate()
+        {
+            if (IdentifierComparer == null)
+            {
+                throw new ArgumentNullException(nameof(IdentifierComparer));
+            }
+        }
     }
 }

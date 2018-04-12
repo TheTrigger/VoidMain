@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Reflection;
 using VoidMain.Application.Commands.Arguments.ValueParsers;
 using VoidMain.Application.Commands.Internal;
@@ -16,9 +15,8 @@ namespace VoidMain.Application.Commands.Arguments
 
         private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly IValueParserProvider _parserProvider;
-        private readonly IFormatProvider _formatProvider;
-        private readonly MultiValueStrategy _multiValueStrategy;
-        private readonly IEqualityComparer<string> _identifierComparer;
+        private readonly ArgumentsParserOptions _options;
+        private readonly CommandLineSyntaxOptions _syntaxOptions;
 
         public ArgumentsParser(
             ICollectionConstructorProvider colCtorProvider,
@@ -28,10 +26,10 @@ namespace VoidMain.Application.Commands.Arguments
         {
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
             _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
-            _formatProvider = options?.FormatProvider ?? CultureInfo.CurrentCulture;
-            _multiValueStrategy = options?.MultiValueStrategy ?? MultiValueStrategy.UseLastValue;
-            _identifierComparer = syntaxOptions?.IdentifierComparer
-                ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
+            _options = options ?? new ArgumentsParserOptions();
+            _options.Validate();
+            _syntaxOptions = syntaxOptions ?? new CommandLineSyntaxOptions();
+            _syntaxOptions.Validate();
         }
 
         private static void Validate(IReadOnlyList<ArgumentModel> argsModel,
@@ -75,7 +73,7 @@ namespace VoidMain.Application.Commands.Arguments
                     case ArgumentKind.Option:
                         string[] optionValues = GetOptionValues(options, arg);
                         values[i] = ParseValueOrGetDefault(
-                            arg, optionValues, 0, out int _, _multiValueStrategy);
+                            arg, optionValues, 0, out int _, _options.MultiValueStrategy);
                         break;
                     case ArgumentKind.Operand:
                         values[i] = ParseValueOrGetDefault(arg, operands, operandsOffset,
@@ -107,8 +105,8 @@ namespace VoidMain.Application.Commands.Arguments
 
         private bool IsNameOrAliasEquals(string optionName, ArgumentModel arg)
         {
-            return _identifierComparer.Equals(optionName, arg.Name)
-                || _identifierComparer.Equals(optionName, arg.Alias);
+            return _syntaxOptions.IdentifierComparer.Equals(optionName, arg.Name)
+                || _syntaxOptions.IdentifierComparer.Equals(optionName, arg.Alias);
         }
 
         private object GetService(ArgumentModel arg, IServiceProvider services)
@@ -273,7 +271,7 @@ namespace VoidMain.Application.Commands.Arguments
                 stringValue = String.Empty;
             }
 
-            return parser.Parse(stringValue, valueType, _formatProvider);
+            return parser.Parse(stringValue, valueType, _options.FormatProvider);
         }
     }
 }

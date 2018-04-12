@@ -2,39 +2,33 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace VoidMain.CommandLineIinterface.History
 {
     public class CommandsHistoryFileStorage : ICommandsHistoryStorage
     {
-        private readonly string _filePath;
-        private readonly Encoding _encoding;
+        private readonly CommandsHistoryFileStorageOptions _options;
 
         public CommandsHistoryFileStorage(
             CommandsHistoryFileStorageOptions options = null)
         {
-            _filePath = options?.FilePath;
-            if (_filePath == null)
+            _options = options ?? new CommandsHistoryFileStorageOptions();
+            _options.Validate();
+
+            if (!Path.IsPathRooted(_options.FilePath))
             {
-                _filePath = Assembly.GetEntryAssembly().Location + ".history";
+                _options.FilePath = Path.GetFullPath(_options.FilePath);
             }
-            else if (!Path.IsPathRooted(_filePath))
-            {
-                _filePath = Path.GetFullPath(_filePath);
-            }
-            _encoding = options?.Encoding ?? Encoding.UTF8;
         }
 
         public IReadOnlyList<string> Load()
         {
-            if (!File.Exists(_filePath))
+            if (!File.Exists(_options.FilePath))
             {
                 return Array.Empty<string>();
             }
 
-            var commands = File.ReadLines(_filePath, _encoding)
+            var commands = File.ReadLines(_options.FilePath, _options.Encoding)
                 .Where(_ => !String.IsNullOrWhiteSpace(_));
 
             return commands.ToArray();
@@ -46,7 +40,7 @@ namespace VoidMain.CommandLineIinterface.History
             {
                 throw new ArgumentNullException(nameof(commands));
             }
-            File.WriteAllLines(_filePath, commands, _encoding);
+            File.WriteAllLines(_options.FilePath, commands, _options.Encoding);
         }
     }
 }

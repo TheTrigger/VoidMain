@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static ConsoleInterfaceBuilder AddSyntaxHighlighting(
             this ConsoleInterfaceBuilder builder,
-            Action<SyntaxHighlightingOptions<ConsoleTextStyle>> options = null)
+            Action<ConsoleSyntaxHighlightingOptions> options = null)
         {
             var services = builder.Services;
             services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();

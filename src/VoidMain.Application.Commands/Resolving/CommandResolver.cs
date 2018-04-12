@@ -13,9 +13,12 @@ namespace VoidMain.Application.Commands.Resolving
 
         public CommandResolver(CommandLineSyntaxOptions syntaxOptions = null)
         {
-            var identifierComparer = syntaxOptions?.IdentifierComparer
-                ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
-            _nameComparer = new CommandNameComparer(identifierComparer);
+            if(syntaxOptions == null)
+            {
+                syntaxOptions = new CommandLineSyntaxOptions();
+            }
+            syntaxOptions.Validate();
+            _nameComparer = new CommandNameComparer(syntaxOptions.IdentifierComparer);
         }
 
         public CommandModel Resolve(Dictionary<string, object> context, IReadOnlyList<CommandModel> commands)

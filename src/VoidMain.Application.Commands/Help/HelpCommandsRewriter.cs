@@ -14,16 +14,17 @@ namespace VoidMain.Application.Commands.Help
 
         private readonly ApplicationModel _appModel;
         private readonly ICommandResolver _commandResolver;
-        private readonly IEqualityComparer<string> _identifierComparer;
+        private readonly CommandLineSyntaxOptions _syntaxOptions;
 
         public HelpCommandsRewriter(
-            ApplicationModel appModel, ICommandResolver commandResolver,
+            ApplicationModel appModel,
+            ICommandResolver commandResolver,
             CommandLineSyntaxOptions syntaxOptions = null)
         {
             _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
             _commandResolver = commandResolver ?? throw new ArgumentNullException(nameof(commandResolver));
-            _identifierComparer = syntaxOptions?.IdentifierComparer
-                ?? CommandLineSyntaxOptions.DefaultIdentifierComparer;
+            _syntaxOptions = syntaxOptions ?? new CommandLineSyntaxOptions();
+            _syntaxOptions.Validate();
         }
 
         public bool TryRewrite(Dictionary<string, object> context)
@@ -63,13 +64,13 @@ namespace VoidMain.Application.Commands.Help
 
         private bool IsHelpOption(KeyValuePair<string, string> option)
         {
-            return _identifierComparer.Equals(option.Key, HelpName);
+            return _syntaxOptions.IdentifierComparer.Equals(option.Key, HelpName);
         }
 
         private bool IsHelpOption(ArgumentModel arg)
         {
             return arg.Kind == ArgumentKind.Option
-                && _identifierComparer.Equals(arg.Name, HelpName);
+                && _syntaxOptions.IdentifierComparer.Equals(arg.Name, HelpName);
         }
     }
 }
