@@ -12,21 +12,21 @@ namespace VoidMain.CommandLineIinterface.IO
     public class ConsoleCommandLineReader : ICommandLineReader
     {
         private readonly IConsole _console;
+        private readonly IConsoleKeyReader _keyReader;
         private readonly ICommandLineViewProvider _viewProvider;
         private readonly IConsoleInputHandler[] _inputHandlers;
-        private readonly ConsoleKeyAsyncReader _keyReader;
 
-        public ConsoleCommandLineReader(IConsole console,
-            ICommandLineViewProvider viewSelector, IEnumerable<IConsoleInputHandler> inputHandlers)
+        public ConsoleCommandLineReader(IConsole console, IConsoleKeyReader keyReader,
+            ICommandLineViewProvider viewProvider, IEnumerable<IConsoleInputHandler> inputHandlers)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _viewProvider = viewSelector ?? throw new ArgumentNullException(nameof(viewSelector));
+            _keyReader = keyReader ?? throw new ArgumentNullException(nameof(keyReader));
+            _viewProvider = viewProvider ?? throw new ArgumentNullException(nameof(viewProvider));
             if (inputHandlers == null)
             {
                 throw new ArgumentNullException(nameof(inputHandlers));
             }
             _inputHandlers = inputHandlers.OrderBy(_ => _.Order).ToArray();
-            _keyReader = new ConsoleKeyAsyncReader(_console, 100, 1000);
         }
 
         public Task<string> ReadLineAsync(CancellationToken token = default(CancellationToken))
@@ -75,7 +75,7 @@ namespace VoidMain.CommandLineIinterface.IO
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var key = await _keyReader.ReadKeyAsync(token, intercept: true).ConfigureAwait(false);
+                    var key = await _keyReader.ReadKeyAsync(intercept: true, token: token).ConfigureAwait(false);
                     var keyInfo = key.KeyInfo;
                     bool isNextKeyAvailable = key.IsNextKeyAvailable;
 

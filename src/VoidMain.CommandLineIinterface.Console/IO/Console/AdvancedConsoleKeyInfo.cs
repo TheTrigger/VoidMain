@@ -2,12 +2,12 @@
 
 namespace VoidMain.CommandLineIinterface.IO.Console
 {
-    public struct AdvancedConsoleKeyInfo
+    public struct ExtendedConsoleKeyInfo
     {
         public ConsoleKeyInfo KeyInfo { get; }
         public bool IsNextKeyAvailable { get; }
 
-        public AdvancedConsoleKeyInfo(ConsoleKeyInfo keyInfo, bool isNextKeyAvailable)
+        public ExtendedConsoleKeyInfo(ConsoleKeyInfo keyInfo, bool isNextKeyAvailable)
         {
             KeyInfo = keyInfo;
             IsNextKeyAvailable = isNextKeyAvailable;

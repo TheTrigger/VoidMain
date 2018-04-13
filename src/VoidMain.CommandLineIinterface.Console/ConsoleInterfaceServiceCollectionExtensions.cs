@@ -27,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IConsole>(_ => PlatformConsole.Instance);
 
             services.AddSingleton<ICommandLineReader, ConsoleCommandLineReader>();
+            services.AddSingleton<IConsoleKeyReader, ConsoleKeyReader>();
             services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
             services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
             services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
