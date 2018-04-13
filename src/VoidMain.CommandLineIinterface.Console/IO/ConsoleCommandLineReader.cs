@@ -31,40 +31,21 @@ namespace VoidMain.CommandLineIinterface.IO
 
         public Task<string> ReadLineAsync(CancellationToken token = default(CancellationToken))
         {
-            return ReadLineAsync(prompt: null, token: token);
+            var viewOptions = CommandLineViewOptions.Normal;
+            return ReadLineAsync(viewOptions, token);
         }
 
         public Task<string> ReadLineAsync(char? mask, CancellationToken token = default(CancellationToken))
         {
-            return ReadLineAsync(prompt: null, mask: mask, token: token);
-        }
-
-        public Task<string> ReadLineAsync(ICommandLinePrompt prompt,
-            CancellationToken token = default(CancellationToken))
-        {
-            var viewOptions = CommandLineViewOptions.Normal;
-            return ReadLineAsync(prompt, viewOptions, token);
-        }
-
-        public Task<string> ReadLineAsync(ICommandLinePrompt prompt, char? mask,
-            CancellationToken token = default(CancellationToken))
-        {
             var viewOptions = mask.HasValue
                 ? CommandLineViewOptions.Masked(mask.Value)
                 : CommandLineViewOptions.Hidden;
-            return ReadLineAsync(prompt, viewOptions, token);
+            return ReadLineAsync(viewOptions, token);
         }
 
-        private async Task<string> ReadLineAsync(ICommandLinePrompt prompt,
-            CommandLineViewOptions viewOptions, CancellationToken token)
+        private async Task<string> ReadLineAsync(CommandLineViewOptions viewOptions, CancellationToken token)
         {
             ThrowIfCancellationRequested(token, hadUserInput: false);
-
-            string promptMessage = prompt?.GetMessage();
-            if (!String.IsNullOrEmpty(promptMessage))
-            {
-                _console.Write(promptMessage);
-            }
 
             var lineView = _viewProvider.GetView(viewOptions);
             var lineViewLifecycle = lineView as ICommandLineInputLifecycle;

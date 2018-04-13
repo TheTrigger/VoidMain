@@ -7,7 +7,5 @@ namespace VoidMain.CommandLineIinterface.IO
     {
         Task<string> ReadLineAsync(CancellationToken token = default(CancellationToken));
         Task<string> ReadLineAsync(char? mask, CancellationToken token = default(CancellationToken));
-        Task<string> ReadLineAsync(ICommandLinePrompt prompt, CancellationToken token = default(CancellationToken));
-        Task<string> ReadLineAsync(ICommandLinePrompt prompt, char? mask, CancellationToken token = default(CancellationToken));
     }
 }

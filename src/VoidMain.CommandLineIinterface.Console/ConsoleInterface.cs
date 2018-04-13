@@ -6,6 +6,7 @@ using VoidMain.Application.Builder;
 using VoidMain.CommandLineIinterface.Internal;
 using VoidMain.CommandLineIinterface.IO;
 using VoidMain.CommandLineIinterface.IO.Console;
+using VoidMain.CommandLineIinterface.IO.Prompt;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 
@@ -15,16 +16,16 @@ namespace VoidMain.CommandLineIinterface
     {
         private readonly IConsole _console;
         private readonly ConsoleOutputLock _outputLock;
-        private readonly ICommandLinePrompt _prompt;
         private readonly ICommandLineReader _reader;
         private readonly ICommandLineParser _parser;
+        private readonly IConsolePromptMessage _prompt;
         private readonly ContextInitHelper _contextHelper;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
 
         public ConsoleInterface(IConsole console, ConsoleOutputLock outputLock,
-            ICommandLineReader reader, ICommandLineParser parser, ICommandLinePrompt prompt = null)
+            ICommandLineReader reader, ICommandLineParser parser, IConsolePromptMessage prompt = null)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _outputLock = outputLock ?? throw new ArgumentNullException(nameof(outputLock));
@@ -96,7 +97,8 @@ namespace VoidMain.CommandLineIinterface
                     try
                     {
                         _outputLock.Lock();
-                        commandLine = await _reader.ReadLineAsync(_prompt, consoleTokenSource.Token)
+                        _prompt?.Print();
+                        commandLine = await _reader.ReadLineAsync(consoleTokenSource.Token)
                             .ConfigureAwait(false);
                     }
                     catch (OperationCanceledException ex)
