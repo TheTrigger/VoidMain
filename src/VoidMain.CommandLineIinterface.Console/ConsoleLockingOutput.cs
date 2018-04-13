@@ -4,7 +4,6 @@ using VoidMain.CommandLineIinterface.IO.Console;
 
 namespace VoidMain.CommandLineIinterface
 {
-
     public class ConsoleLockingOutput : ICommandLineOutput
     {
         private readonly IConsole _console;

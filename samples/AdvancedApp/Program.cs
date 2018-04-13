@@ -12,9 +12,9 @@ namespace AdvancedApp
 {
     public class ExampleModule : CommandsModule
     {
-        [Command(Description = "Greets the specified person.")]
+        [Command(Description = "Greets the specified person")]
         public void Hello(
-            [Operand(DefaultValue = "World", Description = "Name of a person")] string name)
+            [Operand(DefaultValue = "World", Description = "Name of the person")] string name)
         {
             Output.WriteLine($"Hello, {name}!");
         }

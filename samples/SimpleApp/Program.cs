@@ -18,7 +18,7 @@ namespace SimpleApp
         [Command(Name = "command name")]
         public void Command(string option, bool flag, string[] operands)
         {
-            Output.WriteLine("The command was executed.");
+            Output.WriteLine("Command was executed.");
         }
     }
 

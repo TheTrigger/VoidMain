@@ -7,7 +7,7 @@ using System.Linq;
 namespace VoidMain.CommandLineIinterface.Internal
 {
     [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
-    public class PushOutCollection<T> : IEnumerable<T>
+    public class PushOutCollection<T> : IReadOnlyList<T>
     {
         private readonly T[] _elements;
         private int _start;

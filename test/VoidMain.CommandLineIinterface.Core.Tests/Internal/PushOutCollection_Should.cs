@@ -158,7 +158,7 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
             collection.Clear();
 
             // Assert
-            Assert.Equal(0, collection.Count);
+            Assert.Empty(collection);
         }
 
         #endregion
