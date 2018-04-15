@@ -8,6 +8,14 @@ namespace VoidMain.Application.Commands
         public string Name { get; set; }
         public string Description { get; set; }
 
+        private bool? _excludeModuleName;
+        public bool ExcludeModuleName
+        {
+            get => _excludeModuleName ?? false;
+            set => _excludeModuleName = value;
+        }
+        public bool IsSetExcludeModuleName => _excludeModuleName.HasValue;
+
         public CommandAttribute()
         {
         }

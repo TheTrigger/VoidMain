@@ -79,9 +79,9 @@ class Program : IStartup
 CMD> example hello world
 ```
 
-You can get rid of `example` command name part if you set the module name to an empty string like this:
+You can get rid of the `example` command name part if you configure the `ExcludeFromCommandName` property for the module.
 ```csharp
-[Module(Name = "")]
+[Module(ExcludeFromCommandName = true)]
 public class ExampleModule : CommandsModule { }
 ```
 ```

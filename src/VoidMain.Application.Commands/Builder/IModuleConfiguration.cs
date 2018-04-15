@@ -8,6 +8,7 @@ namespace VoidMain.Application.Commands.Builder
     {
         string Name { get; set; }
         string Description { get; set; }
+        bool ExcludeFromCommandName { get; set; }
         void RemoveCommand(Expression<Action<TModule>> command);
         bool IsRemoved(MethodInfo method);
     }

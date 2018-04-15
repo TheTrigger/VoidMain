@@ -8,7 +8,7 @@ using VoidMain.Hosting;
 
 namespace VoidMain.Application.Commands.Help
 {
-    [Module(Name = "")]
+    [Module(ExcludeFromCommandName = true)]
     public class HelpModule : CommandsModule
     {
         private readonly ApplicationModel _appModel;

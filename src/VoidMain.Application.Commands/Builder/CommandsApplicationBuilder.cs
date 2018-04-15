@@ -38,6 +38,7 @@ namespace VoidMain.Application.Commands.Builder
             var config = _configFactory.Create<TModule>();
             config.Name = module.Name;
             config.Description = module.Description;
+            config.ExcludeFromCommandName = module.ExcludeFromCommandName;
             configure?.Invoke(config);
 
             AddModuleInternal(module, config);
@@ -45,14 +46,9 @@ namespace VoidMain.Application.Commands.Builder
 
         private void AddModuleInternal<TModule>(ModuleModel module, IModuleConfiguration<TModule> config)
         {
-            if (config.Name != module.Name)
-            {
-                module.Name = config.Name;
-            }
-            if (config.Description != module.Description)
-            {
-                module.Description = config.Description;
-            }
+            module.Name = config.Name;
+            module.Description = config.Description;
+            module.ExcludeFromCommandName = config.ExcludeFromCommandName;
 
             var newCommands = new List<CommandModel>();
             var methods = module.Type.GetTypeInfo().GetMethods();

@@ -45,6 +45,9 @@ namespace VoidMain.Application.Commands.Builder
             command.Method = method;
             command.Module = module;
 
+            bool excludeModuleName = String.IsNullOrWhiteSpace(module.Name)
+                || module.ExcludeFromCommandName;
+
             string name = null;
             var attr = method.GetCustomAttribute<CommandAttribute>();
             if (attr == null)
@@ -55,9 +58,13 @@ namespace VoidMain.Application.Commands.Builder
             {
                 name = attr.Name ?? method.Name;
                 command.Description = attr.Description;
+                if (attr.IsSetExcludeModuleName)
+                {
+                    excludeModuleName = attr.ExcludeModuleName;
+                }
             }
 
-            if (!String.IsNullOrWhiteSpace(module.Name))
+            if (!excludeModuleName)
             {
                 name = module.Name + " " + name;
             }

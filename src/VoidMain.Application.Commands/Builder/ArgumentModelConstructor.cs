@@ -50,7 +50,7 @@ namespace VoidMain.Application.Commands.Builder
                     argument.DefaultValue = argAttr.DefaultValue ?? GetDefaultValue(parameter);
                     argument.ValueParser = argAttr.ValueParser;
                 }
-                argument.Optional = attr.IsOptionalSet
+                argument.Optional = attr.IsSetOptional
                     ? attr.Optional
                     : parameter.IsOptional || isNullableOrParams || argument.DefaultValue != null;
             }

@@ -87,8 +87,9 @@ namespace AdvancedApp
                 commands.AddHelpCommands();
                 commands.AddModule<ExampleModule>(module =>
                 {
-                    module.Name = "";
-                    module.Description = "";
+                    module.Name = "Example";
+                    module.Description = "Example module";
+                    module.ExcludeFromCommandName = true;
 
                     module.RemoveCommand(m => m.RemovedCommand());
                 });

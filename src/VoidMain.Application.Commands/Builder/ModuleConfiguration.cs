@@ -11,6 +11,7 @@ namespace VoidMain.Application.Commands.Builder
 
         public string Name { get; set; }
         public string Description { get; set; }
+        public bool ExcludeFromCommandName { get; set; }
 
         public ModuleConfiguration()
         {

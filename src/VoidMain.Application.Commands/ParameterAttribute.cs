@@ -11,6 +11,6 @@ namespace VoidMain.Application.Commands
             get => _optional ?? false;
             set => _optional = value;
         }
-        public bool IsOptionalSet { get => _optional.HasValue; }
+        public bool IsSetOptional => _optional.HasValue;
     }
 }

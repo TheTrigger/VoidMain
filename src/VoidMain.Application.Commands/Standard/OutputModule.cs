@@ -2,7 +2,7 @@
 
 namespace VoidMain.Application.Commands.Standard
 {
-    [Module(Name = "")]
+    [Module(ExcludeFromCommandName = true)]
     public class OutputModule
     {
         public void Clear(ICommandLineOutput output)

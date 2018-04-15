@@ -2,7 +2,7 @@
 
 namespace VoidMain.Application.Commands.Standard
 {
-    [Module(Name = "")]
+    [Module(ExcludeFromCommandName = true)]
     public class AppModule
     {
         public void Quit(ICommandLineInterface cli)

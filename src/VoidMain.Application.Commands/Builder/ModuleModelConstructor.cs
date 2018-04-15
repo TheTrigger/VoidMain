@@ -45,8 +45,11 @@ namespace VoidMain.Application.Commands.Builder
             }
             else
             {
-                module.Name = attr.Name ?? RemoveSuffix(type.Name, ModuleSuffix);
+                module.Name = String.IsNullOrWhiteSpace(attr.Name)
+                    ? RemoveSuffix(type.Name, ModuleSuffix)
+                    : attr.Name;
                 module.Description = attr.Description;
+                module.ExcludeFromCommandName = attr.ExcludeFromCommandName;
             }
 
             return module;

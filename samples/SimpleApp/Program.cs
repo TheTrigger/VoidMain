@@ -7,7 +7,7 @@ using VoidMain.Hosting;
 
 namespace SimpleApp
 {
-    [Module(Name = "")]
+    [Module(ExcludeFromCommandName = true)]
     public class ExampleModule : CommandsModule
     {
         public void Hello([Operand] string name = "World")
