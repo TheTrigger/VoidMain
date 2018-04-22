@@ -11,36 +11,54 @@ namespace VoidMain.Application.Commands.Help
     {
         private readonly ICommandFormatter _commandFormatter;
         private readonly int ListOffset = 2;
-        private readonly int ArgumentDescriptionOffset = 4;
+        private readonly int DescriptionOffset = 4;
+        private readonly int MaxNameLength = 30;
 
         public HelpProvider(ICollectionConstructorProvider colCtorProvider)
         {
             _commandFormatter = new CommandHelpFormatter(colCtorProvider);
         }
 
-        public string GetGeneralHelp(IEnumerable<CommandModel> commands)
+        public string GetGeneralHelp(IReadOnlyList<CommandModel> commands)
         {
             var help = new StringBuilder();
 
-            string usage = GetUsage();
-            help.AppendLine(usage)
-                .AppendLine()
-                .AppendLine("Commands:");
+            help.AppendLine("Usage:")
+                .Append(' ', ListOffset)
+                .AppendLine("command name [options...] [operands...]");
 
-            commands = commands.OrderBy(_ => _commandFormatter.FormatCommandName(_.Name));
-            foreach (var command in commands)
+            if (commands.Count != 0)
             {
-                string signature = _commandFormatter.FormatCommand(command);
-                help.Append(' ', ListOffset)
-                    .AppendLine(signature);
+                help.AppendLine()
+                    .AppendLine("Commands:");
+
+                var commandsInfo = commands.Select(_ => new
+                {
+                    Name = _commandFormatter.FormatCommandName(_.Name),
+                    _.Description
+                })
+                .OrderBy(_ => _.Name)
+                .ToArray();
+
+                int maxNameLength = Math.Min(MaxNameLength, commandsInfo.Max(_ => _.Name.Length));
+
+                foreach (var cmdInfo in commandsInfo)
+                {
+                    help.Append(' ', ListOffset)
+                        .Append(cmdInfo.Name);
+
+                    if (!String.IsNullOrWhiteSpace(cmdInfo.Description))
+                    {
+                        int descrOffset = Math.Max(0, maxNameLength - cmdInfo.Name.Length) + DescriptionOffset;
+                        help.Append(' ', descrOffset)
+                            .Append(cmdInfo.Description);
+                    }
+
+                    help.AppendLine();
+                }
             }
 
             return help.ToString();
-        }
-
-        private string GetUsage()
-        {
-            return "command name [options...] [operands...]";
         }
 
         public string GetCommandHelp(CommandModel command)
@@ -54,7 +72,9 @@ namespace VoidMain.Application.Commands.Help
             }
 
             string signature = _commandFormatter.FormatCommand(command);
-            help.AppendLine(signature);
+            help.AppendLine("Syntax:")
+                .Append(' ', ListOffset)
+                .AppendLine(signature);
 
             var arguments = command.Arguments
                 .Where(_ => _.Kind == ArgumentKind.Option
@@ -63,7 +83,7 @@ namespace VoidMain.Application.Commands.Help
 
             if (arguments.Length > 0)
             {
-                int maxNameLength = arguments.Max(_ => _.Name.Length + (_.Alias?.Length ?? 0));
+                int maxNameLength = Math.Min(MaxNameLength, arguments.Max(_ => _.Name.Length + (_.Alias?.Length ?? 0)));
 
                 AppendOptionsList(help, command, maxNameLength);
                 AppendOperandsList(help, command, maxNameLength);
@@ -87,7 +107,7 @@ namespace VoidMain.Application.Commands.Help
             foreach (var opt in options)
             {
                 help.Append(' ', ListOffset);
-                int nameLength = opt.Name.Length;
+                int nameLength = 0;
 
                 if (!String.IsNullOrWhiteSpace(opt.Alias))
                 {
@@ -95,11 +115,12 @@ namespace VoidMain.Application.Commands.Help
                     help.Append($"-{opt.Alias}, ");
                 }
 
+                nameLength += opt.Name.Length + 2;
                 help.Append($"--{opt.Name}");
 
                 if (!String.IsNullOrWhiteSpace(opt.Description))
                 {
-                    int descrOffset = nameSpace - nameLength + ArgumentDescriptionOffset;
+                    int descrOffset = Math.Max(0, nameSpace - nameLength) + DescriptionOffset;
                     help.Append(' ', descrOffset)
                         .Append(opt.Description);
                 }
@@ -128,7 +149,7 @@ namespace VoidMain.Application.Commands.Help
 
                 if (!String.IsNullOrWhiteSpace(opr.Description))
                 {
-                    int descrOffset = nameSpace - nameLength + ArgumentDescriptionOffset;
+                    int descrOffset = Math.Max(0, nameSpace - nameLength) + DescriptionOffset;
                     help.Append(' ', descrOffset)
                         .Append(opr.Description);
                 }
