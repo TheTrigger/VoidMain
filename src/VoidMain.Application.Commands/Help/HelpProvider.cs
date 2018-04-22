@@ -9,13 +9,13 @@ namespace VoidMain.Application.Commands.Help
 {
     public class HelpProvider
     {
-        private readonly ICollectionConstructorProvider _colCtorProvider;
+        private readonly ICommandFormatter _commandFormatter;
         private readonly int ListOffset = 2;
         private readonly int ArgumentDescriptionOffset = 4;
 
         public HelpProvider(ICollectionConstructorProvider colCtorProvider)
         {
-            _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
+            _commandFormatter = new CommandHelpFormatter(colCtorProvider);
         }
 
         public string GetGeneralHelp(IEnumerable<CommandModel> commands)
@@ -27,16 +27,20 @@ namespace VoidMain.Application.Commands.Help
                 .AppendLine()
                 .AppendLine("Commands:");
 
-            // TODO: use comparer
-            commands = commands.OrderBy(_ => _.Name.ToString());
+            commands = commands.OrderBy(_ => _commandFormatter.FormatCommandName(_.Name));
             foreach (var command in commands)
             {
-                string signature = GetCommandSignature(command);
-                help.Append(' ', ListOffset);
-                help.AppendLine(signature);
+                string signature = _commandFormatter.FormatCommand(command);
+                help.Append(' ', ListOffset)
+                    .AppendLine(signature);
             }
 
             return help.ToString();
+        }
+
+        private string GetUsage()
+        {
+            return "command name [options...] [operands...]";
         }
 
         public string GetCommandHelp(CommandModel command)
@@ -45,11 +49,11 @@ namespace VoidMain.Application.Commands.Help
 
             if (!String.IsNullOrWhiteSpace(command.Description))
             {
-                help.AppendLine(command.Description);
-                help.AppendLine();
+                help.AppendLine(command.Description)
+                    .AppendLine();
             }
 
-            string signature = GetCommandSignature(command);
+            string signature = _commandFormatter.FormatCommand(command);
             help.AppendLine(signature);
 
             var arguments = command.Arguments
@@ -72,13 +76,13 @@ namespace VoidMain.Application.Commands.Help
         {
             var options = command.Arguments
                 .Where(_ => _.Kind == ArgumentKind.Option)
-                .OrderBy(_ => _.Name) // TODO: use comparer
+                .OrderBy(_ => _.Name)
                 .ToArray();
 
             if (options.Length == 0) return;
 
-            help.AppendLine();
-            help.AppendLine("Options:");
+            help.AppendLine()
+                .AppendLine("Options:");
 
             foreach (var opt in options)
             {
@@ -96,8 +100,8 @@ namespace VoidMain.Application.Commands.Help
                 if (!String.IsNullOrWhiteSpace(opt.Description))
                 {
                     int descrOffset = nameSpace - nameLength + ArgumentDescriptionOffset;
-                    help.Append(' ', descrOffset);
-                    help.Append(opt.Description);
+                    help.Append(' ', descrOffset)
+                        .Append(opt.Description);
                 }
 
                 help.AppendLine();
@@ -112,8 +116,8 @@ namespace VoidMain.Application.Commands.Help
 
             if (operands.Length == 0) return;
 
-            help.AppendLine();
-            help.AppendLine("Operands:");
+            help.AppendLine()
+                .AppendLine("Operands:");
 
             foreach (var opr in operands)
             {
@@ -125,103 +129,11 @@ namespace VoidMain.Application.Commands.Help
                 if (!String.IsNullOrWhiteSpace(opr.Description))
                 {
                     int descrOffset = nameSpace - nameLength + ArgumentDescriptionOffset;
-                    help.Append(' ', descrOffset);
-                    help.Append(opr.Description);
+                    help.Append(' ', descrOffset)
+                        .Append(opr.Description);
                 }
 
                 help.AppendLine();
-            }
-        }
-
-        private string GetUsage()
-        {
-            return "command_name [options...] [operands...]";
-        }
-
-        private string GetCommandSignature(CommandModel command)
-        {
-            var signature = new StringBuilder();
-            signature.Append(command.Name);
-
-            foreach (var arg in command.Arguments)
-            {
-                switch (arg.Kind)
-                {
-                    case ArgumentKind.Option:
-                        string option = GetOptionSignature(arg);
-                        signature.Append(' ').Append(option);
-                        break;
-                    case ArgumentKind.Operand:
-                        string operand = GetOperandSignature(arg);
-                        signature.Append(' ').Append(operand);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            return signature.ToString();
-        }
-
-        private string GetOptionSignature(ArgumentModel option)
-        {
-            string name = option.Name;
-            string value = GetOptionValuePlaceholer(option);
-
-            if (_colCtorProvider.IsCollection(option.Type))
-            {
-                if (option.Optional)
-                {
-                    return $"[--{name} {value}]...";
-                }
-                else
-                {
-                    return $"--{name} {value} [--{name} {value}]...";
-                }
-            }
-            else
-            {
-                if (option.Optional)
-                {
-                    return $"[--{name} {value}]";
-                }
-                else
-                {
-                    return $"--{name} {value}";
-                }
-            }
-        }
-
-        private string GetOptionValuePlaceholer(ArgumentModel option)
-        {
-            return "<value>";
-        }
-
-        private string GetOperandSignature(ArgumentModel operand)
-        {
-            string name = operand.Name;
-
-            if (_colCtorProvider.IsCollection(operand.Type))
-            {
-                if (operand.Optional)
-                {
-                    return $"[<{name}>...]";
-                }
-                else
-                {
-                    return $"<{name}> [<{name}>...]";
-                }
-            }
-            else
-            {
-                if (operand.Optional)
-                {
-                    return $"[<{name}>]";
-                }
-                else
-                {
-                    return $"<{name}>";
-                }
             }
         }
     }

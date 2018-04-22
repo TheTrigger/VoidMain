@@ -43,7 +43,7 @@ public class ExampleModule : CommandsModule
     [Command(Name = "command name")]
     public void Command(string option, bool flag, string[] operands)
     {
-        Output.WriteLine("The command was executed.");
+        Output.WriteLine("Command was executed.");
     }
 }
 ```
@@ -92,8 +92,7 @@ CMD> hello world
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    var interfaceBuilder = services
-        .AddConsoleInterfaceCore()
+    services.AddConsoleInterfaceCore()
         .AddPromptMessage("CMD> ")
         .AddUndoRedo(options =>
         {
@@ -111,9 +110,7 @@ public void ConfigureServices(IServiceCollection services)
             };
             // or
             options.Pallete = ConsoleSyntaxHighlightingPallete.Default;
-        });
-
-    interfaceBuilder
+        })
         .AddCommandsHistory(options =>
         {
             options.MaxCount = 10;

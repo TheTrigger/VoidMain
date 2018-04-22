@@ -37,8 +37,7 @@ namespace AdvancedApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var interfaceBuilder = services
-                .AddConsoleInterfaceCore()
+            services.AddConsoleInterfaceCore()
                 .AddPromptMessage("CMD> ")
                 .AddUndoRedo(options =>
                 {
@@ -56,9 +55,7 @@ namespace AdvancedApp
                     };
                     // or
                     options.Pallete = ConsoleSyntaxHighlightingPallete.Default;
-                });
-
-            interfaceBuilder
+                })
                 .AddCommandsHistory(options =>
                 {
                     options.MaxCount = 10;
