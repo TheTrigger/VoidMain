@@ -31,7 +31,8 @@ namespace VoidMain.Application.Commands.Help
             _helpProvider = new HelpProvider(colCtorProvider);
         }
 
-        public void Help([Operand] string commandName = null)
+        [Command(Description = "Display help information")]
+        public void Help([Operand(Description = "Name of the command")] string commandName = null)
         {
             string help = String.IsNullOrWhiteSpace(commandName)
                 ? _helpProvider.GetGeneralHelp(_appModel.Commands)
