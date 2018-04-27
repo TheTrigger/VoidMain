@@ -18,6 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<ICommandLineInterface, ConsoleInterface>();
 
             services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
+            services.AddSingleton<IConsoleColorConverter, NearestConsoleColorConverter>();
             services.AddSingleton<ConsoleOutputLock>();
 
             var cursorType = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
