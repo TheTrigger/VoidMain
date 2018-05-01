@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Builder;
@@ -19,7 +18,7 @@ namespace VoidMain.CommandLineIinterface
         private readonly ICommandLineReader _reader;
         private readonly ICommandLineParser _parser;
         private readonly IConsolePromptMessage _prompt;
-        private readonly ContextInitHelper _contextHelper;
+        private readonly ContextBuilder _contextBuilder;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
@@ -32,7 +31,7 @@ namespace VoidMain.CommandLineIinterface
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _prompt = prompt;
-            _contextHelper = new ContextInitHelper();
+            _contextBuilder = new ContextBuilder();
             _cliLoopTokenSource = new CancellationTokenSource();
             _cliLoop = null;
             IsRunning = false;
@@ -144,11 +143,11 @@ namespace VoidMain.CommandLineIinterface
                             continue;
                         }
 
-                        var context = new Dictionary<string, object>();
-                        _contextHelper.UseContext(context)
-                            .SetCancellation(consoleTokenSource.Token)
+                        var context = _contextBuilder
+                            .SetCancelToken(consoleTokenSource.Token)
                             .SetRawCommandLine(commandLine)
-                            .SetParsedCommandLine(parsedCommandLine);
+                            .SetParsedCommandLine(parsedCommandLine)
+                            .Build();
 
                         // End command-line loop.
                         if (loopToken.IsCancellationRequested) break;

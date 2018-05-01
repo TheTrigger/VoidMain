@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VoidMain.Application.Commands.Arguments;
 using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Model;
@@ -44,10 +45,8 @@ namespace VoidMain.Application.Commands.Help
         private CommandModel FindCommand(string commandName)
         {
             var name = _commandNameParser.Parse(commandName);
-            var context = new Dictionary<string, object>
-            {
-                [ContextKey.CommandName] = name.Parts
-            };
+            var context = new Dictionary<string, object>();
+            ContextHelper.SetCommandName(context, name.Parts as string[] ?? name.Parts.ToArray());
 
             return _commandResolver.Resolve(context, _appModel.Commands);
         }
