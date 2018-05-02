@@ -40,7 +40,7 @@ namespace VoidMain.Application.Commands.Execution
             token.ThrowIfCancellationRequested();
             var moduleType = command.Module.Type;
             var method = command.Method;
-            var moduleInstance = _typeActivator.CreateInstance(services, moduleType);
+            var moduleInstance = _typeActivator.CreateInstance(moduleType, services);
 
             try
             {
@@ -55,7 +55,7 @@ namespace VoidMain.Application.Commands.Execution
                     .ConfigureAwait(false);
                 return result;
             }
-            catch(TargetInvocationException ex)
+            catch (TargetInvocationException ex)
             {
                 ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
                 throw; // To suppress error CS0161: not all code paths return a value.

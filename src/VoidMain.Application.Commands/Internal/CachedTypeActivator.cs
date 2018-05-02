@@ -13,7 +13,7 @@ namespace VoidMain.Application.Commands.Internal
         private readonly Func<Type, ObjectFactory> _factoryOfFactory =
             (implType) => ActivatorUtilities.CreateFactory(implType, Type.EmptyTypes);
 
-        public object CreateInstance(IServiceProvider services, Type implType)
+        public object CreateInstance(Type implType, IServiceProvider services)
         {
             if (services == null)
             {

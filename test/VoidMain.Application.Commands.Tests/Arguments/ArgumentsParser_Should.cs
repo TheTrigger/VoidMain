@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using VoidMain.Application.Commands.Arguments.ValueParsers;
+using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 using Xunit;
 
@@ -430,7 +431,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         private static ArgumentsParser Parser(ArgumentsParserOptions options = null)
         {
             var colCtorProvider = new CollectionConstructorProvider();
-            var parserProvider = new ValueParserProvider();
+            var parserProvider = new ValueParserProvider(new CachedTypeActivator());
             return new ArgumentsParser(colCtorProvider, parserProvider, options);
         }
 

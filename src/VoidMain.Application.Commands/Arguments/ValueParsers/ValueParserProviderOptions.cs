@@ -5,23 +5,23 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
 {
     public class ValueParserProviderOptions
     {
-        public IValueParser DefaultParser { get; set; }
-        public IValueParser EnumParser { get; set; }
-        public Dictionary<Type, IValueParser> ValueParsers { get; set; }
+        public TypeOrInstance<IValueParser> DefaultParser { get; set; }
+        public TypeOrInstance<IValueParser> EnumParser { get; set; }
+        public Dictionary<Type, TypeOrInstance<IValueParser>> ValueParsers { get; set; }
 
         public ValueParserProviderOptions(bool defaults = true)
         {
             if (defaults)
             {
-                DefaultParser = new ChangeTypeValueParser();
-                EnumParser = new EnumValueParser();
-                ValueParsers = new Dictionary<Type, IValueParser>
+                DefaultParser = typeof(ChangeTypeValueParser);
+                EnumParser = typeof(EnumValueParser);
+                ValueParsers = new Dictionary<Type, TypeOrInstance<IValueParser>>
                 {
-                    [typeof(String)] = new StringValueParser(),
-                    [typeof(Guid)] = new GuidValueParser(),
-                    [typeof(IntPtr)] = new IntPtrValueParser(),
-                    [typeof(TimeSpan)] = new TimeSpanValueParser(),
-                    [typeof(Uri)] = new UriValueParser()
+                    [typeof(String)] = typeof(StringValueParser),
+                    [typeof(Guid)] = typeof(GuidValueParser),
+                    [typeof(IntPtr)] = typeof(IntPtrValueParser),
+                    [typeof(TimeSpan)] = typeof(TimeSpanValueParser),
+                    [typeof(Uri)] = typeof(UriValueParser)
                 };
             }
         }

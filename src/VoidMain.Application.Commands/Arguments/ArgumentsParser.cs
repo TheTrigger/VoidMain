@@ -10,6 +10,8 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public class ArgumentsParser : IArgumentsParser
     {
+        private const int OptionValuesOffset = 0;
+        private const MultiValueStrategy OperandMultiValueStrategy = MultiValueStrategy.UseFirstValue;
         private readonly Type BooleanType = typeof(bool);
         private readonly object TrueValue = true;
 
@@ -73,11 +75,11 @@ namespace VoidMain.Application.Commands.Arguments
                     case ArgumentKind.Option:
                         string[] optionValues = GetOptionValues(options, arg);
                         values[i] = ParseValueOrGetDefault(
-                            arg, optionValues, 0, out int _, _options.MultiValueStrategy);
+                            arg, optionValues, OptionValuesOffset, services, _options.MultiValueStrategy, out int _);
                         break;
                     case ArgumentKind.Operand:
-                        values[i] = ParseValueOrGetDefault(arg, operands, operandsOffset,
-                            out int operandsUsed, MultiValueStrategy.UseFirstValue);
+                        values[i] = ParseValueOrGetDefault(
+                            arg, operands, operandsOffset, services, OperandMultiValueStrategy, out int operandsUsed);
                         operandsOffset += operandsUsed;
                         break;
                     default:
@@ -125,20 +127,23 @@ namespace VoidMain.Application.Commands.Arguments
             throw new ArgumentParseException(arg, $"Service '{arg.Type.Name}' is not registered.");
         }
 
-        private object ParseValueOrGetDefault(ArgumentModel arg,
-            string[] stringValues, int valuesOffset, out int valuesUsed,
-            MultiValueStrategy multiValueStrategy)
+        private object ParseValueOrGetDefault(
+            ArgumentModel arg,
+            string[] stringValues, int valuesOffset,
+            IServiceProvider services,
+            MultiValueStrategy multiValueStrategy,
+            out int valuesUsed)
         {
             if (stringValues == null || valuesOffset == stringValues.Length)
             {
                 valuesUsed = 0;
-                return GetDefaultValue(arg, multiValueStrategy);
+                return GetDefaultValue(arg, services, multiValueStrategy);
             }
 
-            return ParseValue(arg, stringValues, valuesOffset, out valuesUsed, multiValueStrategy);
+            return ParseValue(arg, stringValues, valuesOffset, services, multiValueStrategy, out valuesUsed);
         }
 
-        private object GetDefaultValue(ArgumentModel arg, MultiValueStrategy multiValueStrategy)
+        private object GetDefaultValue(ArgumentModel arg, IServiceProvider services, MultiValueStrategy multiValueStrategy)
         {
             var defaultValue = arg.DefaultValue;
             if (defaultValue == null)
@@ -156,9 +161,9 @@ namespace VoidMain.Application.Commands.Arguments
             switch (defaultValue)
             {
                 case string stringValue:
-                    return ParseValue(arg, new[] { stringValue }, 0, out var _, multiValueStrategy);
+                    return ParseValue(arg, new[] { stringValue }, 0, services, multiValueStrategy, out var _);
                 case string[] stringValues when stringValues.Length > 0:
-                    return ParseValue(arg, stringValues, 0, out var _, multiValueStrategy);
+                    return ParseValue(arg, stringValues, 0, services, multiValueStrategy, out var _);
                 default:
                     return CastValue(arg, defaultValue);
             }
@@ -209,8 +214,12 @@ namespace VoidMain.Application.Commands.Arguments
             return target.Collection;
         }
 
-        private object ParseValue(ArgumentModel arg, string[] stringValues,
-            int valuesOffset, out int valuesUsed, MultiValueStrategy multiValueStrategy)
+        private object ParseValue(
+            ArgumentModel arg,
+            string[] stringValues, int valuesOffset,
+            IServiceProvider services,
+            MultiValueStrategy multiValueStrategy,
+            out int valuesUsed)
         {
             var argType = arg.Type;
             bool isCollection = _colCtorProvider.TryGetConstructor(
@@ -224,7 +233,7 @@ namespace VoidMain.Application.Commands.Arguments
                 var colAdapter = colCtor.Create(argElemType, valuesUsed);
 
                 var valueType = argElemType.UnwrapIfNullable();
-                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
+                var parser = _parserProvider.GetParser(valueType, arg.ValueParser, services);
 
                 for (int i = 0; i < valuesUsed; i++)
                 {
@@ -254,7 +263,7 @@ namespace VoidMain.Application.Commands.Arguments
                 }
 
                 var valueType = argType.UnwrapIfNullable();
-                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
+                var parser = _parserProvider.GetParser(valueType, arg.ValueParser, services);
                 return ParseValue(stringValue, valueType, parser);
             }
         }
