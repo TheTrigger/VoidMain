@@ -15,7 +15,7 @@ namespace VoidMain.CommandLineIinterface.History
             {
                 MaxCount = 10;
                 SavePeriod = TimeSpan.FromSeconds(10.0);
-                CommandsComparer = StringComparer.OrdinalIgnoreCase;
+                CommandsComparer = StringComparer.Ordinal;
             }
         }
 

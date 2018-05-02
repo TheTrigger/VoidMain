@@ -2,7 +2,7 @@
 using System.Threading;
 using Xunit;
 
-namespace VoidMain.Hosting.Tests
+namespace VoidMain.Application.Tests
 {
     public class ContextHelper_Should
     {

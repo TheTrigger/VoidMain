@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace VoidMain.Hosting
+namespace VoidMain.Application
 {
     public static class ContextHelper
     {

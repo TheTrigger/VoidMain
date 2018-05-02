@@ -11,14 +11,14 @@ namespace VoidMain.Application.Commands.Arguments
     {
         private readonly ApplicationModel _appModel;
         private readonly ICollectionConstructorProvider _colCtorProvider;
-        private readonly CommandLineSyntaxOptions _syntaxOptions;
+        private readonly CommandLineOptions _cliOptions;
         private readonly CommandNameComparer _nameComparer;
         private readonly List<string> _nameBuffer;
 
         public CommandsSemanticModel(
             ApplicationModel appModel,
             ICollectionConstructorProvider colCtorProvider,
-            CommandLineSyntaxOptions syntaxOptions = null)
+            CommandLineOptions cliOptions = null)
         {
             _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
             if (appModel.Commands == null)
@@ -26,9 +26,9 @@ namespace VoidMain.Application.Commands.Arguments
                 throw new ArgumentNullException(nameof(appModel) + "." + nameof(appModel.Commands));
             }
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
-            _syntaxOptions = syntaxOptions ?? new CommandLineSyntaxOptions();
-            _syntaxOptions.Validate();
-            _nameComparer = new CommandNameComparer(_syntaxOptions.IdentifierComparer);
+            _cliOptions = cliOptions ?? new CommandLineOptions();
+            _cliOptions.Validate();
+            _nameComparer = new CommandNameComparer(_cliOptions.IdentifierComparer);
             _nameBuffer = new List<string>();
         }
 
@@ -81,8 +81,8 @@ namespace VoidMain.Application.Commands.Arguments
 
         private bool IsNameOrAliasEquals(ArgumentModel option, string optionName)
         {
-            return _syntaxOptions.IdentifierComparer.Equals(option.Name, optionName)
-                || _syntaxOptions.IdentifierComparer.Equals(option.Alias, optionName);
+            return _cliOptions.IdentifierComparer.Equals(option.Name, optionName)
+                || _cliOptions.IdentifierComparer.Equals(option.Alias, optionName);
         }
 
         public bool TryGetOperandType(IReadOnlyList<string> commandName, int operandIndex, out Type valueType)

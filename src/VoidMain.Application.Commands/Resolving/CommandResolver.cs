@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using VoidMain.Application.Commands.Model;
 using VoidMain.CommandLineIinterface;
-using VoidMain.Hosting;
 
 namespace VoidMain.Application.Commands.Resolving
 {
@@ -11,14 +10,14 @@ namespace VoidMain.Application.Commands.Resolving
     {
         private readonly IEqualityComparer<CommandName> _nameComparer;
 
-        public CommandResolver(CommandLineSyntaxOptions syntaxOptions = null)
+        public CommandResolver(CommandLineOptions cliOptions = null)
         {
-            if(syntaxOptions == null)
+            if(cliOptions == null)
             {
-                syntaxOptions = new CommandLineSyntaxOptions();
+                cliOptions = new CommandLineOptions();
             }
-            syntaxOptions.Validate();
-            _nameComparer = new CommandNameComparer(syntaxOptions.IdentifierComparer);
+            cliOptions.Validate();
+            _nameComparer = new CommandNameComparer(cliOptions.IdentifierComparer);
         }
 
         public CommandModel Resolve(Dictionary<string, object> context, IReadOnlyList<CommandModel> commands)

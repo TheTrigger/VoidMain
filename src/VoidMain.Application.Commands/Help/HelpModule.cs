@@ -5,7 +5,6 @@ using VoidMain.Application.Commands.Arguments;
 using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Model;
 using VoidMain.Application.Commands.Resolving;
-using VoidMain.Hosting;
 
 namespace VoidMain.Application.Commands.Help
 {

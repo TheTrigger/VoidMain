@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using VoidMain.Application;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
-using VoidMain.Hosting;
 
 namespace VoidMain.CommandLineIinterface.Internal
 {

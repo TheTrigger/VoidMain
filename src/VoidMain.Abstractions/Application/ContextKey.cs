@@ -1,4 +1,4 @@
-﻿namespace VoidMain.Hosting
+﻿namespace VoidMain.Application
 {
     public static class ContextKey
     {

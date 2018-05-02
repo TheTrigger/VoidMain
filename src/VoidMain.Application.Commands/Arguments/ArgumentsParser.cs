@@ -16,20 +16,20 @@ namespace VoidMain.Application.Commands.Arguments
         private readonly ICollectionConstructorProvider _colCtorProvider;
         private readonly IValueParserProvider _parserProvider;
         private readonly ArgumentsParserOptions _options;
-        private readonly CommandLineSyntaxOptions _syntaxOptions;
+        private readonly CommandLineOptions _cliOptions;
 
         public ArgumentsParser(
             ICollectionConstructorProvider colCtorProvider,
             IValueParserProvider parserProvider,
             ArgumentsParserOptions options = null,
-            CommandLineSyntaxOptions syntaxOptions = null)
+            CommandLineOptions cliOptions = null)
         {
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
             _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
             _options = options ?? new ArgumentsParserOptions();
             _options.Validate();
-            _syntaxOptions = syntaxOptions ?? new CommandLineSyntaxOptions();
-            _syntaxOptions.Validate();
+            _cliOptions = cliOptions ?? new CommandLineOptions();
+            _cliOptions.Validate();
         }
 
         private static void Validate(IReadOnlyList<ArgumentModel> argsModel,
@@ -105,8 +105,8 @@ namespace VoidMain.Application.Commands.Arguments
 
         private bool IsNameOrAliasEquals(string optionName, ArgumentModel arg)
         {
-            return _syntaxOptions.IdentifierComparer.Equals(optionName, arg.Name)
-                || _syntaxOptions.IdentifierComparer.Equals(optionName, arg.Alias);
+            return _cliOptions.IdentifierComparer.Equals(optionName, arg.Name)
+                || _cliOptions.IdentifierComparer.Equals(optionName, arg.Alias);
         }
 
         private object GetService(ArgumentModel arg, IServiceProvider services)

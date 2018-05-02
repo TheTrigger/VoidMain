@@ -13,8 +13,10 @@ namespace VoidMain.Hosting
         private readonly CommandDelegate _app;
         private bool _isDisposed;
 
-        public CommandsHost(IServiceProvider services,
-            ICommandLineInterface cli, CommandDelegate app)
+        public CommandsHost(
+            IServiceProvider services,
+            ICommandLineInterface cli,
+            CommandDelegate app)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _cli = cli ?? throw new ArgumentNullException(nameof(cli));

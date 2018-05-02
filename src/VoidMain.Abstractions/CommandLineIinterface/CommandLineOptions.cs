@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace VoidMain.CommandLineIinterface
 {
-    public class CommandLineSyntaxOptions
+    public class CommandLineOptions
     {
         public IEqualityComparer<string> IdentifierComparer { get; set; }
 
-        public CommandLineSyntaxOptions(bool defaults = true)
+        public CommandLineOptions(bool defaults = true)
         {
             if (defaults)
             {

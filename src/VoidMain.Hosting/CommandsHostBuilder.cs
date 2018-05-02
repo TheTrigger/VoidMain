@@ -54,8 +54,7 @@ namespace VoidMain.Hosting
                 var app = appBuilder.Build();
                 var cli = services.GetRequiredService<ICommandLineInterface>();
 
-                var host = new CommandsHost(services, cli, app);
-                return host;
+                return new CommandsHost(services, cli, app);
             }
             catch
             {

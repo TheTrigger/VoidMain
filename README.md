@@ -115,7 +115,7 @@ public void ConfigureServices(IServiceCollection services)
         {
             options.MaxCount = 10;
             options.SavePeriod = TimeSpan.FromSeconds(10);
-            options.CommandsComparer = StringComparer.OrdinalIgnoreCase;
+            options.CommandsComparer = StringComparer.Ordinal;
         })
         .AddFileStorage(options =>
         {

@@ -4,7 +4,6 @@ using System.Linq;
 using VoidMain.Application.Commands.Model;
 using VoidMain.Application.Commands.Resolving;
 using VoidMain.CommandLineIinterface;
-using VoidMain.Hosting;
 
 namespace VoidMain.Application.Commands.Help
 {
@@ -14,17 +13,17 @@ namespace VoidMain.Application.Commands.Help
 
         private readonly ApplicationModel _appModel;
         private readonly ICommandResolver _commandResolver;
-        private readonly CommandLineSyntaxOptions _syntaxOptions;
+        private readonly CommandLineOptions _cliOptions;
 
         public HelpCommandsRewriter(
             ApplicationModel appModel,
             ICommandResolver commandResolver,
-            CommandLineSyntaxOptions syntaxOptions = null)
+            CommandLineOptions cliOptions = null)
         {
             _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
             _commandResolver = commandResolver ?? throw new ArgumentNullException(nameof(commandResolver));
-            _syntaxOptions = syntaxOptions ?? new CommandLineSyntaxOptions();
-            _syntaxOptions.Validate();
+            _cliOptions = cliOptions ?? new CommandLineOptions();
+            _cliOptions.Validate();
         }
 
         public bool TryRewrite(Dictionary<string, object> context)
@@ -64,13 +63,13 @@ namespace VoidMain.Application.Commands.Help
 
         private bool IsHelpOption(KeyValuePair<string, string> option)
         {
-            return _syntaxOptions.IdentifierComparer.Equals(option.Key, HelpName);
+            return _cliOptions.IdentifierComparer.Equals(option.Key, HelpName);
         }
 
         private bool IsHelpOption(ArgumentModel arg)
         {
             return arg.Kind == ArgumentKind.Option
-                && _syntaxOptions.IdentifierComparer.Equals(arg.Name, HelpName);
+                && _cliOptions.IdentifierComparer.Equals(arg.Name, HelpName);
         }
     }
 }

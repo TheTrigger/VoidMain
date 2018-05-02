@@ -14,16 +14,16 @@ namespace VoidMain.Application.Commands.Builder.Validation
         private readonly TypeInfo ValueParserType = typeof(IValueParser).GetTypeInfo();
 
         private readonly ICollectionConstructorProvider _colCtorProvider;
-        private readonly CommandLineSyntaxOptions _syntaxOptions;
+        private readonly CommandLineOptions _cliOptions;
         private readonly IIdentifierValidator _identifierValidator;
 
         public CommandModelValidator(
             ICollectionConstructorProvider colCtorProvider,
-            CommandLineSyntaxOptions syntaxOptions = null)
+            CommandLineOptions cliOptions = null)
         {
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
-            _syntaxOptions = syntaxOptions ?? new CommandLineSyntaxOptions();
-            _syntaxOptions.Validate();
+            _cliOptions = cliOptions ?? new CommandLineOptions();
+            _cliOptions.Validate();
             _identifierValidator = new IdentifierValidator();
         }
 
@@ -67,7 +67,7 @@ namespace VoidMain.Application.Commands.Builder.Validation
 
                 if (arg.Alias != null)
                 {
-                    if (_syntaxOptions.IdentifierComparer.Equals(arg.Alias, arg.Name))
+                    if (_cliOptions.IdentifierComparer.Equals(arg.Alias, arg.Name))
                     {
                         errors.Add(GetErrorMessage(arg, "Argument alias is the same as the name"));
                     }
