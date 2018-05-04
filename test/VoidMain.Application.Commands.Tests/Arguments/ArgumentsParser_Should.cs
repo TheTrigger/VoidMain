@@ -430,7 +430,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
 
         private static ArgumentsParser Parser(ArgumentsParserOptions options = null)
         {
-            var colCtorProvider = new CollectionConstructorProvider();
+            var colCtorProvider = new CollectionConstructorProvider(new CachedTypeActivator());
             var parserProvider = new ValueParserProvider(new CachedTypeActivator());
             return new ArgumentsParser(colCtorProvider, parserProvider, options);
         }

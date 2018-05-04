@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Reflection;
+using VoidMain.Application.Commands.Internal;
 
 namespace VoidMain.Application.Commands.Arguments
 {
     public class CollectionConstructorProvider : ICollectionConstructorProvider
     {
+        private readonly ITypeActivator _typeActivator;
         private readonly CollectionConstructorProviderOptions _options;
 
-        public CollectionConstructorProvider(CollectionConstructorProviderOptions options = null)
+        public CollectionConstructorProvider(
+            ITypeActivator typeActivator,
+            CollectionConstructorProviderOptions options = null)
         {
+            _typeActivator = typeActivator ?? throw new ArgumentNullException(nameof(typeActivator));
             _options = options ?? new CollectionConstructorProviderOptions();
             _options.Validate();
         }
@@ -34,27 +39,43 @@ namespace VoidMain.Application.Commands.Arguments
             return _options.CollectionConstructors.ContainsKey(genericDefinition);
         }
 
-        public bool TryGetConstructor(Type collectionType, out ICollectionConstructor constructor)
+        public bool TryGetConstructor(Type collectionType,
+            IServiceProvider services, out ICollectionConstructor constructor)
         {
-            if (_options.CollectionConstructors.TryGetValue(collectionType, out constructor))
+            if (_options.CollectionConstructors.TryGetValue(collectionType, out var config))
             {
+                constructor = GetInstance(config, services);
                 return true;
             }
 
             if (collectionType.IsArray)
             {
-                constructor = _options.ArrayConstructor;
-                return constructor != null;
+                constructor = GetInstance(_options.ArrayConstructor, services);
+                return true;
             }
 
-            if (!collectionType.GetTypeInfo().IsGenericType)
+            if (collectionType.GetTypeInfo().IsGenericType)
             {
-                constructor = null;
-                return false;
+                var genericDefinition = collectionType.GetGenericTypeDefinition();
+                if (_options.CollectionConstructors.TryGetValue(genericDefinition, out config))
+                {
+                    constructor = GetInstance(config, services);
+                    return true;
+                }
             }
 
-            var genericDefinition = collectionType.GetGenericTypeDefinition();
-            return _options.CollectionConstructors.TryGetValue(genericDefinition, out constructor);
+            constructor = null;
+            return false;
+        }
+
+        private ICollectionConstructor GetInstance(Type parserType, IServiceProvider services)
+        {
+            return (ICollectionConstructor)_typeActivator.CreateInstance(parserType, services);
+        }
+
+        private ICollectionConstructor GetInstance(TypeOrInstance<ICollectionConstructor> config, IServiceProvider services)
+        {
+            return config.Instance ?? GetInstance(config.Type, services);
         }
     }
 }

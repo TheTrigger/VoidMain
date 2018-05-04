@@ -11,6 +11,7 @@ namespace VoidMain.Application.Commands.Arguments
     {
         private readonly ApplicationModel _appModel;
         private readonly ICollectionConstructorProvider _colCtorProvider;
+        private readonly IServiceProvider _services;
         private readonly CommandLineOptions _cliOptions;
         private readonly CommandNameComparer _nameComparer;
         private readonly List<string> _nameBuffer;
@@ -18,6 +19,7 @@ namespace VoidMain.Application.Commands.Arguments
         public CommandsSemanticModel(
             ApplicationModel appModel,
             ICollectionConstructorProvider colCtorProvider,
+            IServiceProvider services,
             CommandLineOptions cliOptions = null)
         {
             _appModel = appModel ?? throw new ArgumentNullException(nameof(appModel));
@@ -26,6 +28,7 @@ namespace VoidMain.Application.Commands.Arguments
                 throw new ArgumentNullException(nameof(appModel) + "." + nameof(appModel.Commands));
             }
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
+            _services = services ?? throw new ArgumentNullException(nameof(services));
             _cliOptions = cliOptions ?? new CommandLineOptions();
             _cliOptions.Validate();
             _nameComparer = new CommandNameComparer(_cliOptions.IdentifierComparer);
@@ -113,7 +116,7 @@ namespace VoidMain.Application.Commands.Arguments
 
             foreach (var operand in operands)
             {
-                bool isCollection = _colCtorProvider.TryGetConstructor(operand.Type, out var colCtor);
+                bool isCollection = _colCtorProvider.TryGetConstructor(operand.Type, _services, out var colCtor);
 
                 if (isCollection)
                 {

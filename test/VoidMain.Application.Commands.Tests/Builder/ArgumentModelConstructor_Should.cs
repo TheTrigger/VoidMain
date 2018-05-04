@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using VoidMain.Application.Commands.Arguments;
+using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 using Xunit;
 
@@ -214,7 +215,7 @@ namespace VoidMain.Application.Commands.Builder.Tests
 
         private ArgumentModelConstructor NewArgumentModelConstructor()
         {
-            var colCtorProvider = new CollectionConstructorProvider();
+            var colCtorProvider = new CollectionConstructorProvider(new CachedTypeActivator());
             return new ArgumentModelConstructor(colCtorProvider);
         }
 

@@ -165,17 +165,17 @@ namespace VoidMain.Application.Commands.Arguments
                 case string[] stringValues when stringValues.Length > 0:
                     return ParseValue(arg, stringValues, 0, services, multiValueStrategy, out var _);
                 default:
-                    return CastValue(arg, defaultValue);
+                    return CastValue(arg, defaultValue, services);
             }
         }
 
-        private object CastValue(ArgumentModel arg, object value)
+        private object CastValue(ArgumentModel arg, object value, IServiceProvider services)
         {
             var argType = arg.Type;
             var valueType = value.GetType();
 
-            bool isArgCollection = _colCtorProvider.TryGetConstructor(argType, out var argColCtor);
-            bool isValueCollection = _colCtorProvider.TryGetConstructor(valueType, out var valueColCtor);
+            bool isArgCollection = _colCtorProvider.TryGetConstructor(argType, services, out var argColCtor);
+            bool isValueCollection = _colCtorProvider.TryGetConstructor(valueType, services, out var valueColCtor);
 
             if (isArgCollection && isValueCollection)
             {
@@ -223,7 +223,7 @@ namespace VoidMain.Application.Commands.Arguments
         {
             var argType = arg.Type;
             bool isCollection = _colCtorProvider.TryGetConstructor(
-                argType, out ICollectionConstructor colCtor);
+                argType, services, out ICollectionConstructor colCtor);
 
             if (isCollection)
             {

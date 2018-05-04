@@ -30,9 +30,9 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
                 return GetInstance(_options.EnumParser, services);
             }
 
-            if (_options.ValueParsers.TryGetValue(valueType, out var parser))
+            if (_options.ValueParsers.TryGetValue(valueType, out var config))
             {
-                return GetInstance(parser, services);
+                return GetInstance(config, services);
             }
 
             return GetInstance(_options.DefaultParser, services);
@@ -43,11 +43,9 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
             return (IValueParser)_typeActivator.CreateInstance(parserType, services);
         }
 
-        private IValueParser GetInstance(TypeOrInstance<IValueParser> parser, IServiceProvider services)
+        private IValueParser GetInstance(TypeOrInstance<IValueParser> config, IServiceProvider services)
         {
-            return parser.Instance == null
-                ? GetInstance(parser.Type, services)
-                : parser.Instance;
+            return config.Instance ?? GetInstance(config.Type, services);
         }
     }
 }
