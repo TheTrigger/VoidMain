@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using VoidMain.Application.Commands.Arguments;
+using VoidMain.Application.Commands.Arguments.CollectionConstructors;
 using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 using Xunit;

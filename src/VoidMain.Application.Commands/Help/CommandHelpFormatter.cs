@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using VoidMain.Application.Commands.Arguments;
+using VoidMain.Application.Commands.Arguments.CollectionConstructors;
 using VoidMain.Application.Commands.Model;
 
 namespace VoidMain.Application.Commands.Help

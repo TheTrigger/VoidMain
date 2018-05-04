@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VoidMain.Application.Commands.Arguments.CollectionConstructors;
 using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
 using VoidMain.CommandLineIinterface;

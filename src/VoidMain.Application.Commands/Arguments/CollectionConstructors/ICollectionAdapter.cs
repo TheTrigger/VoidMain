@@ -1,4 +1,4 @@
-﻿namespace VoidMain.Application.Commands.Arguments
+﻿namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
 {
     public interface ICollectionAdapter
     {

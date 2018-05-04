@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace VoidMain.Application.Commands.Arguments
+namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
 {
     public class ArrayConstructor : ICollectionConstructor
     {

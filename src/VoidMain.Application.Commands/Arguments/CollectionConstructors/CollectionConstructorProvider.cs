@@ -2,7 +2,7 @@
 using System.Reflection;
 using VoidMain.Application.Commands.Internal;
 
-namespace VoidMain.Application.Commands.Arguments
+namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
 {
     public class CollectionConstructorProvider : ICollectionConstructorProvider
     {

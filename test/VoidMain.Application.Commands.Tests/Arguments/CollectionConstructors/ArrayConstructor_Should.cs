@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Xunit;
 
-namespace VoidMain.Application.Commands.Arguments.Tests
+namespace VoidMain.Application.Commands.Arguments.CollectionConstructors.Tests
 {
-    public class ListConstructor_Should
+    public class ArrayConstructor_Should
     {
         #region GetElementType
 
@@ -14,11 +14,11 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         [InlineData(typeof(IReadOnlyCollection<int>), typeof(int))]
         [InlineData(typeof(IList<int>), typeof(int))]
         [InlineData(typeof(IReadOnlyList<int>), typeof(int))]
-        [InlineData(typeof(List<int>), typeof(int))]
+        [InlineData(typeof(int[]), typeof(int))]
         public void GetElementTypeOfValidCollectionType(Type collectionType, Type elementType)
         {
             // Arrange
-            var ctor = new ListConstructor();
+            var ctor = new ArrayConstructor();
 
             // Act
             var actual = ctor.GetElementType(collectionType);
@@ -33,7 +33,7 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         public void ThrowOnGetElementTypeOfInvalidCollectionType(Type collectionType)
         {
             // Arrange
-            var ctor = new ListConstructor();
+            var ctor = new ArrayConstructor();
 
             // Act, Assert
             Assert.Throws<ArgumentException>(() => ctor.GetElementType(collectionType));
@@ -44,31 +44,31 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         #region Create
 
         [Fact]
-        public void CreateListWithSpecifiedElementType()
+        public void CreateArrayWithSpecifiedElementType()
         {
             // Arrange
-            var ctor = new ListConstructor();
+            var ctor = new ArrayConstructor();
 
             // Act
-            var list = ctor.Create(typeof(int), 2).Collection;
+            var array = ctor.Create(typeof(int), 2).Collection;
 
             // Assert
-            Assert.IsType<List<int>>(list);
+            Assert.IsType<int[]>(array);
         }
 
         [Theory]
         [InlineData(2)]
         [InlineData(3)]
-        public void CreateListWithSpecifiedCount(int count)
+        public void CreateArrayWithSpecifiedCount(int count)
         {
             // Arrange
-            var ctor = new ListConstructor();
+            var ctor = new ArrayConstructor();
 
             // Act
-            var list = (List<int>)ctor.Create(typeof(int), count).Collection;
+            var array = (int[])ctor.Create(typeof(int), count).Collection;
 
             // Assert
-            Assert.Equal(count, list.Count);
+            Assert.Equal(count, array.Length);
         }
 
         #endregion
@@ -76,28 +76,28 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         #region Wrap
 
         [Fact]
-        public void WrapValidList()
+        public void WrapValidArray()
         {
             // Arrange
-            var ctor = new ListConstructor();
-            var list = new List<int>();
+            var ctor = new ArrayConstructor();
+            var array = Array.Empty<int>();
 
             // Act
-            var adapter = ctor.Wrap(list);
+            var adapter = ctor.Wrap(array);
 
             // Assert
             Assert.NotNull(adapter.Collection);
         }
 
         [Fact]
-        public void ThrowOnWrapInvalidList()
+        public void ThrowOnWrapInvalidArray()
         {
             // Arrange
-            var ctor = new ListConstructor();
-            var notList = new object();
+            var ctor = new ArrayConstructor();
+            var notArray = new object();
 
             // Act, Assert
-            Assert.Throws<ArgumentException>(() => ctor.Wrap(notList));
+            Assert.Throws<ArgumentException>(() => ctor.Wrap(notArray));
         }
 
         #endregion
@@ -106,19 +106,19 @@ namespace VoidMain.Application.Commands.Arguments.Tests
 
         #region GetValue
 
-        public static IEnumerable<object[]> Lists = new[]
+        public static IEnumerable<object[]> Arrays = new[]
         {
-            new object[]{new List<int> { 1, 2, 3 }, 0, 1 },
-            new object[]{new List<int> { 1, 2, 3 }, 2, 3 }
+            new object[]{new[] { 1, 2, 3 }, 0, 1 },
+            new object[]{new[] { 1, 2, 3 }, 2, 3 }
         };
 
         [Theory]
-        [MemberData(nameof(Lists))]
-        public void GetValue(List<int> list, int index, int expected)
+        [MemberData(nameof(Arrays))]
+        public void GetValue(int[] array, int index, int expected)
         {
             // Arrange
-            var ctor = new ListConstructor();
-            var adapter = ctor.Wrap(list);
+            var ctor = new ArrayConstructor();
+            var adapter = ctor.Wrap(array);
 
             // Act
             var value = adapter.GetValue(index);
@@ -137,12 +137,12 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         public void SetValue(int index, int expected)
         {
             // Arrange
-            var ctor = new ListConstructor();
+            var ctor = new ArrayConstructor();
             var adapter = ctor.Create(typeof(int), 3);
 
             // Act
             adapter.SetValue(index, expected);
-            var value = ((List<int>)adapter.Collection)[index];
+            var value = ((int[])adapter.Collection).GetValue(index);
 
             // Assert
             Assert.Equal(expected, value);

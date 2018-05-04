@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using VoidMain.Application.Commands.Arguments;
+using VoidMain.Application.Commands.Arguments.CollectionConstructors;
 using VoidMain.Application.Commands.Arguments.ValueParsers;
 using VoidMain.Application.Commands.Model;
 using VoidMain.CommandLineIinterface;

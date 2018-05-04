@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VoidMain.Application.Commands.Arguments;
+using VoidMain.Application.Commands.Arguments.CollectionConstructors;
 using VoidMain.Application.Commands.Builder;
 using VoidMain.Application.Commands.Model;
 using VoidMain.Application.Commands.Resolving;
