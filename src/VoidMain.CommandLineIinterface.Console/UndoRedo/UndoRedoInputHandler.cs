@@ -33,7 +33,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
                     }
                     else
                     {
-                        AddSnapshot(args.LineView, byTime: true);
+                        AddSnapshot(args.LineView);
                     }
                     break;
                 case ConsoleKey.Y:
@@ -43,14 +43,14 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
                     }
                     else
                     {
-                        AddSnapshot(args.LineView, byTime: true);
+                        AddSnapshot(args.LineView);
                     }
                     break;
                 case ConsoleKey.Enter:
                     ClearSnapshots();
                     break;
                 default:
-                    AddSnapshot(args.LineView, byTime: true);
+                    AddSnapshot(args.LineView);
                     break;
             }
         }
@@ -83,16 +83,16 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
             _lastSnapshotTime = DateTime.MinValue;
         }
 
-        private void AddSnapshot(ICommandLineView lineView, bool byTime = false)
+        private void AddSnapshot(ICommandLineView lineView)
         {
             var now = DateTime.UtcNow;
-            if (byTime && now - _lastSnapshotTime < _minSnapshotTime)
+            if (now - _lastSnapshotTime < _minSnapshotTime)
             {
                 // Too soon.
                 return;
             }
             var snapshot = lineView.TakeSnapshot();
-            if (_undoRedoManager.TryAddSnapshot(snapshot, deleteAfter: byTime))
+            if (_undoRedoManager.TryAddSnapshot(snapshot, deleteAfter: true))
             {
                 _lastSnapshotTime = now;
             }

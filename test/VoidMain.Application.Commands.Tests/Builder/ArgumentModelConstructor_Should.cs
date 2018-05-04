@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moq;
+using System;
 using System.Linq;
 using System.Reflection;
 using VoidMain.Application.Commands.Arguments.CollectionConstructors;
@@ -215,9 +216,11 @@ namespace VoidMain.Application.Commands.Builder.Tests
 
         private ArgumentModelConstructor NewArgumentModelConstructor()
         {
-            var colCtorProvider = new CollectionConstructorProvider(new CachedTypeActivator());
+            var colCtorProvider = new CollectionConstructorProvider(new CachedTypeActivator(), EmptyServices);
             return new ArgumentModelConstructor(colCtorProvider);
         }
+
+        private static readonly IServiceProvider EmptyServices = new Mock<IServiceProvider>().Object;
 
         private ParameterInfo GetFirstParameter(Type type, string methodName)
         {

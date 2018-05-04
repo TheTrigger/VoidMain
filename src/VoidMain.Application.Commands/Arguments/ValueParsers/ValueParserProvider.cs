@@ -7,35 +7,38 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
     public class ValueParserProvider : IValueParserProvider
     {
         private readonly ITypeActivator _typeActivator;
+        private readonly IServiceProvider _services;
         private readonly ValueParserProviderOptions _options;
 
         public ValueParserProvider(
             ITypeActivator typeActivator,
+            IServiceProvider services,
             ValueParserProviderOptions options = null)
         {
             _typeActivator = typeActivator ?? throw new ArgumentNullException(nameof(typeActivator));
+            _services = services ?? throw new ArgumentNullException(nameof(services));
             _options = options ?? new ValueParserProviderOptions();
             _options.Validate();
         }
 
-        public IValueParser GetParser(Type valueType, Type parserType, IServiceProvider services)
+        public IValueParser GetParser(Type valueType, Type parserType)
         {
             if (parserType != null)
             {
-                return GetInstance(parserType, services);
+                return GetInstance(parserType, _services);
             }
 
             if (valueType.GetTypeInfo().IsEnum)
             {
-                return GetInstance(_options.EnumParser, services);
+                return GetInstance(_options.EnumParser, _services);
             }
 
             if (_options.ValueParsers.TryGetValue(valueType, out var config))
             {
-                return GetInstance(config, services);
+                return GetInstance(config, _services);
             }
 
-            return GetInstance(_options.DefaultParser, services);
+            return GetInstance(_options.DefaultParser, _services);
         }
 
         private IValueParser GetInstance(Type parserType, IServiceProvider services)

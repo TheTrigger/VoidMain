@@ -54,16 +54,18 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
         {
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
+            args.IsHandledHint = true;
+
+            if (lineView.Position == 0) return;
 
             if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
-                lineView.MoveTo(_fastNavigation.FindPrevPosition(lineView));
-                args.IsHandledHint = true;
+                int prev = _fastNavigation.FindPrevPosition(lineView);
+                lineView.MoveTo(prev);
             }
-            else if (lineView.Position > 0)
+            else
             {
                 lineView.Move(-1);
-                args.IsHandledHint = true;
             }
         }
 
@@ -71,16 +73,18 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
         {
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
+            args.IsHandledHint = true;
+
+            if (lineView.Position == lineView.Length) return;
 
             if (fast && lineView.ViewType == CommandLineViewType.Normal)
             {
-                lineView.MoveTo(_fastNavigation.FindNextPosition(lineView));
-                args.IsHandledHint = true;
+                int next = _fastNavigation.FindNextPosition(lineView);
+                lineView.MoveTo(next);
             }
-            else if (lineView.Position < lineView.Length)
+            else
             {
                 lineView.Move(1);
-                args.IsHandledHint = true;
             }
         }
     }

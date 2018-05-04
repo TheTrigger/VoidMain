@@ -7,13 +7,16 @@ namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
     public class CollectionConstructorProvider : ICollectionConstructorProvider
     {
         private readonly ITypeActivator _typeActivator;
+        private readonly IServiceProvider _services;
         private readonly CollectionConstructorProviderOptions _options;
 
         public CollectionConstructorProvider(
             ITypeActivator typeActivator,
+            IServiceProvider services,
             CollectionConstructorProviderOptions options = null)
         {
             _typeActivator = typeActivator ?? throw new ArgumentNullException(nameof(typeActivator));
+            _services = services ?? throw new ArgumentNullException(nameof(services));
             _options = options ?? new CollectionConstructorProviderOptions();
             _options.Validate();
         }
@@ -39,18 +42,17 @@ namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
             return _options.CollectionConstructors.ContainsKey(genericDefinition);
         }
 
-        public bool TryGetConstructor(Type collectionType,
-            IServiceProvider services, out ICollectionConstructor constructor)
+        public bool TryGetConstructor(Type collectionType, out ICollectionConstructor constructor)
         {
             if (_options.CollectionConstructors.TryGetValue(collectionType, out var config))
             {
-                constructor = GetInstance(config, services);
+                constructor = GetInstance(config, _services);
                 return true;
             }
 
             if (collectionType.IsArray)
             {
-                constructor = GetInstance(_options.ArrayConstructor, services);
+                constructor = GetInstance(_options.ArrayConstructor, _services);
                 return true;
             }
 
@@ -59,7 +61,7 @@ namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
                 var genericDefinition = collectionType.GetGenericTypeDefinition();
                 if (_options.CollectionConstructors.TryGetValue(genericDefinition, out config))
                 {
-                    constructor = GetInstance(config, services);
+                    constructor = GetInstance(config, _services);
                     return true;
                 }
             }

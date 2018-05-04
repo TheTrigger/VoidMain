@@ -11,6 +11,9 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public class ArgumentsParser : IArgumentsParser
     {
+        private const string CastErrorMessagTemplate = "Type `{0}` of the default value " +
+            "is not assignable to the type `{1}` of the argument.";
+
         private const int OptionValuesOffset = 0;
         private const MultiValueStrategy OperandMultiValueStrategy = MultiValueStrategy.UseFirstValue;
         private readonly Type BooleanType = typeof(bool);
@@ -84,7 +87,7 @@ namespace VoidMain.Application.Commands.Arguments
                         operandsOffset += operandsUsed;
                         break;
                     default:
-                        throw new ArgumentParseException(arg, $"Unknown argument kind '{arg.Kind}'.");
+                        throw new ArgumentParseException(arg, $"Unknown argument kind `{arg.Kind}`.");
                 }
             }
 
@@ -125,7 +128,7 @@ namespace VoidMain.Application.Commands.Arguments
                 return arg.Type.GetEmptyValue();
             }
 
-            throw new ArgumentParseException(arg, $"Service '{arg.Type.Name}' is not registered.");
+            throw new ArgumentParseException(arg, $"Service `{arg.Type.Name}` is not registered.");
         }
 
         private object ParseValueOrGetDefault(
@@ -141,7 +144,7 @@ namespace VoidMain.Application.Commands.Arguments
                 return GetDefaultValue(arg, services, multiValueStrategy);
             }
 
-            return ParseValue(arg, stringValues, valuesOffset, services, multiValueStrategy, out valuesUsed);
+            return ParseValue(arg, stringValues, valuesOffset, multiValueStrategy, out valuesUsed);
         }
 
         private object GetDefaultValue(ArgumentModel arg, IServiceProvider services, MultiValueStrategy multiValueStrategy)
@@ -162,21 +165,21 @@ namespace VoidMain.Application.Commands.Arguments
             switch (defaultValue)
             {
                 case string stringValue:
-                    return ParseValue(arg, new[] { stringValue }, 0, services, multiValueStrategy, out var _);
+                    return ParseValue(arg, new[] { stringValue }, 0, multiValueStrategy, out var _);
                 case string[] stringValues when stringValues.Length > 0:
-                    return ParseValue(arg, stringValues, 0, services, multiValueStrategy, out var _);
+                    return ParseValue(arg, stringValues, 0, multiValueStrategy, out var _);
                 default:
-                    return CastValue(arg, defaultValue, services);
+                    return CastDefaultValue(arg, defaultValue);
             }
         }
 
-        private object CastValue(ArgumentModel arg, object value, IServiceProvider services)
+        private object CastDefaultValue(ArgumentModel arg, object value)
         {
             var argType = arg.Type;
             var valueType = value.GetType();
 
-            bool isArgCollection = _colCtorProvider.TryGetConstructor(argType, services, out var argColCtor);
-            bool isValueCollection = _colCtorProvider.TryGetConstructor(valueType, services, out var valueColCtor);
+            bool isArgCollection = _colCtorProvider.TryGetConstructor(argType, out var argColCtor);
+            bool isValueCollection = _colCtorProvider.TryGetConstructor(valueType, out var valueColCtor);
 
             if (isArgCollection && isValueCollection)
             {
@@ -184,7 +187,8 @@ namespace VoidMain.Application.Commands.Arguments
                 var valueElemType = valueColCtor.GetElementType(valueType);
                 if (!argElemType.GetTypeInfo().IsAssignableFrom(valueElemType))
                 {
-                    throw new ArgumentParseException(arg, "Element's types of the argument and default value do not match.");
+                    throw new ArgumentParseException(arg,
+                        String.Format(CastErrorMessagTemplate, valueElemType.Name, argElemType.Name));
                 }
 
                 return CopyCollection(valueColCtor, value, argColCtor, argType);
@@ -195,7 +199,8 @@ namespace VoidMain.Application.Commands.Arguments
                 return value;
             }
 
-            throw new ArgumentParseException(arg, "Types of the argument and default value do not match.");
+            throw new ArgumentParseException(arg,
+                        String.Format(CastErrorMessagTemplate, valueType.Name, argType.Name));
         }
 
         private object CopyCollection(
@@ -218,13 +223,11 @@ namespace VoidMain.Application.Commands.Arguments
         private object ParseValue(
             ArgumentModel arg,
             string[] stringValues, int valuesOffset,
-            IServiceProvider services,
             MultiValueStrategy multiValueStrategy,
             out int valuesUsed)
         {
             var argType = arg.Type;
-            bool isCollection = _colCtorProvider.TryGetConstructor(
-                argType, services, out ICollectionConstructor colCtor);
+            bool isCollection = _colCtorProvider.TryGetConstructor(argType, out ICollectionConstructor colCtor);
 
             if (isCollection)
             {
@@ -234,7 +237,7 @@ namespace VoidMain.Application.Commands.Arguments
                 var colAdapter = colCtor.Create(argElemType, valuesUsed);
 
                 var valueType = argElemType.UnwrapIfNullable();
-                var parser = _parserProvider.GetParser(valueType, arg.ValueParser, services);
+                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
 
                 for (int i = 0; i < valuesUsed; i++)
                 {
@@ -247,25 +250,29 @@ namespace VoidMain.Application.Commands.Arguments
             }
             else
             {
-                string stringValue = null;
-
-                switch (multiValueStrategy)
-                {
-                    case MultiValueStrategy.UseFirstValue:
-                        stringValue = stringValues[valuesOffset];
-                        valuesUsed = 1;
-                        break;
-                    case MultiValueStrategy.UseLastValue:
-                        stringValue = stringValues[stringValues.Length - 1];
-                        valuesUsed = stringValues.Length - valuesOffset;
-                        break;
-                    default:
-                        throw new NotSupportedException($"Unknown multivalue strategy '{multiValueStrategy}'.");
-                }
-
+                string stringValue = GetStringValue(
+                    stringValues, valuesOffset, multiValueStrategy, out valuesUsed);
                 var valueType = argType.UnwrapIfNullable();
-                var parser = _parserProvider.GetParser(valueType, arg.ValueParser, services);
+                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
                 return ParseValue(stringValue, valueType, parser);
+            }
+        }
+
+        private static string GetStringValue(
+            string[] stringValues, int valuesOffset,
+            MultiValueStrategy multiValueStrategy,
+            out int valuesUsed)
+        {
+            switch (multiValueStrategy)
+            {
+                case MultiValueStrategy.UseFirstValue:
+                    valuesUsed = 1;
+                    return stringValues[valuesOffset];
+                case MultiValueStrategy.UseLastValue:
+                    valuesUsed = stringValues.Length - valuesOffset;
+                    return stringValues[stringValues.Length - 1];
+                default:
+                    throw new NotSupportedException($"Unknown multivalue strategy `{multiValueStrategy}`.");
             }
         }
 
