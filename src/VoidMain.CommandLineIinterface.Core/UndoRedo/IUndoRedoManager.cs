@@ -6,7 +6,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
     {
         bool TryUndo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot prevSnapshot);
         bool TryRedo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot nextSnapshot);
-        bool TryAddSnapshot(CommandLineViewSnapshot snapshot, bool deleteAfter = true);
+        bool TryAddSnapshot(CommandLineViewSnapshot snapshot);
         void Clear();
     }
 }

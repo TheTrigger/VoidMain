@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    [DebuggerDisplay("{" + nameof(LineContent) + "}")]
     public struct CommandLineViewSnapshot : IEquatable<CommandLineViewSnapshot>
     {
         public string LineContent { get; }
@@ -27,9 +25,11 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             lineView.MoveTo(CursorPosition);
         }
 
+        public override string ToString() => LineContent;
+
         public override int GetHashCode()
         {
-            return (LineContent == null ? 0 : LineContent.GetHashCode()) ^ CursorPosition;
+            return (LineContent?.GetHashCode() ?? 0) ^ CursorPosition;
         }
 
         public override bool Equals(object obj)

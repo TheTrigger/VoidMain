@@ -215,11 +215,11 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
 
             // Act
             bool added = manager.TryAddSnapshot(firstSnapshot);
-            // Current state: [S1]
+            // Current state: [S1], S2
 
             // Assert
             Assert.False(added);
-            Assert.Equal(1, manager.Count);
+            Assert.Equal(2, manager.Count);
         }
 
         #endregion
@@ -238,7 +238,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
             // Current state: [S1], S2
 
             // Act
-            manager.TryAddSnapshot(newSnapshot, deleteAfter: true);
+            manager.TryAddSnapshot(newSnapshot);
             // Current state: S1, [S3]
             manager.TryUndo(newSnapshot, out var prevSnapshot);
             // Current state: [S1], S3
@@ -261,7 +261,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
             // Current state: S1, [S2]
 
             // Act
-            manager.TryAddSnapshot(newSnapshot, deleteAfter: true);
+            manager.TryAddSnapshot(newSnapshot);
             // Current state: S1, S2, [S3]
             manager.TryUndo(newSnapshot, out var prevSnapshot);
             // Current state: S1, [S2], S3

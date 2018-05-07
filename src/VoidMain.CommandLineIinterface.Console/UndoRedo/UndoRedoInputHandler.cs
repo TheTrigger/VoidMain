@@ -88,11 +88,10 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
             var now = DateTime.UtcNow;
             if (now - _lastSnapshotTime < _minSnapshotTime)
             {
-                // Too soon.
-                return;
+                return; // Too soon.
             }
             var snapshot = lineView.TakeSnapshot();
-            if (_undoRedoManager.TryAddSnapshot(snapshot, deleteAfter: true))
+            if (_undoRedoManager.TryAddSnapshot(snapshot))
             {
                 _lastSnapshotTime = now;
             }

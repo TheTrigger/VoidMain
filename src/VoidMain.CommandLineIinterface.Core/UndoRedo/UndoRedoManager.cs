@@ -8,7 +8,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
     {
         private readonly UndoRedoOptions _options;
         private readonly PushOutCollection<CommandLineViewSnapshot> _snapshots;
-        private int _current;
+        private readonly CollectionIterator<CommandLineViewSnapshot> _iterator;
 
         public int MaxCount => _options.MaxCount;
         public int Count => _snapshots.Count;
@@ -18,29 +18,26 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
             _options = options ?? new UndoRedoOptions();
             _options.Validate();
             _snapshots = new PushOutCollection<CommandLineViewSnapshot>(_options.MaxCount);
-            _current = 0;
+            _iterator = new CollectionIterator<CommandLineViewSnapshot>(_snapshots);
+        }
+
+        private void Validate(ref CommandLineViewSnapshot snapshot, string paramName)
+        {
+            if (_options.SnapshotsComparer.Equals(snapshot, default(CommandLineViewSnapshot)))
+            {
+                throw new ArgumentNullException(nameof(paramName));
+            }
         }
 
         public bool TryUndo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot prevSnapshot)
         {
-            if (_options.SnapshotsComparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
-            {
-                throw new ArgumentNullException(nameof(currentSnapshot));
-            }
+            Validate(ref currentSnapshot, nameof(currentSnapshot));
 
-            if (IsLast())
-            {
-                TryAddSnapshot(currentSnapshot, deleteAfter: false);
-            }
-            else if (!IsEqualsToCurrentSnapshot(currentSnapshot))
-            {
-                TryAddSnapshot(currentSnapshot, deleteAfter: true);
-            }
+            TryAddSnapshotInternal(ref currentSnapshot);
 
-            if (HasPrev())
+            if (_iterator.MoveToPrev())
             {
-                _current--;
-                prevSnapshot = _snapshots[_current];
+                prevSnapshot = _iterator.Current;
                 return true;
             }
 
@@ -50,20 +47,13 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
 
         public bool TryRedo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot nextSnapshot)
         {
-            if (_options.SnapshotsComparer.Equals(currentSnapshot, default(CommandLineViewSnapshot)))
-            {
-                throw new ArgumentNullException(nameof(currentSnapshot));
-            }
+            Validate(ref currentSnapshot, nameof(currentSnapshot));
 
-            if (!IsEqualsToCurrentSnapshot(currentSnapshot))
-            {
-                TryAddSnapshot(currentSnapshot, deleteAfter: true);
-            }
+            TryAddSnapshotInternal(ref currentSnapshot);
 
-            if (HasNext())
+            if (_iterator.MoveToNext())
             {
-                _current++;
-                nextSnapshot = _snapshots[_current];
+                nextSnapshot = _iterator.Current;
                 return true;
             }
 
@@ -71,25 +61,26 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
             return false;
         }
 
-        public bool TryAddSnapshot(CommandLineViewSnapshot snapshot, bool deleteAfter = true)
+        public bool TryAddSnapshot(CommandLineViewSnapshot snapshot)
         {
-            if (_options.SnapshotsComparer.Equals(snapshot, default(CommandLineViewSnapshot)))
-            {
-                throw new ArgumentNullException(nameof(snapshot));
-            }
+            Validate(ref snapshot, nameof(snapshot));
+            return TryAddSnapshotInternal(ref snapshot);
+        }
 
-            if (deleteAfter && HasNext())
-            {
-                _snapshots.TrimTo(_current + 1);
-            }
-
-            if (IsEqualsToLastSnapshot(snapshot))
+        private bool TryAddSnapshotInternal(ref CommandLineViewSnapshot snapshot)
+        {
+            if (EqualsToCurrentSnapshot(ref snapshot))
             {
                 return false;
             }
 
+            if (_iterator.HasNext())
+            {
+                _snapshots.TrimTo(_iterator.Index + 1);
+            }
+
             _snapshots.Add(snapshot);
-            _current = _snapshots.Count - 1;
+            _iterator.MoveToLast();
 
             return true;
         }
@@ -97,34 +88,13 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
         public void Clear()
         {
             _snapshots.Clear();
-            _current = 0;
+            _iterator.MoveToFirst();
         }
 
-        private bool IsLast()
-        {
-            return _current == _snapshots.Count - 1;
-        }
-
-        private bool HasNext()
-        {
-            return _current < _snapshots.Count - 1;
-        }
-
-        private bool HasPrev()
-        {
-            return _current > 0;
-        }
-
-        private bool IsEqualsToLastSnapshot(CommandLineViewSnapshot snapshot)
+        private bool EqualsToCurrentSnapshot(ref CommandLineViewSnapshot snapshot)
         {
             return _snapshots.Count > 0
-                && _options.SnapshotsComparer.Equals(snapshot, _snapshots[_snapshots.Count - 1]);
-        }
-
-        private bool IsEqualsToCurrentSnapshot(CommandLineViewSnapshot snapshot)
-        {
-            return _current >= 0 && _current < _snapshots.Count
-                && _options.SnapshotsComparer.Equals(snapshot, _snapshots[_current]);
+                && _options.SnapshotsComparer.Equals(snapshot, _iterator.Current);
         }
     }
 }
