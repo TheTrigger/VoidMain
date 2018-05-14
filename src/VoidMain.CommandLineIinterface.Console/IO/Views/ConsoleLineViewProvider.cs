@@ -3,27 +3,27 @@ using VoidMain.CommandLineIinterface.IO.Console;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class ConsoleCommandLineViewProvider : ICommandLineViewProvider
+    public class ConsoleLineViewProvider : ILineViewProvider
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
 
-        public ConsoleCommandLineViewProvider(IConsole console, IConsoleCursor cursor)
+        public ConsoleLineViewProvider(IConsole console, IConsoleCursor cursor)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
         }
 
-        public ICommandLineView GetView(CommandLineViewOptions options)
+        public ILineView GetView(LineViewOptions options)
         {
             switch (options.ViewType)
             {
-                case CommandLineViewType.Normal:
-                    return new ConsoleCommandLineView(_console, _cursor);
-                case CommandLineViewType.Masked:
-                    return new ConsoleCommandLineMaskedView(_console, _cursor, options.MaskSymbol);
-                case CommandLineViewType.Hidden:
-                    return new CommandLineInMemoryView();
+                case LineViewType.Normal:
+                    return new ConsoleLineView(_console, _cursor);
+                case LineViewType.Masked:
+                    return new ConsoleMaskedLineView(_console, _cursor, options.MaskSymbol);
+                case LineViewType.Hidden:
+                    return new InMemoryLineView();
                 default:
                     throw new NotSupportedException($"{options.ViewType} view is not supported.");
             }

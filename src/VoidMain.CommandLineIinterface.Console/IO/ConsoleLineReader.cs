@@ -9,15 +9,15 @@ using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.IO
 {
-    public class ConsoleCommandLineReader : ICommandLineReader
+    public class ConsoleLineReader : ILineReader
     {
         private readonly IConsole _console;
         private readonly IConsoleKeyReader _keyReader;
-        private readonly ICommandLineViewProvider _viewProvider;
+        private readonly ILineViewProvider _viewProvider;
         private readonly IConsoleInputHandler[] _inputHandlers;
 
-        public ConsoleCommandLineReader(IConsole console, IConsoleKeyReader keyReader,
-            ICommandLineViewProvider viewProvider, IEnumerable<IConsoleInputHandler> inputHandlers)
+        public ConsoleLineReader(IConsole console, IConsoleKeyReader keyReader,
+            ILineViewProvider viewProvider, IEnumerable<IConsoleInputHandler> inputHandlers)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _keyReader = keyReader ?? throw new ArgumentNullException(nameof(keyReader));
@@ -31,24 +31,24 @@ namespace VoidMain.CommandLineIinterface.IO
 
         public Task<string> ReadLineAsync(CancellationToken token = default(CancellationToken))
         {
-            var viewOptions = CommandLineViewOptions.Normal;
+            var viewOptions = LineViewOptions.Normal;
             return ReadLineAsync(viewOptions, token);
         }
 
         public Task<string> ReadLineAsync(char? mask, CancellationToken token = default(CancellationToken))
         {
             var viewOptions = mask.HasValue
-                ? CommandLineViewOptions.Masked(mask.Value)
-                : CommandLineViewOptions.Hidden;
+                ? LineViewOptions.Masked(mask.Value)
+                : LineViewOptions.Hidden;
             return ReadLineAsync(viewOptions, token);
         }
 
-        private async Task<string> ReadLineAsync(CommandLineViewOptions viewOptions, CancellationToken token)
+        private async Task<string> ReadLineAsync(LineViewOptions viewOptions, CancellationToken token)
         {
             ThrowIfCancellationRequested(token, hadUserInput: false);
 
             var lineView = _viewProvider.GetView(viewOptions);
-            var lineViewLifecycle = lineView as ICommandLineInputLifecycle;
+            var lineViewLifecycle = lineView as ILineViewInputLifecycle;
             var eventArgs = new ConsoleInputEventArgs();
 
             lineViewLifecycle?.BeforeLineReading();

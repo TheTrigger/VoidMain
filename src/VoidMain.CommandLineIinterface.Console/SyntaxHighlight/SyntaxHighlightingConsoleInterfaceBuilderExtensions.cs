@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var services = builder.Services;
             services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();
-            services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineHighlightedViewProvider>();
+            services.AddSingleton<ILineViewProvider, ConsoleHighlightedLineViewProvider>();
 
             var parserService = services.FirstOrDefault(_ => _.ServiceType == typeof(ICommandLineParser));
             if (parserService == null)

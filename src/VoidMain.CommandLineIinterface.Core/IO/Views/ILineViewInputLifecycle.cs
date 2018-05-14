@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public interface ICommandLineInputLifecycle
+    public interface ILineViewInputLifecycle
     {
         void BeforeLineReading();
         void AfterLineReading();

@@ -2,20 +2,20 @@
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class CommandLineViewSnapshotComparer
+    public class LineViewSnapshotComparer
     {
-        public static IEqualityComparer<CommandLineViewSnapshot> IgnoreCursor =>
+        public static IEqualityComparer<LineViewSnapshot> IgnoreCursor =>
             new IgnoreCursorComparer();
 
         private class IgnoreCursorComparer
-            : IEqualityComparer<CommandLineViewSnapshot>
+            : IEqualityComparer<LineViewSnapshot>
         {
-            public bool Equals(CommandLineViewSnapshot x, CommandLineViewSnapshot y)
+            public bool Equals(LineViewSnapshot x, LineViewSnapshot y)
             {
                 return x.LineContent == y.LineContent;
             }
 
-            public int GetHashCode(CommandLineViewSnapshot obj)
+            public int GetHashCode(LineViewSnapshot obj)
             {
                 return obj.LineContent?.GetHashCode() ?? 0;
             }

@@ -27,15 +27,15 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(typeof(IConsoleCursor), cursorType);
             services.AddSingleton<IConsole>(_ => PlatformConsole.Instance);
 
-            services.AddSingleton<ICommandLineReader, ConsoleCommandLineReader>();
+            services.AddSingleton<ILineReader, ConsoleLineReader>();
             services.AddSingleton<IConsoleKeyReader, ConsoleKeyReader>();
             services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
             services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
             services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
 
-            services.AddSingleton<ICommandLineViewNavigation, CommandLineViewNavigation>();
+            services.AddSingleton<ILineViewNavigation, ByWordLineViewNavigation>();
 
-            services.AddSingleton<ICommandLineViewProvider, ConsoleCommandLineViewProvider>();
+            services.AddSingleton<ILineViewProvider, ConsoleLineViewProvider>();
 
             services.AddSingleton<ICommandLineParser, CommandLineParser>();
             services.AddSingleton<ICommandLineLexer, CommandLineLexer>();

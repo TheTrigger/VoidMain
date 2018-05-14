@@ -1,8 +1,8 @@
 ﻿namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public interface ICommandLineView : ICommandLineReadOnlyView
+    public interface ILineView : IReadOnlyLineView
     {
-        CommandLineViewType ViewType { get; }
+        LineViewType ViewType { get; }
 
         void Move(int offset);
         void MoveTo(int position);

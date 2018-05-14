@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public interface ICommandLineReadOnlyView
+    public interface IReadOnlyLineView
     {
         int Position { get; }
         int Length { get; }

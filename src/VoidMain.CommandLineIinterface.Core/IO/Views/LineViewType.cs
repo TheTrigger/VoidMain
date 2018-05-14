@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public enum CommandLineViewType
+    public enum LineViewType
     {
         Normal,
         Masked,

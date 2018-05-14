@@ -7,14 +7,14 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
     public class UndoRedoOptions
     {
         public int MaxCount { get; set; }
-        public IEqualityComparer<CommandLineViewSnapshot> SnapshotsComparer { get; set; }
+        public IEqualityComparer<LineViewSnapshot> SnapshotsComparer { get; set; }
 
         public UndoRedoOptions(bool defaults = true)
         {
             if (defaults)
             {
                 MaxCount = 10;
-                SnapshotsComparer = CommandLineViewSnapshotComparer.IgnoreCursor;
+                SnapshotsComparer = LineViewSnapshotComparer.IgnoreCursor;
             }
         }
 

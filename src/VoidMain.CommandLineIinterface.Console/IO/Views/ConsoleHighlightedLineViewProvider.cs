@@ -5,7 +5,7 @@ using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class ConsoleCommandLineHighlightedViewProvider : ICommandLineViewProvider
+    public class ConsoleHighlightedLineViewProvider : ILineViewProvider
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
@@ -13,7 +13,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private readonly ISyntaxHighlighter<ConsoleTextStyle> _highlighter;
         private readonly ConsoleSyntaxHighlightingOptions _highlightingOptions;
 
-        public ConsoleCommandLineHighlightedViewProvider(
+        public ConsoleHighlightedLineViewProvider(
             IConsole console, IConsoleCursor cursor,
             ICommandLineParser parser, ISyntaxHighlighter<ConsoleTextStyle> highlighter,
             ConsoleSyntaxHighlightingOptions highlightingOptions = null)
@@ -26,16 +26,16 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _highlightingOptions.Validate();
         }
 
-        public ICommandLineView GetView(CommandLineViewOptions options)
+        public ILineView GetView(LineViewOptions options)
         {
             switch (options.ViewType)
             {
-                case CommandLineViewType.Normal:
-                    return new ConsoleCommandLineHighlightedView(_console, _cursor, _parser, _highlighter, _highlightingOptions.Pallete);
-                case CommandLineViewType.Masked:
-                    return new ConsoleCommandLineMaskedView(_console, _cursor, options.MaskSymbol);
-                case CommandLineViewType.Hidden:
-                    return new CommandLineInMemoryView();
+                case LineViewType.Normal:
+                    return new ConsoleHighlightedLineView(_console, _cursor, _parser, _highlighter, _highlightingOptions.Pallete);
+                case LineViewType.Masked:
+                    return new ConsoleMaskedLineView(_console, _cursor, options.MaskSymbol);
+                case LineViewType.Hidden:
+                    return new InMemoryLineView();
                 default:
                     throw new NotSupportedException($"{options.ViewType} view is not supported.");
             }

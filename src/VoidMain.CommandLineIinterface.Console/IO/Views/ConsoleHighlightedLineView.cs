@@ -6,7 +6,7 @@ using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class ConsoleCommandLineHighlightedView : ICommandLineView, ICommandLineInputLifecycle
+    public class ConsoleHighlightedLineView : ILineView, ILineViewInputLifecycle
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
@@ -19,7 +19,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private bool _hasChanges;
         private int _prevLength;
 
-        public ConsoleCommandLineHighlightedView(
+        public ConsoleHighlightedLineView(
             IConsole console, IConsoleCursor cursor, ICommandLineParser parser,
             ISyntaxHighlighter<ConsoleTextStyle> highlighter, SyntaxHighlightingPallete<ConsoleTextStyle> pallete)
         {
@@ -29,12 +29,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _highlighter = highlighter ?? throw new ArgumentNullException(nameof(highlighter));
             _pallete = pallete ?? throw new ArgumentNullException(nameof(pallete));
             _lineBuilder = new CommandLineBuilder();
-            ViewType = CommandLineViewType.Normal;
+            ViewType = LineViewType.Normal;
             _hasChanges = false;
             _prevLength = 0;
         }
 
-        public CommandLineViewType ViewType { get; }
+        public LineViewType ViewType { get; }
         public int Position => _lineBuilder.Position;
         public int Length => _lineBuilder.Length;
         public char this[int index] => _lineBuilder[index];

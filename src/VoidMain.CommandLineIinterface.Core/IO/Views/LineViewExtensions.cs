@@ -1,8 +1,8 @@
 ﻿namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public static class CommandLineViewExtensions
+    public static class LineViewExtensions
     {
-        public static void ReplaceWith(this ICommandLineView lineView, string value)
+        public static void ReplaceWith(this ILineView lineView, string value)
         {
             lineView.MoveTo(0);
             lineView.TypeOver(value);
@@ -12,9 +12,9 @@
             }
         }
 
-        public static CommandLineViewSnapshot TakeSnapshot(this ICommandLineView lineView)
+        public static LineViewSnapshot TakeSnapshot(this ILineView lineView)
         {
-            return new CommandLineViewSnapshot(lineView);
+            return new LineViewSnapshot(lineView);
         }
     }
 }

@@ -164,7 +164,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
             // Current state: [S1], S2
 
             // Assert
-            Assert.Equal(expected, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
+            Assert.Equal(expected, prevSnapshot, LineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
@@ -245,7 +245,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
 
             // Assert
             Assert.Equal(2, manager.Count);
-            Assert.Equal(firstSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
+            Assert.Equal(firstSnapshot, prevSnapshot, LineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
@@ -268,7 +268,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
 
             // Assert
             Assert.Equal(3, manager.Count);
-            Assert.Equal(secondSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
+            Assert.Equal(secondSnapshot, prevSnapshot, LineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
 
             // Assert
             Assert.Equal(3, manager.Count);
-            Assert.Equal(secondSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
+            Assert.Equal(secondSnapshot, prevSnapshot, LineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
 
             // Assert
             Assert.Equal(2, manager.Count);
-            Assert.Equal(firstSnapshot, prevSnapshot, CommandLineViewSnapshotComparer.IgnoreCursor);
+            Assert.Equal(firstSnapshot, prevSnapshot, LineViewSnapshotComparer.IgnoreCursor);
         }
 
         [Fact]
@@ -338,9 +338,9 @@ namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
 
         #region Helpers
 
-        private static CommandLineViewSnapshot S(string value)
+        private static LineViewSnapshot S(string value)
         {
-            return new CommandLineViewSnapshot(value, 0);
+            return new LineViewSnapshot(value, 0);
         }
 
         #endregion

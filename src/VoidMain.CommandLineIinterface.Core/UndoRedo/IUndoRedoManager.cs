@@ -4,9 +4,9 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
 {
     public interface IUndoRedoManager
     {
-        bool TryUndo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot prevSnapshot);
-        bool TryRedo(CommandLineViewSnapshot currentSnapshot, out CommandLineViewSnapshot nextSnapshot);
-        bool TryAddSnapshot(CommandLineViewSnapshot snapshot);
+        bool TryUndo(LineViewSnapshot currentSnapshot, out LineViewSnapshot prevSnapshot);
+        bool TryRedo(LineViewSnapshot currentSnapshot, out LineViewSnapshot nextSnapshot);
+        bool TryAddSnapshot(LineViewSnapshot snapshot);
         void Clear();
     }
 }

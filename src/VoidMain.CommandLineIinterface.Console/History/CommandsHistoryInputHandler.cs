@@ -7,7 +7,7 @@ namespace VoidMain.CommandLineIinterface.History
     public class CommandsHistoryInputHandler : IConsoleInputHandler
     {
         private readonly ICommandsHistoryManager _historyManager;
-        private CommandLineViewSnapshot? _temp;
+        private LineViewSnapshot? _temp;
 
         public int Order { get; set; } = 2048;
 

@@ -59,7 +59,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
         {
             var lineView = args.LineView;
             var currentSnapshot = lineView.TakeSnapshot();
-            if (_undoRedoManager.TryUndo(currentSnapshot, out CommandLineViewSnapshot prevSnapshot))
+            if (_undoRedoManager.TryUndo(currentSnapshot, out LineViewSnapshot prevSnapshot))
             {
                 prevSnapshot.ApplyTo(lineView);
                 args.IsHandledHint = true;
@@ -70,7 +70,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
         {
             var lineView = args.LineView;
             var currentSnapshot = lineView.TakeSnapshot();
-            if (_undoRedoManager.TryRedo(currentSnapshot, out CommandLineViewSnapshot nextSnapshot))
+            if (_undoRedoManager.TryRedo(currentSnapshot, out LineViewSnapshot nextSnapshot))
             {
                 nextSnapshot.ApplyTo(lineView);
                 args.IsHandledHint = true;
@@ -83,7 +83,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
             _lastSnapshotTime = DateTime.MinValue;
         }
 
-        private void AddSnapshot(ICommandLineView lineView)
+        private void AddSnapshot(ILineView lineView)
         {
             var now = DateTime.UtcNow;
             if (now - _lastSnapshotTime < _minSnapshotTime)

@@ -15,7 +15,7 @@ namespace VoidMain.CommandLineIinterface
     {
         private readonly IConsole _console;
         private readonly ConsoleOutputLock _outputLock;
-        private readonly ICommandLineReader _reader;
+        private readonly ILineReader _reader;
         private readonly ICommandLineParser _parser;
         private readonly IConsolePromptMessage _prompt;
         private readonly ContextBuilder _contextBuilder;
@@ -24,7 +24,7 @@ namespace VoidMain.CommandLineIinterface
         public bool IsRunning { get; private set; }
 
         public ConsoleInterface(IConsole console, ConsoleOutputLock outputLock,
-            ICommandLineReader reader, ICommandLineParser parser, IConsolePromptMessage prompt = null)
+            ILineReader reader, ICommandLineParser parser, IConsolePromptMessage prompt = null)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _outputLock = outputLock ?? throw new ArgumentNullException(nameof(outputLock));

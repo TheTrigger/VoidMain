@@ -2,7 +2,7 @@
 
 namespace VoidMain.CommandLineIinterface.IO.Views.Tests
 {
-    public class CommandLineViewNavigation_Should
+    public class ByWordLineViewNavigation_Should
     {
         #region FindNext tests
 
@@ -19,7 +19,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Tests
         public void FindNext(string startValue, int startPos, int expectedPos)
         {
             // Arrange
-            var navigation = new CommandLineViewNavigation();
+            var navigation = new ByWordLineViewNavigation();
             var lineView = InitView(startValue, startPos);
 
             // Act
@@ -46,7 +46,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Tests
         public void FindPrev(string startValue, int startPos, int expectedPos)
         {
             // Arrange
-            var navigation = new CommandLineViewNavigation();
+            var navigation = new ByWordLineViewNavigation();
             var lineView = InitView(startValue, startPos);
 
             // Act
@@ -60,9 +60,9 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Tests
 
         #region Helpers
 
-        private static CommandLineInMemoryView InitView(string startValue, int startPos)
+        private static InMemoryLineView InitView(string startValue, int startPos)
         {
-            var lineView = new CommandLineInMemoryView();
+            var lineView = new InMemoryLineView();
             lineView.Type(startValue);
             lineView.MoveTo(startPos);
             return lineView;

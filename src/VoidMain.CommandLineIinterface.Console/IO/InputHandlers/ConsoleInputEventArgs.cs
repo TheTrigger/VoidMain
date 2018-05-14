@@ -15,6 +15,6 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
         /// </summary>
         public bool IsHandledHint { get; set; }
 
-        public ICommandLineView LineView { get; set; }
+        public ILineView LineView { get; set; }
     }
 }

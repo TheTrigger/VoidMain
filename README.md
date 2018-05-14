@@ -97,7 +97,7 @@ public void ConfigureServices(IServiceCollection services)
         .AddUndoRedo(options =>
         {
             options.MaxCount = 10;
-            options.SnapshotsComparer = CommandLineViewSnapshotComparer.IgnoreCursor;
+            options.SnapshotsComparer = LineViewSnapshotComparer.IgnoreCursor;
         })
         .AddSyntaxHighlighting(options =>
         {
