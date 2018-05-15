@@ -1,74 +1,134 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Internal;
+using System.Text;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
     public class InMemoryLineView : ILineView
     {
-        private readonly CommandLineBuilder _lineBuilder;
-
-        public InMemoryLineView()
-        {
-            _lineBuilder = new CommandLineBuilder();
-            ViewType = LineViewType.Hidden;
-        }
+        private readonly StringBuilder _lineBuilder;
+        private string _cache;
 
         public LineViewType ViewType { get; }
-        public int Position => _lineBuilder.Position;
+        public int Position { get; private set; }
         public int Length => _lineBuilder.Length;
         public char this[int index] => _lineBuilder[index];
 
-        public string ToString(int start, int length) => _lineBuilder.ToString(start, length);
-        public string ToString(int start) => _lineBuilder.ToString(start);
-        public override string ToString() => _lineBuilder.ToString();
+        public InMemoryLineView()
+        {
+            _lineBuilder = new StringBuilder();
+            ViewType = LineViewType.Hidden;
+        }
+
+        public string ToString(int start, int length)
+        {
+            return start == 0 && length == _lineBuilder.Length
+                ? ToString()
+                : _lineBuilder.ToString(start, length);
+        }
+
+        public string ToString(int start)
+        {
+            return start == 0
+                ? ToString()
+                : _lineBuilder.ToString(start, Length - start);
+        }
+
+        public override string ToString()
+        {
+            return _cache ?? (_cache = _lineBuilder.ToString());
+        }
 
         public void Move(int offset)
         {
-            // Throws if out of range
-            _lineBuilder.Move(offset);
+            int newPos = Position + offset;
+            if (newPos < 0 || newPos > Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            }
+            Position = newPos;
         }
 
         public void MoveTo(int newPos)
         {
-            // Throws if out of range
-            _lineBuilder.MoveTo(newPos);
+            if (newPos < 0 || newPos > Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(newPos));
+            }
+            Position = newPos;
         }
 
         public void Delete(int count)
         {
             if (count == 0) return;
 
-            // Throws if out of range
-            _lineBuilder.Delete(count);
+            int newPos = Position + count;
+            if (newPos < 0 || newPos > Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count));
+            }
+
+            if (count < 0)
+            {
+                Position = newPos;
+                count = -count;
+            }
+
+            _lineBuilder.Remove(Position, count);
+            _cache = null;
         }
 
         public void Clear()
         {
             _lineBuilder.Clear();
+            Position = 0;
+            _cache = null;
         }
 
         public void Type(char value)
         {
-            _lineBuilder.Insert(value);
+            if (Position == Length)
+            {
+                _lineBuilder.Append(value);
+            }
+            else
+            {
+                _lineBuilder.Insert(Position, value);
+            }
+
+            Position++;
+            _cache = null;
         }
 
         public void TypeOver(char value)
         {
-            if (_lineBuilder.Position < _lineBuilder.Length)
+            if (Position == Length)
             {
-                _lineBuilder[_lineBuilder.Position] = value;
-                _lineBuilder.Move(1);
+                _lineBuilder.Append(value);
             }
             else
             {
-                _lineBuilder.Insert(value);
+                _lineBuilder[Position] = value;
             }
+
+            Position++;
+            _cache = null;
         }
 
         public void Type(string value)
         {
             if (String.IsNullOrEmpty(value)) return;
-            _lineBuilder.Insert(value);
+
+            if (Position == Length)
+            {
+                _lineBuilder.Append(value);
+            }
+            else
+            {
+                _lineBuilder.Insert(Position, value);
+            }
+
+            Position += value.Length;
+            _cache = null;
         }
 
         public void TypeOver(string value)
@@ -76,16 +136,19 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             if (String.IsNullOrEmpty(value)) return;
 
             int offset = 0;
-            while (_lineBuilder.Position < _lineBuilder.Length && offset < value.Length)
+            while (Position < Length && offset < value.Length)
             {
-                _lineBuilder[_lineBuilder.Position] = value[offset];
-                _lineBuilder.Move(1);
+                _lineBuilder[Position] = value[offset];
+                Position++;
                 offset++;
             }
             if (offset < value.Length)
             {
-                _lineBuilder.Insert(value.Substring(offset));
+                int length = value.Length - offset;
+                _lineBuilder.Append(value, offset, length);
+                Position += length;
             }
+            _cache = null;
         }
     }
 }

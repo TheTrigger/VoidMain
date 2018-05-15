@@ -1,20 +1,10 @@
 ﻿using System;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Internal.Tests
+namespace VoidMain.CommandLineIinterface.IO.Views.Tests
 {
-    public class CommandLineBuilder_Should
+    public class InMemoryLineView_Should
     {
-        #region Ctor tests
-
-        [Fact]
-        public void HaveValidCapacity()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new CommandLineBuilder(-1));
-        }
-
-        #endregion
-
         #region Move & MoveTo tests
 
         [Theory]
@@ -23,10 +13,10 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         public void NotMoveOutsideBoundaries(int offset)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
+            var line = new InMemoryLineView();
 
             // Act, Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => builder.Move(offset));
+            Assert.Throws<ArgumentOutOfRangeException>(() => line.Move(offset));
         }
 
         [Theory]
@@ -35,10 +25,10 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         public void NotMoveToOutsideBoundaries(int newPos)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
+            var line = new InMemoryLineView();
 
             // Act, Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => builder.MoveTo(newPos));
+            Assert.Throws<ArgumentOutOfRangeException>(() => line.MoveTo(newPos));
         }
 
         [Theory]
@@ -47,15 +37,15 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         public void Move(int startPos, int offset)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert("test");
-            builder.MoveTo(startPos);
+            var line = new InMemoryLineView();
+            line.Type("test");
+            line.MoveTo(startPos);
 
             // Act
-            builder.Move(offset);
+            line.Move(offset);
 
             // Assert
-            Assert.Equal(startPos + offset, builder.Position);
+            Assert.Equal(startPos + offset, line.Position);
         }
 
         [Theory]
@@ -64,15 +54,15 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         public void MoveTo(int startPos, int newPos)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert("test");
-            builder.MoveTo(startPos);
+            var line = new InMemoryLineView();
+            line.Type("test");
+            line.MoveTo(startPos);
 
             // Act
-            builder.MoveTo(newPos);
+            line.MoveTo(newPos);
 
             // Assert
-            Assert.Equal(newPos, builder.Position);
+            Assert.Equal(newPos, line.Position);
         }
 
         #endregion
@@ -84,20 +74,20 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         [InlineData("test", 0, 'a', "atest", 1)]
         [InlineData("test", 4, 'a', "testa", 5)]
         [InlineData("test", 2, 'a', "teast", 3)]
-        public void InsertCharValue(string startValue, int startPos,
+        public void TypeCharValue(string startValue, int startPos,
             char value, string expextedValue, int expextedPos)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert(startValue);
-            builder.MoveTo(startPos);
+            var line = new InMemoryLineView();
+            line.Type(startValue);
+            line.MoveTo(startPos);
 
             // Act
-            builder.Insert(value);
+            line.Type(value);
 
             // Assert
-            Assert.Equal(expextedValue, builder.ToString());
-            Assert.Equal(expextedPos, builder.Position);
+            Assert.Equal(expextedValue, line.ToString());
+            Assert.Equal(expextedPos, line.Position);
         }
 
         [Theory]
@@ -105,35 +95,35 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         [InlineData("test", 0, "ab", "abtest", 2)]
         [InlineData("test", 4, "ab", "testab", 6)]
         [InlineData("test", 2, "ab", "teabst", 4)]
-        public void InsertStringValue(string startValue, int startPos,
+        public void TypeStringValue(string startValue, int startPos,
             string value, string expextedValue, int expextedPos)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert(startValue);
-            builder.MoveTo(startPos);
+            var line = new InMemoryLineView();
+            line.Type(startValue);
+            line.MoveTo(startPos);
 
             // Act
-            builder.Insert(value);
+            line.Type(value);
 
             // Assert
-            Assert.Equal(expextedValue, builder.ToString());
-            Assert.Equal(expextedPos, builder.Position);
+            Assert.Equal(expextedValue, line.ToString());
+            Assert.Equal(expextedPos, line.Position);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void NotInsertEmptyStringValue(string value)
+        public void NotTypeEmptyStringValue(string value)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
+            var line = new InMemoryLineView();
 
             // Act
-            builder.Insert(value);
+            line.Type(value);
 
             // Assert
-            Assert.Equal("", builder.ToString());
+            Assert.Equal("", line.ToString());
         }
 
         #endregion
@@ -143,13 +133,13 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         [Theory]
         [InlineData(-1)]
         [InlineData(1)]
-        public void NotDeleteOutsideBoundaries(int count)
+        public void NotDeleteOutsideOfBoundaries(int count)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
+            var line = new InMemoryLineView();
 
             // Act, Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => builder.Delete(count));
+            Assert.Throws<ArgumentOutOfRangeException>(() => line.Delete(count));
         }
 
         [Theory]
@@ -163,16 +153,16 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
             int deleteCount, string expextedValue, int expextedPos)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert(startValue);
-            builder.MoveTo(startPos);
+            var line = new InMemoryLineView();
+            line.Type(startValue);
+            line.MoveTo(startPos);
 
             // Act
-            builder.Delete(deleteCount);
+            line.Delete(deleteCount);
 
             // Assert
-            Assert.Equal(expextedValue, builder.ToString());
-            Assert.Equal(expextedPos, builder.Position);
+            Assert.Equal(expextedValue, line.ToString());
+            Assert.Equal(expextedPos, line.Position);
         }
 
         [Theory]
@@ -181,15 +171,15 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         public void Clear(string startValue)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert(startValue);
+            var line = new InMemoryLineView();
+            line.Type(startValue);
 
             // Act
-            builder.Clear();
+            line.Clear();
 
             // Assert
-            Assert.Equal("", builder.ToString());
-            Assert.Equal(0, builder.Position);
+            Assert.Equal("", line.ToString());
+            Assert.Equal(0, line.Position);
         }
 
         #endregion
@@ -200,12 +190,12 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
         public void ReturnValidString()
         {
             // Arrange
-            var builder = new CommandLineBuilder();
+            var line = new InMemoryLineView();
             string expected = "test";
-            builder.Insert(expected);
+            line.Type(expected);
 
             // Act
-            string actual = builder.ToString();
+            string actual = line.ToString();
 
             // Assert
             Assert.Equal(expected, actual);
@@ -218,11 +208,11 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
             string startValue, int start, string expected)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert(startValue);
+            var line = new InMemoryLineView();
+            line.Type(startValue);
 
             // Act
-            string actual = builder.ToString(start);
+            string actual = line.ToString(start);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -235,11 +225,11 @@ namespace VoidMain.CommandLineIinterface.Internal.Tests
             string startValue, int start, int length, string expected)
         {
             // Arrange
-            var builder = new CommandLineBuilder();
-            builder.Insert(startValue);
+            var line = new InMemoryLineView();
+            line.Type(startValue);
 
             // Act
-            string actual = builder.ToString(start, length);
+            string actual = line.ToString(start, length);
 
             // Assert
             Assert.Equal(expected, actual);
