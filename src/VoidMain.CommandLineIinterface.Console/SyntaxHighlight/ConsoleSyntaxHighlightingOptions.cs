@@ -4,21 +4,21 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
     public class ConsoleSyntaxHighlightingOptions
     {
-        public SyntaxHighlightingPallete<ConsoleTextStyle> Pallete { get; set; }
+        public SyntaxHighlightingPalette<ConsoleTextStyle> Palette { get; set; }
 
         public ConsoleSyntaxHighlightingOptions(bool defaults = true)
         {
             if (defaults)
             {
-                Pallete = ConsoleSyntaxHighlightingPallete.Default;
+                Palette = ConsoleSyntaxHighlightingPalette.Default;
             }
         }
 
         public void Validate()
         {
-            if (Pallete == null)
+            if (Palette == null)
             {
-                throw new ArgumentNullException(nameof(Pallete));
+                throw new ArgumentNullException(nameof(Palette));
             }
         }
     }

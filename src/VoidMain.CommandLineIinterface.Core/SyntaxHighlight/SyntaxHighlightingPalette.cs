@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class SyntaxHighlightingPallete<TStyle> : IEnumerable<KeyValuePair<SyntaxClass, TStyle>>
+    public class SyntaxHighlightingPalette<TStyle> : IEnumerable<KeyValuePair<SyntaxClass, TStyle>>
     {
         private readonly Dictionary<SyntaxClass, TStyle> _styles;
 
         public TStyle DefaultStyle { get; }
 
-        public SyntaxHighlightingPallete(TStyle defaultStyle = default(TStyle))
+        public SyntaxHighlightingPalette(TStyle defaultStyle = default(TStyle))
         {
             _styles = new Dictionary<SyntaxClass, TStyle>();
             DefaultStyle = defaultStyle;

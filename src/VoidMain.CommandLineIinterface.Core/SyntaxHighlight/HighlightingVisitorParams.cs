@@ -5,13 +5,14 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
     public class HighlightingVisitorParams<TStyle>
     {
         public List<StyledSpan<TStyle>> Spans { get; }
-        public SyntaxHighlightingPallete<TStyle> Pallete { get; }
+        public int HighlightedLength { get; set; }
+        public SyntaxHighlightingPalette<TStyle> Palette { get; }
 
         public HighlightingVisitorParams(List<StyledSpan<TStyle>> spans,
-            SyntaxHighlightingPallete<TStyle> pallete)
+            SyntaxHighlightingPalette<TStyle> palette)
         {
             Spans = spans;
-            Pallete = pallete;
+            Palette = palette;
         }
     }
 }

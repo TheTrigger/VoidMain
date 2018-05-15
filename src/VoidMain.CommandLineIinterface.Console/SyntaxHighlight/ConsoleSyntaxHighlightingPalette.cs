@@ -2,11 +2,11 @@
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class ConsoleSyntaxHighlightingPallete : SyntaxHighlightingPallete<ConsoleTextStyle>
+    public class ConsoleSyntaxHighlightingPalette : SyntaxHighlightingPalette<ConsoleTextStyle>
     {
-        public static ConsoleSyntaxHighlightingPallete Default => new DefaultPallete();
+        public static ConsoleSyntaxHighlightingPalette Default => new DefaultPalette();
 
-        public ConsoleSyntaxHighlightingPallete(
+        public ConsoleSyntaxHighlightingPalette(
             ConsoleTextStyle defaultStyle = null)
             : base(defaultStyle)
         {
@@ -22,9 +22,9 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             Add(@class, new ConsoleTextStyle(foreground, background));
         }
 
-        private class DefaultPallete : ConsoleSyntaxHighlightingPallete
+        private class DefaultPalette : ConsoleSyntaxHighlightingPalette
         {
-            public DefaultPallete()
+            public DefaultPalette()
                 : base(ConsoleTextStyle.Default)
             {
                 Add(SyntaxClass.CommandName, ConsoleColor.Yellow);

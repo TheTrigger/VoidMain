@@ -1,6 +1,5 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
@@ -9,21 +8,15 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
-        private readonly ICommandLineParser _parser;
-        private readonly ISyntaxHighlighter<ConsoleTextStyle> _highlighter;
-        private readonly ConsoleSyntaxHighlightingOptions _highlightingOptions;
+        private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
 
         public ConsoleHighlightedLineViewProvider(
             IConsole console, IConsoleCursor cursor,
-            ICommandLineParser parser, ISyntaxHighlighter<ConsoleTextStyle> highlighter,
-            ConsoleSyntaxHighlightingOptions highlightingOptions = null)
+            ITextHighlighter<ConsoleTextStyle> textHighlighter)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
-            _parser = parser ?? throw new ArgumentNullException(nameof(parser));
-            _highlighter = highlighter ?? throw new ArgumentNullException(nameof(highlighter));
-            _highlightingOptions = highlightingOptions ?? new ConsoleSyntaxHighlightingOptions();
-            _highlightingOptions.Validate();
+            _textHighlighter = textHighlighter ?? throw new ArgumentNullException(nameof(textHighlighter));
         }
 
         public ILineView GetView(LineViewOptions options)
@@ -31,7 +24,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             switch (options.ViewType)
             {
                 case LineViewType.Normal:
-                    return new ConsoleHighlightedLineView(_console, _cursor, _parser, _highlighter, _highlightingOptions.Pallete);
+                    return new ConsoleHighlightedLineView(_console, _cursor, _textHighlighter);
                 case LineViewType.Masked:
                     return new ConsoleMaskedLineView(_console, _cursor, options.MaskSymbol);
                 case LineViewType.Hidden:

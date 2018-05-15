@@ -13,33 +13,24 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             _visitor = new HighlightingVisitor<TStyle>();
         }
 
-        public IReadOnlyList<StyledSpan<TStyle>> GetHighlightedSpans(CommandLineSyntax syntax, SyntaxHighlightingPallete<TStyle> pallete)
+        public IReadOnlyList<StyledSpan<TStyle>> GetHighlightedSpans(CommandLineSyntax syntax, SyntaxHighlightingPalette<TStyle> palette)
         {
             if (syntax == null) throw new ArgumentNullException(nameof(syntax));
-            if (pallete == null) throw new ArgumentNullException(nameof(pallete));
+            if (palette == null) throw new ArgumentNullException(nameof(palette));
 
             var styledSpans = new List<StyledSpan<TStyle>>();
-            var visitorParams = new HighlightingVisitorParams<TStyle>(styledSpans, pallete);
+            var visitorParams = new HighlightingVisitorParams<TStyle>(styledSpans, palette);
 
             syntax.Accept(_visitor, visitorParams);
-            ValidateSpans(styledSpans);
+
+            int tailLength = syntax.FullSpan.Length - visitorParams.HighlightedLength;
+            if (tailLength > 0)
+            {
+                var tail = new TextSpan(syntax.FullSpan.Source, visitorParams.HighlightedLength, tailLength);
+                styledSpans.Add(new StyledSpan<TStyle>(tail, palette.DefaultStyle));
+            }
 
             return styledSpans;
-        }
-
-        private void ValidateSpans(List<StyledSpan<TStyle>> spans)
-        {
-            int pos = 0;
-
-            foreach (var highlight in spans)
-            {
-                if (highlight.Span.Start < pos)
-                {
-                    // TODO: Throw specialized exception.
-                    throw new Exception("Overlapped spans.");
-                }
-                pos = highlight.Span.End;
-            }
         }
     }
 }

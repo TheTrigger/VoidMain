@@ -15,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Action<ConsoleSyntaxHighlightingOptions> options = null)
         {
             var services = builder.Services;
+            services.AddSingleton<ITextHighlighter<ConsoleTextStyle>, ConsoleCommandLineHighlighter>();
             services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();
             services.AddSingleton<ILineViewProvider, ConsoleHighlightedLineViewProvider>();
 

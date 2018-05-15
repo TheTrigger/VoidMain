@@ -5,6 +5,6 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
     public interface ISyntaxHighlighter<TStyle>
     {
-        IReadOnlyList<StyledSpan<TStyle>> GetHighlightedSpans(CommandLineSyntax syntax, SyntaxHighlightingPallete<TStyle> pallete);
+        IReadOnlyList<StyledSpan<TStyle>> GetHighlightedSpans(CommandLineSyntax syntax, SyntaxHighlightingPalette<TStyle> palette);
     }
 }

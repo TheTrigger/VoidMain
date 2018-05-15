@@ -1,6 +1,5 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
@@ -9,9 +8,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
-        private readonly ICommandLineParser _parser;
-        private readonly ISyntaxHighlighter<ConsoleTextStyle> _highlighter;
-        private readonly SyntaxHighlightingPallete<ConsoleTextStyle> _pallete;
+        private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
         private readonly InMemoryLineView _line;
         private ConsoleColor _background;
         private ConsoleColor _foreground;
@@ -24,14 +21,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public char this[int index] => _line[index];
 
         public ConsoleHighlightedLineView(
-            IConsole console, IConsoleCursor cursor, ICommandLineParser parser,
-            ISyntaxHighlighter<ConsoleTextStyle> highlighter, SyntaxHighlightingPallete<ConsoleTextStyle> pallete)
+            IConsole console, IConsoleCursor cursor,
+            ITextHighlighter<ConsoleTextStyle> textHighlighter)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
-            _parser = parser ?? throw new ArgumentNullException(nameof(parser));
-            _highlighter = highlighter ?? throw new ArgumentNullException(nameof(highlighter));
-            _pallete = pallete ?? throw new ArgumentNullException(nameof(pallete));
+            _textHighlighter = textHighlighter ?? throw new ArgumentNullException(nameof(textHighlighter));
             _line = new InMemoryLineView();
             ViewType = LineViewType.Normal;
             _hasChanges = false;
@@ -113,23 +108,24 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         #region Rendering
 
-        private void RenderHighlightedLine()
+        private void RenderLine()
         {
             string commandLine = ToString();
-            var syntax = _parser.Parse(commandLine);
-            var highlightedSpans = _highlighter.GetHighlightedSpans(syntax, _pallete);
+            var highlights = _textHighlighter.Highlight(commandLine);
 
             int pos = Position;
             int written = 0;
             _cursor.Move(-pos);
 
-            foreach (var highlightedSpan in highlightedSpans)
+            foreach (var highlight in highlights)
             {
-                var span = highlightedSpan.Span;
-                var style = highlightedSpan.Style ?? ConsoleTextStyle.Default;
+                var style = highlight.Style ?? ConsoleTextStyle.Default;
+                var span = highlight.Span;
 
-                int spansGap = WriteBlank(span.Start - written);
-                written += spansGap;
+                if (span.Start != written)
+                {
+                    throw new IndexOutOfRangeException();
+                }
 
                 ApplyStyle(style);
                 _console.Write(span.Text);
@@ -137,10 +133,8 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             }
 
             int clearSpace = WriteBlank(_prevLength - written);
-            written += clearSpace;
-
-            _cursor.Move(pos - written);
-            _prevLength = commandLine.Length;
+            _prevLength = written;
+            _cursor.Move(pos - written - clearSpace);
         }
 
         private int WriteBlank(int length)
@@ -160,7 +154,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         #endregion
 
-        #region View Lifecycle
+        #region Input Lifecycle
 
         public void BeforeLineReading()
         {
@@ -181,7 +175,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public void AfterInputHandling(bool isNextKeyAvailable)
         {
             if (!_hasChanges || isNextKeyAvailable) return;
-            RenderHighlightedLine();
+            RenderLine();
             _hasChanges = false;
         }
 
