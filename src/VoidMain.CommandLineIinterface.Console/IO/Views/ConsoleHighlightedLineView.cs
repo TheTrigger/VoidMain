@@ -16,6 +16,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private ConsoleColor _foreground;
         private bool _hasChanges;
         private int _prevLength;
+        private int _maxPosition;
 
         public LineViewType ViewType { get; }
         public int Position => _line.Position;
@@ -34,6 +35,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             ViewType = LineViewType.Normal;
             _hasChanges = false;
             _prevLength = 0;
+            _maxPosition = 0;
         }
 
         public string ToString(int start, int length) => _line.ToString(start, length);
@@ -53,6 +55,28 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             int oldPos = Position;
             _line.MoveTo(newPos);
             _cursor.Move(newPos - oldPos);
+        }
+
+        /// <summary>
+        /// Prevents ArgumentOutOfRangeException when reaching BufferHeight.
+        /// </summary>
+        private void MoveCursorSafe(int offset)
+        {
+            int newPos = Position + offset;
+
+            if (newPos <= _maxPosition)
+            {
+                _cursor.Move(offset);
+            }
+            else
+            {
+                int available = _maxPosition - Position;
+                _cursor.Move(available);
+
+                int fill = offset - available;
+                _console.Write(' ', fill);
+                _maxPosition += fill;
+            }
         }
 
         public void Delete(int count)
@@ -77,14 +101,14 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         public void Type(char value)
         {
-            _cursor.Move(1);
+            MoveCursorSafe(1);
             _line.Type(value);
             _hasChanges = true;
         }
 
         public void TypeOver(char value)
         {
-            _cursor.Move(1);
+            MoveCursorSafe(1);
             _line.TypeOver(value);
             _hasChanges = true;
         }
@@ -93,7 +117,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         {
             if (String.IsNullOrEmpty(value)) return;
 
-            _cursor.Move(value.Length);
+            MoveCursorSafe(value.Length);
             _line.Type(value);
             _hasChanges = true;
         }
@@ -102,7 +126,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         {
             if (String.IsNullOrEmpty(value)) return;
 
-            _cursor.Move(value.Length);
+            MoveCursorSafe(value.Length);
             _line.TypeOver(value);
             _hasChanges = true;
         }
