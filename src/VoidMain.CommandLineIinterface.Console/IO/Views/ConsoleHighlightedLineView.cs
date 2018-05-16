@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
@@ -9,6 +10,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private readonly IConsole _console;
         private readonly IConsoleCursor _cursor;
         private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
+        private IReadOnlyList<StyledSpan<ConsoleTextStyle>> _prevHighlights;
         private readonly InMemoryLineView _line;
         private ConsoleColor _background;
         private ConsoleColor _foreground;
@@ -27,6 +29,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
             _textHighlighter = textHighlighter ?? throw new ArgumentNullException(nameof(textHighlighter));
+            _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
             _line = new InMemoryLineView();
             ViewType = LineViewType.Normal;
             _hasChanges = false;
@@ -106,6 +109,34 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         #endregion
 
+        #region Input Lifecycle
+
+        void ILineViewInputLifecycle.BeforeLineReading()
+        {
+            _foreground = _console.ForegroundColor;
+            _background = _console.BackgroundColor;
+        }
+
+        void ILineViewInputLifecycle.AfterLineReading()
+        {
+            _console.ForegroundColor = _foreground;
+            _console.BackgroundColor = _background;
+        }
+
+        void ILineViewInputLifecycle.BeforeInputHandling(bool isNextKeyAvailable)
+        {
+            // do nothing
+        }
+
+        void ILineViewInputLifecycle.AfterInputHandling(bool isNextKeyAvailable)
+        {
+            if (!_hasChanges || isNextKeyAvailable) return;
+            RenderLine();
+            _hasChanges = false;
+        }
+
+        #endregion
+
         #region Rendering
 
         private void RenderLine()
@@ -113,12 +144,22 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             string commandLine = ToString();
             var highlights = _textHighlighter.Highlight(commandLine);
 
+            int lastUnchanged = IndexOfLastUnchanged(_prevHighlights, highlights);
+            _prevHighlights = highlights;
+
             int pos = Position;
             int written = 0;
-            _cursor.Move(-pos);
 
-            foreach (var highlight in highlights)
+            if (highlights.Count > 0 && lastUnchanged >= 0)
             {
+                written = highlights[lastUnchanged].Span.End;
+            }
+
+            _cursor.Move(written - pos);
+
+            for (int i = lastUnchanged + 1; i < highlights.Count; i++)
+            {
+                var highlight = highlights[i];
                 var style = highlight.Style ?? ConsoleTextStyle.Default;
                 var span = highlight.Span;
 
@@ -137,13 +178,19 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _cursor.Move(pos - written - clearSpace);
         }
 
-        private int WriteBlank(int length)
+        private int IndexOfLastUnchanged(
+           IReadOnlyList<StyledSpan<ConsoleTextStyle>> previous,
+           IReadOnlyList<StyledSpan<ConsoleTextStyle>> current)
         {
-            if (length < 1) return 0;
-            _console.ForegroundColor = _foreground;
-            _console.BackgroundColor = _background;
-            _console.Write(' ', length);
-            return length;
+            int index = 0;
+            while (index < previous.Count && index < current.Count)
+            {
+                bool equals = previous[index].Span == current[index].Span
+                    && previous[index].Style == current[index].Style;
+                if (!equals) break;
+                index++;
+            }
+            return index - 1;
         }
 
         private void ApplyStyle(ConsoleTextStyle style)
@@ -152,31 +199,13 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _console.BackgroundColor = style.Background ?? _background;
         }
 
-        #endregion
-
-        #region Input Lifecycle
-
-        public void BeforeLineReading()
+        private int WriteBlank(int length)
         {
-            _foreground = _console.ForegroundColor;
-            _background = _console.BackgroundColor;
-        }
-
-        public void AfterLineReading()
-        {
+            if (length < 1) return 0;
             _console.ForegroundColor = _foreground;
             _console.BackgroundColor = _background;
-        }
-
-        public void BeforeInputHandling(bool isNextKeyAvailable)
-        {
-        }
-
-        public void AfterInputHandling(bool isNextKeyAvailable)
-        {
-            if (!_hasChanges || isNextKeyAvailable) return;
-            RenderLine();
-            _hasChanges = false;
+            _console.Write(' ', length);
+            return length;
         }
 
         #endregion

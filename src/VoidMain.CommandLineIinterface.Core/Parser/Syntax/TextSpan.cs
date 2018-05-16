@@ -62,7 +62,7 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
 
         public override int GetHashCode()
         {
-            return Source == null ? 0 : Source.GetHashCode() ^ Start ^ Length;
+            return (Source?.GetHashCode() ?? 0) ^ Start ^ Length;
         }
 
         public override bool Equals(object obj)
