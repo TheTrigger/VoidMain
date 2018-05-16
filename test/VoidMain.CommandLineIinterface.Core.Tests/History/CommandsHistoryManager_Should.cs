@@ -15,7 +15,6 @@ namespace VoidMain.CommandLineIinterface.History.Tests
         }
 
         [Theory]
-        [InlineData(0)]
         [InlineData(-1)]
         public void HaveValidSavePeriod(int savePeriod)
         {
@@ -27,11 +26,11 @@ namespace VoidMain.CommandLineIinterface.History.Tests
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public void HaveValidMaxCounts(int maxCounts)
+        public void HaveValidMaxCount(int maxCount)
         {
             var storage = new Mock<ICommandsHistoryStorage>();
             Assert.Throws<ArgumentOutOfRangeException>(() => new CommandsHistoryManager(storage.Object,
-                new CommandsHistoryOptions { MaxCount = maxCounts }));
+                new CommandsHistoryOptions { MaxCount = maxCount }));
         }
 
         #endregion

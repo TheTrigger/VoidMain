@@ -25,7 +25,7 @@ namespace VoidMain.CommandLineIinterface.History
             {
                 throw new ArgumentOutOfRangeException(nameof(MaxCount));
             }
-            if (SavePeriod.TotalMilliseconds < 1.0)
+            if (SavePeriod < TimeSpan.Zero)
             {
                 throw new ArgumentOutOfRangeException(nameof(SavePeriod));
             }
