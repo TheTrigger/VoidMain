@@ -27,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IArgumentsParser, ArgumentsParser>();
             services.AddTransient<ICommandExecutor, CommandExecutor>();
             services.AddTransient<ITypeActivator, CachedTypeActivator>();
+            services.AddTransient<IModuleFactory, ModuleFactory>();
             services.AddTransient<IMethodInvokerProvider, MethodInvokerProvider>();
             services.AddSingleton<ICollectionConstructorProvider, CollectionConstructorProvider>();
             services.AddSingleton<IValueParserProvider, ValueParserProvider>();
