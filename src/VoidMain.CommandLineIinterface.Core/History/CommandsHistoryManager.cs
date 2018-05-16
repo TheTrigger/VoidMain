@@ -27,10 +27,10 @@ namespace VoidMain.CommandLineIinterface.History
         }
 
         public CommandsHistoryManager(
-            ICommandsHistoryStorage storage,
+            ICommandsHistoryStorage storage = null,
             CommandsHistoryOptions options = null)
         {
-            _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            _storage = storage;
             _options = options ?? new CommandsHistoryOptions();
             _options.Validate();
             _commandsWriteLock = new object();
@@ -42,23 +42,30 @@ namespace VoidMain.CommandLineIinterface.History
 
             lock (_commandsWriteLock)
             {
-                IReadOnlyList<string> loaded = null;
-                lock (_storage)
+                if (_storage == null)
                 {
-                    loaded = _storage.Load();
-                }
-                loaded = loaded.Where(_ => !String.IsNullOrWhiteSpace(_)).ToArray();
-
-                if (loaded.Count > MaxCount)
-                {
-                    _commands = new PushOutCollection<string>(loaded.Skip(loaded.Count - MaxCount));
+                    _commands = new PushOutCollection<string>(MaxCount);
                 }
                 else
                 {
-                    _commands = new PushOutCollection<string>(MaxCount);
-                    for (int i = 0; i < loaded.Count; i++)
+                    IReadOnlyList<string> loaded = null;
+                    lock (_storage)
                     {
-                        _commands.Add(loaded[i]);
+                        loaded = _storage.Load();
+                    }
+                    loaded = loaded.Where(_ => !String.IsNullOrWhiteSpace(_)).ToArray();
+
+                    if (loaded.Count > MaxCount)
+                    {
+                        _commands = new PushOutCollection<string>(loaded.Skip(loaded.Count - MaxCount));
+                    }
+                    else
+                    {
+                        _commands = new PushOutCollection<string>(MaxCount);
+                        for (int i = 0; i < loaded.Count; i++)
+                        {
+                            _commands.Add(loaded[i]);
+                        }
                     }
                 }
 
@@ -151,6 +158,8 @@ namespace VoidMain.CommandLineIinterface.History
 
         private void SaveCommands()
         {
+            if (_storage == null) return;
+
             try
             {
                 string[] commands = null;

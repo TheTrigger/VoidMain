@@ -8,12 +8,6 @@ namespace VoidMain.CommandLineIinterface.History.Tests
     {
         #region Ctor tests
 
-        [Fact]
-        public void RequireStorage()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CommandsHistoryManager(null));
-        }
-
         [Theory]
         [InlineData(-1)]
         public void HaveValidSavePeriod(int savePeriod)
