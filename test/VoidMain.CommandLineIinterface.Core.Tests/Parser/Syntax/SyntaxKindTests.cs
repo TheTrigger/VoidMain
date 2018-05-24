@@ -10,42 +10,38 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax.Tests
         [Fact]
         public void AllLexerKindsShouldBeMarkedOnlyAsLexerNode()
         {
-            var lexerNodeKinds = from kind in GetAllSyntaxKinds()
-                                 let name = kind.ToString()
-                                 where name.EndsWith("Token") || name.EndsWith("Trivia")
-                                 select kind;
+            bool IsTokenOrTrivia(SyntaxKind kind) => IsToken(kind) || IsTrivia(kind);
+
+            var lexerNodeKinds = GetAllKinds().Where(IsTokenOrTrivia);
 
             foreach (var kind in lexerNodeKinds)
             {
-                Assert.True(kind.HasFlag(SyntaxKind.LexerNode), $"{kind} should cantains LexerNode");
-                Assert.True(!kind.HasFlag(SyntaxKind.ParserNode), $"{kind} should not cantains ParserNode");
+                Assert.True(kind.HasFlag(SyntaxKind.LexerNode), $"{kind} should contains LexerNode");
+                Assert.True(!kind.HasFlag(SyntaxKind.ParserNode), $"{kind} should not contains ParserNode");
             }
         }
 
         [Fact]
         public void AllParserKindsShouldBeMarkedOnlyAsParserNode()
         {
-            var parserNodeKinds = from kind in GetAllSyntaxKinds()
-                                  let name = kind.ToString()
-                                  where name.EndsWith("Syntax")
-                                  select kind;
+            var parserNodeKinds = GetAllKinds().Where(IsSyntax);
 
             foreach (var kind in parserNodeKinds)
             {
-                Assert.True(kind.HasFlag(SyntaxKind.ParserNode), $"{kind} should cantains ParserNode");
-                Assert.True(!kind.HasFlag(SyntaxKind.LexerNode), $"{kind} should not cantains LexerNode");
+                Assert.True(kind.HasFlag(SyntaxKind.ParserNode), $"{kind} should contains ParserNode");
+                Assert.True(!kind.HasFlag(SyntaxKind.LexerNode), $"{kind} should not contains LexerNode");
             }
         }
 
         [Fact]
-        public void SyntaxKindShouldContainsOnlyLexerAndParserKinds()
+        public void ShouldContainsOnlyLexerAndParserKinds()
         {
-            var unknownKinds = (from kind in GetAllSyntaxKinds()
-                                let name = kind.ToString()
-                                where !name.EndsWith("Token")
-                                where !name.EndsWith("Trivia")
-                                where !name.EndsWith("Syntax")
-                                select kind).Except(SpecialKinds).ToArray();
+            bool NotTokenOrTriviaOrSyntax(SyntaxKind kind)
+                => !IsToken(kind) && !IsTrivia(kind) && !IsSyntax(kind);
+
+            var unknownKinds = GetAllKinds()
+                .Where(NotTokenOrTriviaOrSyntax)
+                .Except(SpecialKinds).ToArray();
 
             Assert.True(unknownKinds.Length == 0,
                 "Unknown syntax kinds: " + String.Join(", ", unknownKinds));
@@ -54,47 +50,54 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax.Tests
         [Fact]
         public void QuotedLiteralShouldContainsOnlyLiteral()
         {
-            var kinds = GetAllSyntaxKinds()
+            var kinds = GetAllKinds()
                 .Except(SpecialKinds);
 
-            var matches = kinds.Where(k => SyntaxKind.QuotedLiteralToken.HasFlag(k))
-                .Except(new[] { SyntaxKind.QuotedLiteralToken }).ToArray();
+            var quotedLiteral = SyntaxKind.QuotedLiteralToken;
 
-            Assert.True(matches.Length == 1, "QuotedLiteralToken should not contains: "
-                + String.Join(", ", matches.Except(new[] { SyntaxKind.LiteralToken })));
-            Assert.True(SyntaxKind.QuotedLiteralToken.HasFlag(SyntaxKind.LiteralToken));
+            var matches = kinds.Except(new[] { quotedLiteral })
+                .Where(k => quotedLiteral.HasFlag(k))
+                .ToArray();
+
+
+            var expected = new[] { SyntaxKind.LiteralToken };
+            Assert.True(Equals(expected, matches),
+                quotedLiteral + " should not contains: " + Format(matches.Except(expected)));
         }
 
         [Fact]
         public void IdentifierOrLiteralShouldContainsOnlyIdentifierAndLiteral()
         {
-            var kinds = GetAllSyntaxKinds()
+            var kinds = GetAllKinds()
                 .Except(SpecialKinds);
 
-            var matches = kinds.Where(k => SyntaxKind.IdentifierOrLiteralToken.HasFlag(k))
-                .Except(new[] { SyntaxKind.IdentifierOrLiteralToken }).ToArray();
+            var identifierOrLiteral = SyntaxKind.IdentifierOrLiteralToken;
 
-            Assert.True(matches.Length == 2, "IdentifierOrLiteralToken should not contains: "
-                + String.Join(", ", matches.Except(new[] { SyntaxKind.IdentifierToken, SyntaxKind.LiteralToken })));
-            Assert.True(SyntaxKind.IdentifierOrLiteralToken.HasFlag(SyntaxKind.IdentifierToken));
-            Assert.True(SyntaxKind.IdentifierOrLiteralToken.HasFlag(SyntaxKind.LiteralToken));
+            var matches = kinds.Except(new[] { identifierOrLiteral })
+                .Where(k => identifierOrLiteral.HasFlag(k))
+                .ToArray();
+
+            var expected = new[] { SyntaxKind.IdentifierToken, SyntaxKind.LiteralToken };
+            Assert.True(Equals(expected, matches),
+                identifierOrLiteral + " should not contains: " + Format(matches.Except(expected)));
         }
 
         [Fact]
         public void AllSingleMeaningKindsShouldNotContainsAnyOtherKind()
         {
-            var kinds = GetAllSyntaxKinds()
+            var kinds = GetAllKinds()
                 .Except(SpecialKinds)
-                .Except(DoubleMeaningKinds);
+                .Except(DoubleMeaningKinds)
+                .ToArray();
 
             var matchesByKind = from kind in kinds
-                                let matches = kinds.Where(_ => kind != _ && kind.HasFlag(_)).ToArray()
+                                let matches = kinds.Where(k => kind != k && kind.HasFlag(k)).ToArray()
                                 select new { kind, matches };
 
             foreach (var mk in matchesByKind)
             {
                 Assert.True(mk.matches.Length == 0,
-                    mk.kind + " should not contains: " + String.Join(", ", mk.matches));
+                    mk.kind + " should not contains: " + Format(mk.matches));
             }
         }
 
@@ -104,10 +107,20 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax.Tests
         private static readonly IReadOnlyList<SyntaxKind> DoubleMeaningKinds
             = new[] { SyntaxKind.QuotedLiteralToken, SyntaxKind.IdentifierOrLiteralToken };
 
-        private IEnumerable<SyntaxKind> GetAllSyntaxKinds()
-        {
-            return Enum.GetValues(typeof(SyntaxKind))
-                .Cast<SyntaxKind>();
-        }
+        private IEnumerable<SyntaxKind> GetAllKinds()
+            => Enum.GetValues(typeof(SyntaxKind)).Cast<SyntaxKind>();
+
+        private const string TokenSuffix = "Token";
+        private const string TriviaSuffix = "Trivia";
+        private const string SyntaxSuffix = "Syntax";
+
+        private static bool IsToken(SyntaxKind kind) => kind.ToString().EndsWith(TokenSuffix);
+        private static bool IsTrivia(SyntaxKind kind) => kind.ToString().EndsWith(TriviaSuffix);
+        private static bool IsSyntax(SyntaxKind kind) => kind.ToString().EndsWith(SyntaxSuffix);
+
+        private static string Format(IEnumerable<SyntaxKind> kinds) => String.Join(", ", kinds);
+
+        private static bool Equals(IEnumerable<SyntaxKind> a, IEnumerable<SyntaxKind> b)
+            => Enumerable.SequenceEqual(a.OrderBy(_ => _), b.OrderBy(_ => _));
     }
 }
