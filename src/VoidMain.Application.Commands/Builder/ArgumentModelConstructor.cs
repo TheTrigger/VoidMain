@@ -24,6 +24,7 @@ namespace VoidMain.Application.Commands.Builder
             var argument = new ArgumentModel();
             argument.Parameter = parameter;
             argument.Type = paramType;
+            argument.Name = parameter.Name;
 
             var attr = parameter.GetCustomAttribute<ParameterAttribute>();
             bool isNullableOrParams = paramType.IsNullable() ||
@@ -32,7 +33,6 @@ namespace VoidMain.Application.Commands.Builder
             if (attr == null)
             {
                 argument.Kind = GetKindFromType(paramType);
-                argument.Name = parameter.Name;
                 argument.DefaultValue = GetDefaultValue(parameter);
                 argument.Optional = parameter.IsOptional || isNullableOrParams;
             }
@@ -41,7 +41,10 @@ namespace VoidMain.Application.Commands.Builder
                 argument.Kind = GetKindFromAttribute(attr);
                 if (attr is ArgumentAttribute argAttr)
                 {
-                    argument.Name = argAttr.Name ?? parameter.Name;
+                    if (argAttr.Name != null)
+                    {
+                        argument.Name = argAttr.Name;
+                    }
                     if (argAttr.IsAliasSet)
                     {
                         argument.Alias = argAttr.Alias.ToString();
@@ -50,6 +53,7 @@ namespace VoidMain.Application.Commands.Builder
                     argument.DefaultValue = argAttr.DefaultValue ?? GetDefaultValue(parameter);
                     argument.ValueParser = argAttr.ValueParser;
                 }
+
                 argument.Optional = attr.IsSetOptional
                     ? attr.Optional
                     : parameter.IsOptional || isNullableOrParams || argument.DefaultValue != null;
