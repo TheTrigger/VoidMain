@@ -11,27 +11,33 @@ namespace VoidMain.Application.Commands.Arguments
 {
     public class ArgumentsParser : IArgumentsParser
     {
-        private const string CastErrorMessagTemplate = "Type `{0}` of the default value " +
-            "is not assignable to the type `{1}` of the argument.";
+        private class ParseArguments
+        {
+            public string[] Values { get; set; }
+            public int ValuesOffset { get; set; }
+            public MultiValueStrategy MultiValueStrategy { get; set; }
+            public IServiceProvider Services { get; set; }
+        }
 
-        private const int OptionValuesOffset = 0;
-        private const MultiValueStrategy OperandMultiValueStrategy = MultiValueStrategy.UseFirstValue;
+        private const string CastErrorMessagTemplate =
+            "Type `{0}` of the default value is not assignable to the type `{1}` of the argument.";
         private readonly Type BooleanType = typeof(bool);
         private readonly object TrueValue = true;
+        private static bool NotParseException(Exception ex) => !(ex is ArgumentParseException);
 
         private readonly ICollectionConstructorProvider _colCtorProvider;
-        private readonly IValueParserProvider _parserProvider;
+        private readonly IValueParserProvider _valParserProvider;
         private readonly ArgumentsParserOptions _options;
         private readonly CommandLineOptions _cliOptions;
 
         public ArgumentsParser(
             ICollectionConstructorProvider colCtorProvider,
-            IValueParserProvider parserProvider,
+            IValueParserProvider valParserProvider,
             ArgumentsParserOptions options = null,
             CommandLineOptions cliOptions = null)
         {
             _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
-            _parserProvider = parserProvider ?? throw new ArgumentNullException(nameof(parserProvider));
+            _valParserProvider = valParserProvider ?? throw new ArgumentNullException(nameof(valParserProvider));
             _options = options ?? new ArgumentsParserOptions();
             _options.Validate();
             _cliOptions = cliOptions ?? new CommandLineOptions();
@@ -65,29 +71,42 @@ namespace VoidMain.Application.Commands.Arguments
             Validate(argsModel, options, operands, services);
 
             var values = new object[argsModel.Count];
+            var parseArgs = new ParseArguments { Services = services };
             int operandsOffset = 0;
 
             for (int i = 0; i < argsModel.Count; i++)
             {
                 var arg = argsModel[i];
-
-                switch (arg.Kind)
+                try
                 {
-                    case ArgumentKind.Service:
-                        values[i] = GetService(arg, services);
-                        break;
-                    case ArgumentKind.Option:
-                        string[] optionValues = GetOptionValues(options, arg);
-                        values[i] = ParseValueOrGetDefault(
-                            arg, optionValues, OptionValuesOffset, services, _options.MultiValueStrategy, out int _);
-                        break;
-                    case ArgumentKind.Operand:
-                        values[i] = ParseValueOrGetDefault(
-                            arg, operands, operandsOffset, services, OperandMultiValueStrategy, out int operandsUsed);
-                        operandsOffset += operandsUsed;
-                        break;
-                    default:
-                        throw new ArgumentParseException(arg, $"Unknown argument kind `{arg.Kind}`.");
+                    switch (arg.Kind)
+                    {
+                        case ArgumentKind.Service:
+                            parseArgs.Values = null;
+                            parseArgs.ValuesOffset = 0;
+                            parseArgs.MultiValueStrategy = _options.MultiValueStrategy;
+                            values[i] = GetServiceOrDefault(arg, parseArgs);
+                            break;
+                        case ArgumentKind.Option:
+                            parseArgs.Values = GetOptionValues(options, arg);
+                            parseArgs.ValuesOffset = 0;
+                            parseArgs.MultiValueStrategy = _options.MultiValueStrategy;
+                            values[i] = ParseValueOrGetDefault(arg, parseArgs, out int _);
+                            break;
+                        case ArgumentKind.Operand:
+                            parseArgs.Values = operands;
+                            parseArgs.ValuesOffset = operandsOffset;
+                            parseArgs.MultiValueStrategy = MultiValueStrategy.UseFirstValue;
+                            values[i] = ParseValueOrGetDefault(arg, parseArgs, out int operandsUsed);
+                            operandsOffset += operandsUsed;
+                            break;
+                        default:
+                            throw new ArgumentParseException(arg, $"Unknown argument kind `{arg.Kind}`.");
+                    }
+                }
+                catch (Exception ex) when (NotParseException(ex))
+                {
+                    throw new ArgumentParseException(arg, ex.Message, ex);
                 }
             }
 
@@ -115,49 +134,50 @@ namespace VoidMain.Application.Commands.Arguments
                 || _cliOptions.IdentifierComparer.Equals(optionName, arg.Alias);
         }
 
-        private object GetService(ArgumentModel arg, IServiceProvider services)
+        private object GetServiceOrDefault(ArgumentModel arg, ParseArguments parseArgs)
         {
-            var service = services.GetService(arg.Type);
+            var service = parseArgs.Services.GetService(arg.Type);
             if (service != null)
             {
                 return service;
             }
 
-            if (arg.Optional)
+            if (!TryGetDefaultValue(arg, parseArgs, out var value))
             {
-                return arg.Type.GetEmptyValue();
+                throw new ArgumentParseException(arg, $"Service `{arg.Type.Name}` is not registered.");
             }
 
-            throw new ArgumentParseException(arg, $"Service `{arg.Type.Name}` is not registered.");
+            return value;
         }
 
-        private object ParseValueOrGetDefault(
-            ArgumentModel arg,
-            string[] stringValues, int valuesOffset,
-            IServiceProvider services,
-            MultiValueStrategy multiValueStrategy,
-            out int valuesUsed)
+        private object ParseValueOrGetDefault(ArgumentModel arg, ParseArguments parseArgs, out int valuesUsed)
         {
-            if (stringValues == null || valuesOffset == stringValues.Length)
+            if (parseArgs.Values == null || parseArgs.ValuesOffset == parseArgs.Values.Length)
             {
+                if (!TryGetDefaultValue(arg, parseArgs, out var value))
+                {
+                    throw new ArgumentParseException(arg, "Value is missing.");
+                }
+
                 valuesUsed = 0;
-                return GetDefaultValue(arg, services, multiValueStrategy);
+                return value;
             }
 
-            return ParseValue(arg, stringValues, valuesOffset, multiValueStrategy, out valuesUsed);
+            return ParseValue(arg, parseArgs, out valuesUsed);
         }
 
-        private object GetDefaultValue(ArgumentModel arg, IServiceProvider services, MultiValueStrategy multiValueStrategy)
+        private bool TryGetDefaultValue(ArgumentModel arg, ParseArguments parseArgs, out object defaultValue)
         {
-            var defaultValue = arg.DefaultValue;
+            defaultValue = arg.DefaultValue;
             if (defaultValue == null)
             {
                 if (arg.Optional)
                 {
-                    return arg.Type.GetEmptyValue();
+                    defaultValue = arg.Type.GetEmptyValue();
+                    return true;
                 }
 
-                throw new ArgumentParseException(arg, "Value is missing.");
+                return false;
                 // TODO: Or prompt value.
                 // Use double Enter to end filling collection.
             }
@@ -165,12 +185,21 @@ namespace VoidMain.Application.Commands.Arguments
             switch (defaultValue)
             {
                 case string stringValue:
-                    return ParseValue(arg, new[] { stringValue }, 0, multiValueStrategy, out var _);
+                    parseArgs.Values = new[] { stringValue };
+                    parseArgs.ValuesOffset = 0;
+                    defaultValue = ParseValue(arg, parseArgs, out var _);
+                    break;
                 case string[] stringValues when stringValues.Length > 0:
-                    return ParseValue(arg, stringValues, 0, multiValueStrategy, out var _);
+                    parseArgs.Values = stringValues;
+                    parseArgs.ValuesOffset = 0;
+                    defaultValue = ParseValue(arg, parseArgs, out var _);
+                    break;
                 default:
-                    return CastDefaultValue(arg, defaultValue);
+                    defaultValue = CastDefaultValue(arg, defaultValue);
+                    break;
             }
+
+            return true;
         }
 
         private object CastDefaultValue(ArgumentModel arg, object value)
@@ -200,7 +229,7 @@ namespace VoidMain.Application.Commands.Arguments
             }
 
             throw new ArgumentParseException(arg,
-                        String.Format(CastErrorMessagTemplate, valueType.Name, argType.Name));
+                String.Format(CastErrorMessagTemplate, valueType.Name, argType.Name));
         }
 
         private object CopyCollection(
@@ -220,28 +249,24 @@ namespace VoidMain.Application.Commands.Arguments
             return target.Collection;
         }
 
-        private object ParseValue(
-            ArgumentModel arg,
-            string[] stringValues, int valuesOffset,
-            MultiValueStrategy multiValueStrategy,
-            out int valuesUsed)
+        private object ParseValue(ArgumentModel arg, ParseArguments parseArgs, out int valuesUsed)
         {
             var argType = arg.Type;
             bool isCollection = _colCtorProvider.TryGetConstructor(argType, out ICollectionConstructor colCtor);
 
             if (isCollection)
             {
-                valuesUsed = stringValues.Length - valuesOffset;
+                valuesUsed = parseArgs.Values.Length - parseArgs.ValuesOffset;
 
                 var argElemType = colCtor.GetElementType(argType);
                 var colAdapter = colCtor.Create(argElemType, valuesUsed);
 
                 var valueType = argElemType.UnwrapIfNullable();
-                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
+                var parser = _valParserProvider.GetParser(valueType, arg.ValueParser);
 
                 for (int i = 0; i < valuesUsed; i++)
                 {
-                    string stringValue = stringValues[valuesOffset + i];
+                    string stringValue = parseArgs.Values[parseArgs.ValuesOffset + i];
                     var value = ParseValue(stringValue, valueType, parser);
                     colAdapter.SetValue(i, value);
                 }
@@ -250,29 +275,25 @@ namespace VoidMain.Application.Commands.Arguments
             }
             else
             {
-                string stringValue = GetStringValue(
-                    stringValues, valuesOffset, multiValueStrategy, out valuesUsed);
+                string stringValue = GetStringValue(parseArgs, out valuesUsed);
                 var valueType = argType.UnwrapIfNullable();
-                var parser = _parserProvider.GetParser(valueType, arg.ValueParser);
+                var parser = _valParserProvider.GetParser(valueType, arg.ValueParser);
                 return ParseValue(stringValue, valueType, parser);
             }
         }
 
-        private static string GetStringValue(
-            string[] stringValues, int valuesOffset,
-            MultiValueStrategy multiValueStrategy,
-            out int valuesUsed)
+        private static string GetStringValue(ParseArguments parseArgs, out int valuesUsed)
         {
-            switch (multiValueStrategy)
+            switch (parseArgs.MultiValueStrategy)
             {
                 case MultiValueStrategy.UseFirstValue:
                     valuesUsed = 1;
-                    return stringValues[valuesOffset];
+                    return parseArgs.Values[parseArgs.ValuesOffset];
                 case MultiValueStrategy.UseLastValue:
-                    valuesUsed = stringValues.Length - valuesOffset;
-                    return stringValues[stringValues.Length - 1];
+                    valuesUsed = parseArgs.Values.Length - parseArgs.ValuesOffset;
+                    return parseArgs.Values[parseArgs.Values.Length - 1];
                 default:
-                    throw new NotSupportedException($"Unknown multivalue strategy `{multiValueStrategy}`.");
+                    throw new NotSupportedException($"Unknown multivalue strategy `{parseArgs.MultiValueStrategy}`.");
             }
         }
 
