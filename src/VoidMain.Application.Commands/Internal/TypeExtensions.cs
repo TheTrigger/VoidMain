@@ -8,10 +8,14 @@ namespace VoidMain.Application.Commands.Internal
     {
         private static readonly TypeInfo DisposableType = typeof(IDisposable).GetTypeInfo();
         private static readonly string DisposableName = nameof(IDisposable.Dispose);
+        private static readonly Type ObjectType = typeof(Object);
 
         public static bool IsNullable(this Type type)
         {
-            if (!type.GetTypeInfo().IsValueType) return false;
+            if (!type.GetTypeInfo().IsValueType)
+            {
+                return false;
+            }
             return Nullable.GetUnderlyingType(type) != null;
         }
 
@@ -29,9 +33,14 @@ namespace VoidMain.Application.Commands.Internal
             return type.FullName == "System.DBNull";
         }
 
+        public static bool IsParams(this ParameterInfo param)
+        {
+            return param.IsDefined(typeof(ParamArrayAttribute));
+        }
+
         public static bool IsObjectBaseClassMethod(this MethodInfo method)
         {
-            return method.GetBaseDefinition().DeclaringType == typeof(Object);
+            return method.GetBaseDefinition().DeclaringType == ObjectType;
         }
 
         public static bool IsDisposeMethod(this MethodInfo method)

@@ -27,14 +27,14 @@ namespace VoidMain.Application.Commands.Builder
             argument.Name = parameter.Name;
 
             var attr = parameter.GetCustomAttribute<ParameterAttribute>();
-            bool isNullableOrParams = paramType.IsNullable() ||
-                parameter.IsDefined(typeof(ParamArrayAttribute));
+            bool isOptionalBySignature = parameter.IsOptional ||
+                paramType.IsNullable() || parameter.IsParams();
 
             if (attr == null)
             {
                 argument.Kind = GetKindFromType(paramType);
                 argument.DefaultValue = GetDefaultValue(parameter);
-                argument.Optional = parameter.IsOptional || isNullableOrParams;
+                argument.Optional = isOptionalBySignature || argument.DefaultValue != null;
             }
             else
             {
@@ -56,7 +56,7 @@ namespace VoidMain.Application.Commands.Builder
 
                 argument.Optional = attr.IsSetOptional
                     ? attr.Optional
-                    : parameter.IsOptional || isNullableOrParams || argument.DefaultValue != null;
+                    : isOptionalBySignature || argument.DefaultValue != null;
             }
 
             return argument;

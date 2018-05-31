@@ -9,6 +9,7 @@ namespace VoidMain.CommandLineIinterface.Internal
     {
         private readonly IReadOnlyList<T> _collection;
         public int Index { get; private set; }
+        public int Count => _collection.Count;
 
         public CollectionIterator(IReadOnlyList<T> collection)
         {

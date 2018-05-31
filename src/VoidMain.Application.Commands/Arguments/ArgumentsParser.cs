@@ -156,6 +156,8 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 if (!TryGetDefaultValue(arg, parseArgs, out var value))
                 {
+                    // TODO: Or prompt value.
+                    // Use double Enter to end filling collection.
                     throw new ArgumentParseException(arg, "Value is missing.");
                 }
 
@@ -178,8 +180,6 @@ namespace VoidMain.Application.Commands.Arguments
                 }
 
                 return false;
-                // TODO: Or prompt value.
-                // Use double Enter to end filling collection.
             }
 
             switch (defaultValue)

@@ -35,9 +35,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Abstractions", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Abstractions.Tests", "test\VoidMain.Abstractions.Tests\VoidMain.Abstractions.Tests.csproj", "{7C7231FC-1A19-4FAE-B120-19454D72F59D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidMain.PerformanceTests", "test\VoidMain.PerformanceTests\VoidMain.PerformanceTests.csproj", "{671C872C-4A50-4CB2-8F38-7215988F77C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.PerformanceTests", "test\VoidMain.PerformanceTests\VoidMain.PerformanceTests.csproj", "{671C872C-4A50-4CB2-8F38-7215988F77C6}"
 EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
