@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using VoidMain.Application.Builder;
 using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
+using VoidMain.CommandLineIinterface;
 using VoidMain.Hosting;
 
 namespace SimpleApp
@@ -26,7 +26,6 @@ namespace SimpleApp
     {
         static void Main(string[] args)
         {
-            PrintDevelopmentNote();
             CliApp.Run<Program>();
         }
 
@@ -38,6 +37,8 @@ namespace SimpleApp
 
         public void ConfigureApplication(IApplicationBuilder app)
         {
+            PrintWelcomeMessage(app);
+
             app.UseHelpCommandsRewriter();
             app.RunCommands(commands =>
             {
@@ -47,14 +48,24 @@ namespace SimpleApp
             });
         }
 
-        private static void PrintDevelopmentNote()
+        private void PrintWelcomeMessage(IApplicationBuilder app)
         {
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("This framework is still in early development.");
-            Console.WriteLine("See README.md to learn what features are available.");
-            Console.WriteLine("Type 'quit' or press Ctrl+C twice to close application.");
-            Console.WriteLine("=======================================================");
-            Console.WriteLine();
+            var output = app.Services.GetRequiredService<ICommandLineOutput>();
+
+            string welcomeMessage =
+@"===========================================================
+ This framework is still in the early development.
+ See {0} to learn what features are available.
+ Type {1} or press {2} twice to close the application.
+===========================================================";
+
+            output.WriteLine(new ColoredFormat(welcomeMessage)
+            {
+                { "README.md", Color.DarkCyan },
+                { "quit", Color.Yellow },
+                { "Ctrl+C", Color.Black, Color.Gray }
+            });
+            output.WriteLine();
         }
     }
 }
