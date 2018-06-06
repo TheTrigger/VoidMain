@@ -4,6 +4,7 @@ using VoidMain.CommandLineIinterface;
 using VoidMain.CommandLineIinterface.IO;
 using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.IO.InputHandlers;
+using VoidMain.CommandLineIinterface.IO.Templates;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
@@ -20,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
             services.AddSingleton<IConsoleColorConverter, NearestConsoleColorConverter>();
             services.AddTransient<IMessageTemplateParser, MessageTemplateParser>();
+            services.AddTransient<IMessageTemplateWriter, MessageTemplateWriter>();
+            services.AddTransient<IMessageTemplateValueFormatter, MessageTemplateValueFormatter>();
             services.AddSingleton<ConsoleOutputLock>();
 
             var cursorType = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)

@@ -1,6 +1,7 @@
 ﻿using System;
 using VoidMain.CommandLineIinterface.IO;
 using VoidMain.CommandLineIinterface.IO.Console;
+using VoidMain.CommandLineIinterface.IO.Templates;
 
 namespace VoidMain.CommandLineIinterface
 {
@@ -11,17 +12,20 @@ namespace VoidMain.CommandLineIinterface
         private readonly IConsole _console;
         private readonly IConsoleColorConverter _colorConverter;
         private readonly IMessageTemplateParser _templateParser;
+        private readonly IMessageTemplateWriter _templateWriter;
         private readonly ConsoleOutputLock _lock;
 
         public ConsoleLockingOutput(
             IConsole console,
             IConsoleColorConverter colorConverter,
             IMessageTemplateParser templateParser,
+            IMessageTemplateWriter templateWriter,
             ConsoleOutputLock @lock)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _colorConverter = colorConverter ?? throw new ArgumentNullException(nameof(colorConverter));
             _templateParser = templateParser ?? throw new ArgumentNullException(nameof(templateParser));
+            _templateWriter = templateWriter ?? throw new ArgumentNullException(nameof(templateWriter));
             _lock = @lock ?? throw new ArgumentNullException(nameof(@lock));
         }
 
@@ -51,44 +55,8 @@ namespace VoidMain.CommandLineIinterface
         public void Write(IFormatProvider formatProvider, string format, params object[] args)
         {
             _lock.ThrowIfLocked();
-
             var parsedTemplate = _templateParser.Parse(format);
-            var formatter = GetFormatter(formatProvider);
-
-            foreach (var token in parsedTemplate.Tokens)
-            {
-                switch (token)
-                {
-                    case MessageTemplate.TextToken text:
-                        _console.Write(text.Text);
-                        break;
-                    case MessageTemplate.ArgumentToken arg:
-                        var value = args[arg.Index];
-                        string formatedValue = FormatValue(formatProvider, formatter, value, arg.Format);
-                        if (arg.Alignment > 0)
-                        {
-                            int padRight = arg.Alignment - formatedValue.Length;
-                            if (padRight > 0)
-                            {
-                                _console.Write(' ', padRight);
-                            }
-                        }
-
-                        _console.Write(formatedValue);
-
-                        if (arg.Alignment < 0)
-                        {
-                            int padLeft = -arg.Alignment - formatedValue.Length;
-                            if (padLeft > 0)
-                            {
-                                _console.Write(' ', padLeft);
-                            }
-                        }
-                        break;
-                    default:
-                        throw new FormatException($"Unknown format token `{token.GetType().Name}`.");
-                }
-            }
+            _templateWriter.Write(parsedTemplate, args, _console.Out, formatProvider);
         }
 
         public void WriteLine()
@@ -295,21 +263,13 @@ namespace VoidMain.CommandLineIinterface
 
             if (result == null)
             {
-                var formattable = value as IFormattable;
-                if (formattable == null)
+                if (value is IFormattable formattable)
                 {
-                    if (value == null)
-                    {
-                        result = String.Empty;
-                    }
-                    else
-                    {
-                        result = value.ToString();
-                    }
+                    result = formattable.ToString(format, formatProvider);
                 }
                 else
                 {
-                    result = formattable.ToString(format, formatProvider);
+                    result = value?.ToString() ?? String.Empty;
                 }
             }
 

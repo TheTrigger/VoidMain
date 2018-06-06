@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using VoidMain.CommandLineIinterface.Internal;
 
-namespace VoidMain.CommandLineIinterface.IO
+namespace VoidMain.CommandLineIinterface.IO.Templates
 {
     public class MessageTemplateParser : IMessageTemplateParser
     {

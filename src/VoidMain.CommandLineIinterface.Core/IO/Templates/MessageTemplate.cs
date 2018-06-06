@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace VoidMain.CommandLineIinterface.IO
+namespace VoidMain.CommandLineIinterface.IO.Templates
 {
     public class MessageTemplate
     {

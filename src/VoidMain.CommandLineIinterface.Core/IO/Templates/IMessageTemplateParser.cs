@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.IO
+﻿namespace VoidMain.CommandLineIinterface.IO.Templates
 {
     public interface IMessageTemplateParser
     {
