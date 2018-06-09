@@ -13,7 +13,7 @@ namespace VoidMain.CommandLineIinterface.IO
         {
             if (IsLocked)
             {
-                throw new InvalidOperationException("Output is locked during a read operation.");
+                throw new InvalidOperationException("Output is locked during read operation.");
             }
         }
     }

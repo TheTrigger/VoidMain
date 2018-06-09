@@ -317,15 +317,20 @@ namespace VoidMain.CommandLineIinterface.Parser
             if (span.Length < 2) return false;
 
             char quote = span.Source[span.Start];
-            if (span.Source[span.End - 1] != quote) return false;
+            int endQuotes = 0;
+            int index = span.End - 1;
 
-            bool isDoubleQuote = span.Length > 2 &&
-                span.Source[span.End - 2] == quote;
-            if (!isDoubleQuote) return true;
+            while (index > span.Start)
+            {
+                if(span.Source[index] != quote)
+                {
+                    break;
+                }
+                endQuotes++;
+                index--;
+            }
 
-            bool isTripleQuote = span.Length > 3 &&
-                span.Source[span.End - 3] == quote;
-            return isTripleQuote;
+            return endQuotes % 2 == 1;
         }
 
         private ValueSyntax ScanMultiTokenValue(

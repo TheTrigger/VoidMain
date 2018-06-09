@@ -9,12 +9,12 @@ using VoidMain.CommandLineIinterface.IO.Views;
 
 namespace VoidMain.CommandLineIinterface.IO
 {
-    public class ConsoleLineViewEditor : ILineViewEditor
+    public class LineViewConsoleEditor : ILineViewEditor
     {
         private readonly IConsoleKeyReader _keyReader;
         private readonly IConsoleInputHandler[] _inputHandlers;
 
-        public ConsoleLineViewEditor(
+        public LineViewConsoleEditor(
             IConsoleKeyReader keyReader,
             IEnumerable<IConsoleInputHandler> inputHandlers)
         {
