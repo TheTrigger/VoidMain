@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VoidMain.Hosting.FileSystem;
 
 namespace VoidMain.CommandLineIinterface.History
 {
     public class CommandsHistoryFileStorage : ICommandsHistoryStorage
     {
+        private readonly IFileSystem _fileSystem;
         private readonly CommandsHistoryFileStorageOptions _options;
 
-        public CommandsHistoryFileStorage(
+        public CommandsHistoryFileStorage(IFileSystem fileSystem,
             CommandsHistoryFileStorageOptions options = null)
         {
+            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             _options = options ?? new CommandsHistoryFileStorageOptions();
             _options.Validate();
 
@@ -23,12 +26,12 @@ namespace VoidMain.CommandLineIinterface.History
 
         public IReadOnlyList<string> Load()
         {
-            if (!File.Exists(_options.FilePath))
+            if (!_fileSystem.FileExists(_options.FilePath))
             {
                 return Array.Empty<string>();
             }
 
-            var commands = File.ReadLines(_options.FilePath, _options.Encoding)
+            var commands = _fileSystem.ReadAllLines(_options.FilePath, _options.Encoding)
                 .Where(_ => !String.IsNullOrWhiteSpace(_));
 
             return commands.ToArray();
@@ -40,7 +43,7 @@ namespace VoidMain.CommandLineIinterface.History
             {
                 throw new ArgumentNullException(nameof(commands));
             }
-            File.WriteAllLines(_options.FilePath, commands, _options.Encoding);
+            _fileSystem.WriteAllLines(_options.FilePath, commands, _options.Encoding);
         }
     }
 }

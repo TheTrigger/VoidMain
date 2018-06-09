@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using VoidMain.Application.Builder;
 using VoidMain.CommandLineIinterface;
+using VoidMain.Hosting.FileSystem;
 
 namespace VoidMain.Hosting
 {
@@ -81,6 +82,7 @@ namespace VoidMain.Hosting
         {
             // Default services can be overridden in the following ConfigureServices delegates.
             services.AddTransient<IApplicationBuilder, ApplicationBuilder>();
+            services.AddSingleton<IFileSystem, PhisicalFileSystem>();
         }
     }
 }
