@@ -11,7 +11,7 @@ namespace VoidMain.Application.Commands.Builder
     public class CommandsApplicationBuilder : ICommandsApplicationBuilder
     {
         private readonly IModuleModelConstructor _moduleConstructor;
-        private readonly ICommandModelConstructor _commandsConstructor;
+        private readonly ICommandModelConstructor _commandConstructor;
         private readonly IModuleConfigurationFactory _configFactory;
         private readonly ICommandModelValidator _commandValidator;
         private readonly List<CommandModel> _commands;
@@ -19,12 +19,12 @@ namespace VoidMain.Application.Commands.Builder
         public IServiceProvider Services { get; }
 
         public CommandsApplicationBuilder(IServiceProvider services,
-            IModuleModelConstructor moduleConstructor, ICommandModelConstructor commandsConstructor,
+            IModuleModelConstructor moduleConstructor, ICommandModelConstructor commandConstructor,
             IModuleConfigurationFactory configFactory, ICommandModelValidator commandValidator)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
             _moduleConstructor = moduleConstructor ?? throw new ArgumentNullException(nameof(moduleConstructor));
-            _commandsConstructor = commandsConstructor ?? throw new ArgumentNullException(nameof(commandsConstructor));
+            _commandConstructor = commandConstructor ?? throw new ArgumentNullException(nameof(commandConstructor));
             _configFactory = configFactory ?? throw new ArgumentNullException(nameof(configFactory));
             _commandValidator = commandValidator ?? throw new ArgumentNullException(nameof(commandValidator));
             _commands = new List<CommandModel>();
@@ -60,7 +60,7 @@ namespace VoidMain.Application.Commands.Builder
                     continue;
                 }
 
-                if (_commandsConstructor.TryCreate(method, module, out var command))
+                if (_commandConstructor.TryCreate(method, module, out var command))
                 {
                     var result = _commandValidator.Validate(command);
                     if (!result.IsValid)

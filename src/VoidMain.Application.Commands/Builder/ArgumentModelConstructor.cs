@@ -10,11 +10,11 @@ namespace VoidMain.Application.Commands.Builder
     public class ArgumentModelConstructor : IArgumentModelConstructor
     {
         private readonly Type TokenType = typeof(CancellationToken);
-        private readonly ICollectionConstructorProvider _colCtorProvider;
+        private readonly ICollectionConstructorProvider _collectionCtorProvider;
 
-        public ArgumentModelConstructor(ICollectionConstructorProvider colCtorProvider)
+        public ArgumentModelConstructor(ICollectionConstructorProvider collectionCtorProvider)
         {
-            _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
+            _collectionCtorProvider = collectionCtorProvider ?? throw new ArgumentNullException(nameof(collectionCtorProvider));
         }
 
         public ArgumentModel Create(ParameterInfo parameter, CommandModel command)
@@ -64,7 +64,7 @@ namespace VoidMain.Application.Commands.Builder
 
         private ArgumentKind GetKindFromType(Type paramType)
         {
-            if (_colCtorProvider.IsCollection(paramType))
+            if (_collectionCtorProvider.IsCollection(paramType))
             {
                 return ArgumentKind.Operand;
             }

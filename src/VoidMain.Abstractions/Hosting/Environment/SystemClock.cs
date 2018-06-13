@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Hosting
+namespace VoidMain.Hosting.Environment
 {
     public class SystemClock : IClock
     {

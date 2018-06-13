@@ -6,13 +6,13 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
 {
     public class DeleteCharacterInputHandler : IConsoleInputHandler
     {
-        private readonly ILineViewNavigation _fastNavigation;
+        private readonly ILineViewNavigation _lineViewNavigation;
 
         public int Order { get; set; } = 1024;
 
-        public DeleteCharacterInputHandler(ILineViewNavigation fastNavigation)
+        public DeleteCharacterInputHandler(ILineViewNavigation lineViewNavigation)
         {
-            _fastNavigation = fastNavigation ?? throw new ArgumentNullException(nameof(fastNavigation));
+            _lineViewNavigation = lineViewNavigation ?? throw new ArgumentNullException(nameof(lineViewNavigation));
         }
 
         public void Handle(ConsoleInputEventArgs args)
@@ -45,7 +45,7 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
 
             if (fast && lineView.ViewType == LineViewType.Normal)
             {
-                int prev = _fastNavigation.FindPrevPosition(lineView);
+                int prev = _lineViewNavigation.FindPrevPosition(lineView);
                 lineView.Delete(prev - lineView.Position);
             }
             else
@@ -64,7 +64,7 @@ namespace VoidMain.CommandLineIinterface.IO.InputHandlers
 
             if (fast && lineView.ViewType == LineViewType.Normal)
             {
-                int next = _fastNavigation.FindNextPosition(lineView);
+                int next = _lineViewNavigation.FindNextPosition(lineView);
                 lineView.Delete(next - lineView.Position);
             }
             else

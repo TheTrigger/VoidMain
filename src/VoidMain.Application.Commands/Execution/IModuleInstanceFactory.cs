@@ -2,7 +2,7 @@
 
 namespace VoidMain.Application.Commands.Execution
 {
-    public interface IModuleFactory
+    public interface IModuleInstanceFactory
     {
         object Create(Type moduleType, IServiceProvider services);
     }

@@ -6,7 +6,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     public class ConsoleMaskedLineView : ILineView
     {
         private readonly IConsole _console;
-        private readonly IConsoleCursor _cursor;
+        private readonly IConsoleCursor _consoleCursor;
         private readonly InMemoryLineView _line;
         private readonly char _maskSymbol;
 
@@ -15,10 +15,10 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public int Length => _line.Length;
         public char this[int index] => _line[index];
 
-        public ConsoleMaskedLineView(IConsole console, IConsoleCursor cursor, char maskSymbol)
+        public ConsoleMaskedLineView(IConsole console, IConsoleCursor consoleCursor, char maskSymbol)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
+            _consoleCursor = consoleCursor ?? throw new ArgumentNullException(nameof(consoleCursor));
             _line = new InMemoryLineView();
             ViewType = LineViewType.Masked;
             _maskSymbol = maskSymbol;
@@ -31,14 +31,14 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public void Move(int offset)
         {
             _line.Move(offset);
-            _cursor.Move(offset);
+            _consoleCursor.Move(offset);
         }
 
         public void MoveTo(int newPos)
         {
             int oldPos = Position;
             _line.MoveTo(newPos);
-            _cursor.Move(newPos - oldPos);
+            _consoleCursor.Move(newPos - oldPos);
         }
 
         public void Delete(int count)
@@ -51,21 +51,21 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             if (count < 0)
             {
                 count = -count;
-                _cursor.Move(diff - count);
+                _consoleCursor.Move(diff - count);
             }
             else
             {
-                _cursor.Move(diff);
+                _consoleCursor.Move(diff);
             }
             _console.Write(' ', count);
-            _cursor.Move(-diff - count);
+            _consoleCursor.Move(-diff - count);
         }
 
         public void Clear()
         {
-            _cursor.Move(-Position);
+            _consoleCursor.Move(-Position);
             _console.Write(' ', Length);
-            _cursor.Move(-Length);
+            _consoleCursor.Move(-Length);
 
             _line.Clear();
         }
@@ -79,9 +79,9 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             else
             {
                 int diff = Length - Position;
-                _cursor.Move(diff);
+                _consoleCursor.Move(diff);
                 _console.Write(_maskSymbol);
-                _cursor.Move(-diff);
+                _consoleCursor.Move(-diff);
             }
 
             _line.Type(value);
@@ -95,7 +95,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             }
             else
             {
-                _cursor.Move(1);
+                _consoleCursor.Move(1);
             }
 
             _line.TypeOver(value);
@@ -112,9 +112,9 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             else
             {
                 int diff = Length - Position;
-                _cursor.Move(diff);
+                _consoleCursor.Move(diff);
                 _console.Write(_maskSymbol, value.Length);
-                _cursor.Move(-diff);
+                _consoleCursor.Move(-diff);
             }
 
             _line.Type(value);
@@ -127,12 +127,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             int diff = Length - Position;
             if (diff < value.Length)
             {
-                _cursor.Move(diff);
+                _consoleCursor.Move(diff);
                 _console.Write(_maskSymbol, value.Length - diff);
             }
             else
             {
-                _cursor.Move(value.Length);
+                _consoleCursor.Move(value.Length);
             }
 
             _line.TypeOver(value);

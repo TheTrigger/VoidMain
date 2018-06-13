@@ -2,7 +2,7 @@
 using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.IO.InputHandlers;
 using VoidMain.CommandLineIinterface.IO.Views;
-using VoidMain.Hosting;
+using VoidMain.Hosting.Environment;
 
 namespace VoidMain.CommandLineIinterface.UndoRedo
 {

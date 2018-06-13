@@ -4,7 +4,7 @@ using VoidMain.CommandLineIinterface.Parser;
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    class ConsoleCommandLineHighlighter : ITextHighlighter<ConsoleTextStyle>
+    public class ConsoleCommandLineHighlighter : ITextHighlighter<ConsoleTextStyle>
     {
         private readonly ICommandLineParser _parser;
         private readonly ISyntaxHighlighter<ConsoleTextStyle> _syntaxHighlighter;

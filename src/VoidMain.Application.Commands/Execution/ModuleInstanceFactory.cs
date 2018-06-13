@@ -5,11 +5,11 @@ using VoidMain.CommandLineIinterface;
 
 namespace VoidMain.Application.Commands.Execution
 {
-    public class ModuleFactory : IModuleFactory
+    public class ModuleInstanceFactory : IModuleInstanceFactory
     {
         private readonly ITypeActivator _typeActivator;
 
-        public ModuleFactory(ITypeActivator typeActivator)
+        public ModuleInstanceFactory(ITypeActivator typeActivator)
         {
             _typeActivator = typeActivator ?? throw new ArgumentNullException(nameof(typeActivator));
         }

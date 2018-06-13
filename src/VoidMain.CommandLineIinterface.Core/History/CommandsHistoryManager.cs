@@ -9,7 +9,7 @@ namespace VoidMain.CommandLineIinterface.History
 {
     public class CommandsHistoryManager : ICommandsHistoryManager, IDisposable
     {
-        private readonly ICommandsHistoryStorage _storage;
+        private readonly ICommandsHistoryStorage _historyStorage;
         private readonly CommandsHistoryOptions _options;
         private readonly object _commandsWriteLock;
         private PushOutCollection<string> _commands;
@@ -27,10 +27,10 @@ namespace VoidMain.CommandLineIinterface.History
         }
 
         public CommandsHistoryManager(
-            ICommandsHistoryStorage storage = null,
+            ICommandsHistoryStorage historyStorage = null,
             CommandsHistoryOptions options = null)
         {
-            _storage = storage;
+            _historyStorage = historyStorage;
             _options = options ?? new CommandsHistoryOptions();
             _options.Validate();
             _commandsWriteLock = new object();
@@ -42,16 +42,16 @@ namespace VoidMain.CommandLineIinterface.History
 
             lock (_commandsWriteLock)
             {
-                if (_storage == null)
+                if (_historyStorage == null)
                 {
                     _commands = new PushOutCollection<string>(MaxCount);
                 }
                 else
                 {
                     IReadOnlyList<string> loaded = null;
-                    lock (_storage)
+                    lock (_historyStorage)
                     {
-                        loaded = _storage.Load();
+                        loaded = _historyStorage.Load();
                     }
                     loaded = loaded.Where(_ => !String.IsNullOrWhiteSpace(_)).ToArray();
 
@@ -158,7 +158,7 @@ namespace VoidMain.CommandLineIinterface.History
 
         private void SaveCommands()
         {
-            if (_storage == null) return;
+            if (_historyStorage == null) return;
 
             try
             {
@@ -167,9 +167,9 @@ namespace VoidMain.CommandLineIinterface.History
                 {
                     commands = _commands.ToArray();
                 }
-                lock (_storage)
+                lock (_historyStorage)
                 {
-                    _storage.Save(commands);
+                    _historyStorage.Save(commands);
                 }
             }
             catch

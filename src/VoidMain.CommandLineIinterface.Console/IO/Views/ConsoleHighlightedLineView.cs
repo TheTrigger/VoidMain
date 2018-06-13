@@ -8,7 +8,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     public class ConsoleHighlightedLineView : ILineView, ILineViewInputLifecycle
     {
         private readonly IConsole _console;
-        private readonly IConsoleCursor _cursor;
+        private readonly IConsoleCursor _consoleCursor;
         private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
         private IReadOnlyList<StyledSpan<ConsoleTextStyle>> _prevHighlights;
         private readonly InMemoryLineView _line;
@@ -24,11 +24,11 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public char this[int index] => _line[index];
 
         public ConsoleHighlightedLineView(
-            IConsole console, IConsoleCursor cursor,
+            IConsole console, IConsoleCursor consoleCursor,
             ITextHighlighter<ConsoleTextStyle> textHighlighter)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
+            _consoleCursor = consoleCursor ?? throw new ArgumentNullException(nameof(consoleCursor));
             _textHighlighter = textHighlighter ?? throw new ArgumentNullException(nameof(textHighlighter));
             _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
             _line = new InMemoryLineView();
@@ -47,14 +47,14 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public void Move(int offset)
         {
             _line.Move(offset);
-            _cursor.Move(offset);
+            _consoleCursor.Move(offset);
         }
 
         public void MoveTo(int newPos)
         {
             int oldPos = Position;
             _line.MoveTo(newPos);
-            _cursor.Move(newPos - oldPos);
+            _consoleCursor.Move(newPos - oldPos);
         }
 
         /// <summary>
@@ -66,12 +66,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
             if (newPos <= _maxPosition)
             {
-                _cursor.Move(offset);
+                _consoleCursor.Move(offset);
             }
             else
             {
                 int available = _maxPosition - Position;
-                _cursor.Move(available);
+                _consoleCursor.Move(available);
 
                 int fill = offset - available;
                 _console.Write(' ', fill);
@@ -86,7 +86,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _line.Delete(count);
             if (count < 0)
             {
-                _cursor.Move(count);
+                _consoleCursor.Move(count);
             }
 
             _hasChanges = true;
@@ -94,7 +94,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         public void Clear()
         {
-            _cursor.Move(-Position);
+            _consoleCursor.Move(-Position);
             _line.Clear();
             _hasChanges = true;
         }
@@ -179,7 +179,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
                 written = highlights[lastUnchanged].Span.End;
             }
 
-            _cursor.Move(written - pos);
+            _consoleCursor.Move(written - pos);
 
             for (int i = lastUnchanged + 1; i < highlights.Count; i++)
             {
@@ -199,7 +199,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
             int clearSpace = WriteBlank(_prevLength - written);
             _prevLength = written;
-            _cursor.Move(pos - written - clearSpace);
+            _consoleCursor.Move(pos - written - clearSpace);
         }
 
         private int IndexOfLastUnchanged(

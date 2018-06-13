@@ -9,13 +9,13 @@ namespace VoidMain.Application.Commands.Execution
 {
     public class CommandExecutor : ICommandExecutor
     {
-        private readonly IModuleFactory _moduleFactory;
-        private readonly IMethodInvokerProvider _invokerProvider;
+        private readonly IModuleInstanceFactory _moduleInstanceFactory;
+        private readonly IMethodInvokerProvider _methodInvokerProvider;
 
-        public CommandExecutor(IModuleFactory moduleFactory, IMethodInvokerProvider invokerProvider)
+        public CommandExecutor(IModuleInstanceFactory moduleInstanceFactory, IMethodInvokerProvider methodInvokerProvider)
         {
-            _moduleFactory = moduleFactory ?? throw new ArgumentNullException(nameof(moduleFactory));
-            _invokerProvider = invokerProvider ?? throw new ArgumentNullException(nameof(invokerProvider));
+            _moduleInstanceFactory = moduleInstanceFactory ?? throw new ArgumentNullException(nameof(moduleInstanceFactory));
+            _methodInvokerProvider = methodInvokerProvider ?? throw new ArgumentNullException(nameof(methodInvokerProvider));
         }
 
         private void Validate(CommandModel command, object[] arguments, IServiceProvider services)
@@ -42,11 +42,11 @@ namespace VoidMain.Application.Commands.Execution
             token.ThrowIfCancellationRequested();
             var moduleType = command.Module.Type;
             var method = command.Method;
-            var moduleInstance = _moduleFactory.Create(moduleType, services);
+            var moduleInstance = _moduleInstanceFactory.Create(moduleType, services);
 
             try
             {
-                var invoker = _invokerProvider.GetInvoker(method);
+                var invoker = _methodInvokerProvider.GetInvoker(method);
                 token.ThrowIfCancellationRequested();
                 var result = await invoker.Invoke(moduleInstance, method, arguments)
                     .ConfigureAwait(false);

@@ -13,15 +13,15 @@ namespace VoidMain.Application.Commands.Builder.Validation
     {
         private readonly TypeInfo ValueParserType = typeof(IValueParser).GetTypeInfo();
 
-        private readonly ICollectionConstructorProvider _colCtorProvider;
+        private readonly ICollectionConstructorProvider _collectionCtorProvider;
         private readonly CommandLineOptions _cliOptions;
         private readonly IIdentifierValidator _identifierValidator;
 
         public CommandModelValidator(
-            ICollectionConstructorProvider colCtorProvider,
+            ICollectionConstructorProvider collectionCtorProvider,
             CommandLineOptions cliOptions = null)
         {
-            _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
+            _collectionCtorProvider = collectionCtorProvider ?? throw new ArgumentNullException(nameof(collectionCtorProvider));
             _cliOptions = cliOptions ?? new CommandLineOptions();
             _cliOptions.Validate();
             _identifierValidator = new IdentifierValidator();
@@ -97,7 +97,7 @@ namespace VoidMain.Application.Commands.Builder.Validation
         private bool IsCollectionOperand(ArgumentModel arg)
         {
             return arg.Kind == ArgumentKind.Operand
-                && _colCtorProvider.IsCollection(arg.Type);
+                && _collectionCtorProvider.IsCollection(arg.Type);
         }
 
         private string GetErrorMessage(ArgumentModel arg, string message)

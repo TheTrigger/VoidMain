@@ -7,15 +7,15 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     public class ConsoleHighlightedLineViewProvider : ILineViewProvider
     {
         private readonly IConsole _console;
-        private readonly IConsoleCursor _cursor;
+        private readonly IConsoleCursor _consoleCursor;
         private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
 
         public ConsoleHighlightedLineViewProvider(
-            IConsole console, IConsoleCursor cursor,
+            IConsole console, IConsoleCursor consoleCursor,
             ITextHighlighter<ConsoleTextStyle> textHighlighter)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
+            _consoleCursor = consoleCursor ?? throw new ArgumentNullException(nameof(consoleCursor));
             _textHighlighter = textHighlighter ?? throw new ArgumentNullException(nameof(textHighlighter));
         }
 
@@ -24,9 +24,9 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             switch (options.ViewType)
             {
                 case LineViewType.Normal:
-                    return new ConsoleHighlightedLineView(_console, _cursor, _textHighlighter);
+                    return new ConsoleHighlightedLineView(_console, _consoleCursor, _textHighlighter);
                 case LineViewType.Masked:
-                    return new ConsoleMaskedLineView(_console, _cursor, options.MaskSymbol);
+                    return new ConsoleMaskedLineView(_console, _consoleCursor, options.MaskSymbol);
                 case LineViewType.Hidden:
                     return new InMemoryLineView();
                 default:

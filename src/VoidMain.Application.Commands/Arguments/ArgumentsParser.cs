@@ -25,19 +25,19 @@ namespace VoidMain.Application.Commands.Arguments
         private readonly object TrueValue = true;
         private static bool NotParseException(Exception ex) => !(ex is ArgumentParseException);
 
-        private readonly ICollectionConstructorProvider _colCtorProvider;
-        private readonly IValueParserProvider _valParserProvider;
+        private readonly ICollectionConstructorProvider _collectionCtorProvider;
+        private readonly IValueParserProvider _valueParserProvider;
         private readonly ArgumentsParserOptions _options;
         private readonly CommandLineOptions _cliOptions;
 
         public ArgumentsParser(
-            ICollectionConstructorProvider colCtorProvider,
-            IValueParserProvider valParserProvider,
+            ICollectionConstructorProvider collectionCtorProvider,
+            IValueParserProvider valueParserProvider,
             ArgumentsParserOptions options = null,
             CommandLineOptions cliOptions = null)
         {
-            _colCtorProvider = colCtorProvider ?? throw new ArgumentNullException(nameof(colCtorProvider));
-            _valParserProvider = valParserProvider ?? throw new ArgumentNullException(nameof(valParserProvider));
+            _collectionCtorProvider = collectionCtorProvider ?? throw new ArgumentNullException(nameof(collectionCtorProvider));
+            _valueParserProvider = valueParserProvider ?? throw new ArgumentNullException(nameof(valueParserProvider));
             _options = options ?? new ArgumentsParserOptions();
             _options.Validate();
             _cliOptions = cliOptions ?? new CommandLineOptions();
@@ -207,8 +207,8 @@ namespace VoidMain.Application.Commands.Arguments
             var argType = arg.Type;
             var valueType = value.GetType();
 
-            bool isArgCollection = _colCtorProvider.TryGetConstructor(argType, out var argColCtor);
-            bool isValueCollection = _colCtorProvider.TryGetConstructor(valueType, out var valueColCtor);
+            bool isArgCollection = _collectionCtorProvider.TryGetConstructor(argType, out var argColCtor);
+            bool isValueCollection = _collectionCtorProvider.TryGetConstructor(valueType, out var valueColCtor);
 
             if (isArgCollection && isValueCollection)
             {
@@ -252,7 +252,7 @@ namespace VoidMain.Application.Commands.Arguments
         private object ParseValue(ArgumentModel arg, ParseArguments parseArgs, out int valuesUsed)
         {
             var argType = arg.Type;
-            bool isCollection = _colCtorProvider.TryGetConstructor(argType, out ICollectionConstructor colCtor);
+            bool isCollection = _collectionCtorProvider.TryGetConstructor(argType, out ICollectionConstructor colCtor);
 
             if (isCollection)
             {
@@ -262,7 +262,7 @@ namespace VoidMain.Application.Commands.Arguments
                 var colAdapter = colCtor.Create(argElemType, valuesUsed);
 
                 var valueType = argElemType.UnwrapIfNullable();
-                var parser = _valParserProvider.GetParser(valueType, arg.ValueParser);
+                var parser = _valueParserProvider.GetParser(valueType, arg.ValueParser);
 
                 for (int i = 0; i < valuesUsed; i++)
                 {
@@ -277,7 +277,7 @@ namespace VoidMain.Application.Commands.Arguments
             {
                 string stringValue = GetStringValue(parseArgs, out valuesUsed);
                 var valueType = argType.UnwrapIfNullable();
-                var parser = _valParserProvider.GetParser(valueType, arg.ValueParser);
+                var parser = _valueParserProvider.GetParser(valueType, arg.ValueParser);
                 return ParseValue(stringValue, valueType, parser);
             }
         }

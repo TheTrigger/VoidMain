@@ -6,7 +6,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     public class ConsoleLineView : ILineView
     {
         private readonly IConsole _console;
-        private readonly IConsoleCursor _cursor;
+        private readonly IConsoleCursor _consoleCursor;
         private readonly InMemoryLineView _line;
 
         public LineViewType ViewType { get; }
@@ -14,10 +14,10 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public int Length => _line.Length;
         public char this[int index] => _line[index];
 
-        public ConsoleLineView(IConsole console, IConsoleCursor cursor)
+        public ConsoleLineView(IConsole console, IConsoleCursor consoleCursor)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _cursor = cursor ?? throw new ArgumentNullException(nameof(cursor));
+            _consoleCursor = consoleCursor ?? throw new ArgumentNullException(nameof(consoleCursor));
             _line = new InMemoryLineView();
             ViewType = LineViewType.Normal;
         }
@@ -29,14 +29,14 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public void Move(int offset)
         {
             _line.Move(offset);
-            _cursor.Move(offset);
+            _consoleCursor.Move(offset);
         }
 
         public void MoveTo(int newPos)
         {
             int oldPos = Position;
             _line.MoveTo(newPos);
-            _cursor.Move(newPos - oldPos);
+            _consoleCursor.Move(newPos - oldPos);
         }
 
         public void Delete(int count)
@@ -47,7 +47,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
             if (count < 0)
             {
-                _cursor.Move(count);
+                _consoleCursor.Move(count);
                 count = -count;
             }
 
@@ -57,14 +57,14 @@ namespace VoidMain.CommandLineIinterface.IO.Views
                 _console.Write(tail);
             }
             _console.Write(' ', count);
-            _cursor.Move(Position - Length - count);
+            _consoleCursor.Move(Position - Length - count);
         }
 
         public void Clear()
         {
-            _cursor.Move(-Position);
+            _consoleCursor.Move(-Position);
             _console.Write(' ', Length);
-            _cursor.Move(-Length);
+            _consoleCursor.Move(-Length);
 
             _line.Clear();
         }
@@ -76,7 +76,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             {
                 string tail = ToString(Position);
                 _console.Write(tail);
-                _cursor.Move(-tail.Length);
+                _consoleCursor.Move(-tail.Length);
             }
 
             _line.Type(value);
@@ -97,7 +97,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             {
                 string tail = ToString(Position);
                 _console.Write(tail);
-                _cursor.Move(-tail.Length);
+                _consoleCursor.Move(-tail.Length);
             }
 
             _line.Type(value);

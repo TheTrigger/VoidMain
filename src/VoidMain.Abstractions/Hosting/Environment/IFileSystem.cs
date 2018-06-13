@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace VoidMain.Hosting.FileSystem
+namespace VoidMain.Hosting.Environment
 {
     public interface IFileSystem
     {
