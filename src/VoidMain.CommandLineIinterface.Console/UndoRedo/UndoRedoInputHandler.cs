@@ -1,22 +1,25 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.InputHandlers;
 using VoidMain.CommandLineIinterface.IO.Console;
+using VoidMain.CommandLineIinterface.IO.InputHandlers;
 using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.Hosting;
 
 namespace VoidMain.CommandLineIinterface.UndoRedo
 {
     public class UndoRedoInputHandler : IConsoleInputHandler
     {
         private readonly IUndoRedoManager _undoRedoManager;
+        private readonly IClock _clock;
         private readonly TimeSpan _minSnapshotTime;
         private DateTime _lastSnapshotTime;
 
         // We need to capture command line state before any modifications.
         public int Order => Int32.MinValue;
 
-        public UndoRedoInputHandler(IUndoRedoManager undoRedoManager)
+        public UndoRedoInputHandler(IUndoRedoManager undoRedoManager, IClock clock)
         {
             _undoRedoManager = undoRedoManager ?? throw new ArgumentNullException(nameof(undoRedoManager));
+            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
             // Time to accumulate changes
             _minSnapshotTime = TimeSpan.FromSeconds(1.5);
             _lastSnapshotTime = DateTime.MinValue;
@@ -85,7 +88,7 @@ namespace VoidMain.CommandLineIinterface.UndoRedo
 
         private void AddSnapshot(ILineView lineView)
         {
-            var now = DateTime.UtcNow;
+            var now = _clock.UtcNow();
             if (now - _lastSnapshotTime < _minSnapshotTime)
             {
                 return; // Too soon.
