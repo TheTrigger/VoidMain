@@ -28,10 +28,6 @@ namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
 
         public void Validate()
         {
-            if (ArrayConstructor == null)
-            {
-                throw new ArgumentNullException(nameof(ArrayConstructor));
-            }
             if (CollectionConstructors == null)
             {
                 throw new ArgumentNullException(nameof(CollectionConstructors));

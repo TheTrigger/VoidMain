@@ -52,8 +52,10 @@ namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
 
             if (collectionType.IsArray)
             {
-                constructor = GetInstance(_options.ArrayConstructor, _services);
-                return true;
+                constructor = _options.ArrayConstructor != null
+                    ? GetInstance(_options.ArrayConstructor, _services)
+                    : null;
+                return constructor != null;
             }
 
             if (collectionType.GetTypeInfo().IsGenericType)
