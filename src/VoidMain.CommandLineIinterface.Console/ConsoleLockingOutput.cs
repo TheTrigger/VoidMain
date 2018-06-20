@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using VoidMain.CommandLineIinterface.IO;
 using VoidMain.CommandLineIinterface.IO.Console;
 using VoidMain.CommandLineIinterface.IO.Templates;
@@ -10,22 +11,25 @@ namespace VoidMain.CommandLineIinterface
         private readonly Type CustomFormatterType = typeof(ICustomFormatter);
 
         private readonly IConsole _console;
-        private readonly IConsoleColorConverter _colorConverter;
+        private readonly IColoredTextWriter _coloredTextWriter;
         private readonly IMessageTemplateParser _templateParser;
         private readonly IMessageTemplateWriter _templateWriter;
+        private readonly IMessageTemplateColoredWriter _templateColoredWriter;
         private readonly ConsoleOutputLock _lock;
 
         public ConsoleLockingOutput(
             IConsole console,
-            IConsoleColorConverter colorConverter,
+            IColoredTextWriter coloredTextWriter,
             IMessageTemplateParser templateParser,
             IMessageTemplateWriter templateWriter,
+            IMessageTemplateColoredWriter templateColoredWriter,
             ConsoleOutputLock @lock)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _colorConverter = colorConverter ?? throw new ArgumentNullException(nameof(colorConverter));
+            _coloredTextWriter = coloredTextWriter ?? throw new ArgumentNullException(nameof(coloredTextWriter));
             _templateParser = templateParser ?? throw new ArgumentNullException(nameof(templateParser));
             _templateWriter = templateWriter ?? throw new ArgumentNullException(nameof(templateWriter));
+            _templateColoredWriter = templateColoredWriter ?? throw new ArgumentNullException(nameof(templateColoredWriter));
             _lock = @lock ?? throw new ArgumentNullException(nameof(@lock));
         }
 
@@ -92,230 +96,83 @@ namespace VoidMain.CommandLineIinterface
         public void Write(Color foreground, char value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, null);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, null, value);
         }
 
         public void Write(Color foreground, string value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, null);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, null, value);
         }
 
         public void Write(Color foreground, object value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, null);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, null, value);
         }
 
         public void WriteLine(Color foreground, string value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, null);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, null, value);
+            _coloredTextWriter.WriteLine();
         }
 
         public void WriteLine(Color foreground, object value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, null);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, null, value);
+            _coloredTextWriter.WriteLine();
         }
 
         public void Write(Color foreground, Color background, char value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, background);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, background, value);
         }
 
         public void Write(Color foreground, Color background, string value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, background);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, background, value);
         }
 
         public void Write(Color foreground, Color background, object value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, background);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, background, value);
         }
 
         public void WriteLine(Color foreground, Color background, string value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, background);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, background, value);
+            _coloredTextWriter.WriteLine();
         }
 
         public void WriteLine(Color foreground, Color background, object value)
         {
             _lock.ThrowIfLocked();
-            GetConsoleColors(out var fg, out var bg);
-            SetColors(foreground, background);
-            _console.WriteLine(value);
-            SetConsoleColors(fg, bg);
+            _coloredTextWriter.Write(foreground, background, value);
+            _coloredTextWriter.WriteLine();
         }
 
         public void Write(ColoredFormat format)
         {
             _lock.ThrowIfLocked();
 
-            var parsedTemplate = _templateParser.Parse(format.Template.Value);
-            var formatter = GetFormatter(format.FormatProvider);
-
-            GetConsoleColors(out var defaultFg, out var defaultBg);
-
-            var templateFg = GetColor(format.Template.Foreground, defaultFg);
-            var templateBg = GetColor(format.Template.Background, defaultBg);
-
-            foreach (var token in parsedTemplate.Tokens)
-            {
-                switch (token)
-                {
-                    case MessageTemplate.TextToken text:
-                        SetConsoleColors(templateFg, templateBg);
-                        _console.Write(text.Text);
-                        break;
-                    case MessageTemplate.ArgumentToken arg:
-                        var coloredValue = format[arg.Index];
-                        string formatedValue = FormatValue(format.FormatProvider, formatter, coloredValue.Value, arg.Format);
-
-                        if (arg.Alignment > 0)
-                        {
-                            int padRight = arg.Alignment - formatedValue.Length;
-                            if (padRight > 0)
-                            {
-                                SetConsoleColors(templateFg, templateBg);
-                                _console.Write(' ', padRight);
-                            }
-                        }
-
-                        var argFg = GetColor(coloredValue.Foreground, templateFg);
-                        var argBg = GetColor(coloredValue.Background, templateBg);
-
-                        SetConsoleColors(argFg, argBg);
-                        _console.Write(formatedValue);
-
-                        if (arg.Alignment < 0)
-                        {
-                            int padLeft = -arg.Alignment - formatedValue.Length;
-                            if (padLeft > 0)
-                            {
-                                SetConsoleColors(templateFg, templateBg);
-                                _console.Write(' ', padLeft);
-                            }
-                        }
-                        break;
-                    default:
-                        throw new FormatException($"Unknown format token `{token.GetType().Name}`.");
-                }
-            }
-
-            SetConsoleColors(defaultFg, defaultBg);
+            var template = format.Template;
+            var parsedTemplate = _templateParser.Parse(template.Value);
+            var coloredTemplate = new Colored<MessageTemplate>(
+                parsedTemplate, template.Foreground, template.Background);
+            IReadOnlyList<Colored<object>> coloredArgs = format;
+            _templateColoredWriter.Write(coloredTemplate, coloredArgs, _coloredTextWriter, format.FormatProvider);
         }
 
         public void WriteLine(ColoredFormat format)
         {
             Write(format);
             _console.WriteLine();
-        }
-
-        private ICustomFormatter GetFormatter(IFormatProvider formatProvider)
-        {
-            if (formatProvider == null)
-            {
-                return null;
-            }
-            return (ICustomFormatter)formatProvider.GetFormat(CustomFormatterType);
-        }
-
-        private string FormatValue(IFormatProvider formatProvider, ICustomFormatter formatter, object value, string format)
-        {
-            string result = null;
-
-            if (formatter != null)
-            {
-                result = formatter.Format(format, value, formatProvider);
-            }
-
-            if (result == null)
-            {
-                if (value is IFormattable formattable)
-                {
-                    result = formattable.ToString(format, formatProvider);
-                }
-                else
-                {
-                    result = value?.ToString() ?? String.Empty;
-                }
-            }
-
-            return result;
-        }
-
-        private void GetConsoleColors(out ConsoleColor fg, out ConsoleColor bg)
-        {
-            fg = _console.ForegroundColor;
-            bg = _console.BackgroundColor;
-        }
-
-        private void SetConsoleColors(ConsoleColor fg, ConsoleColor bg)
-        {
-            _console.ForegroundColor = fg;
-            _console.BackgroundColor = bg;
-        }
-
-        private ConsoleColor GetColor(Color color, ConsoleColor @default)
-        {
-            if (color == null)
-            {
-                return @default;
-            }
-            return ConvertColor(color);
-        }
-
-        private void SetColors(Color foreground, Color background)
-        {
-            if (foreground != null)
-            {
-                _console.ForegroundColor = ConvertColor(foreground);
-            }
-            if (background != null)
-            {
-                _console.BackgroundColor = ConvertColor(background);
-            }
-        }
-
-        private ConsoleColor ConvertColor(Color color)
-        {
-            if (_colorConverter.TryConvert(color, out var consoleColor))
-            {
-                return consoleColor;
-            }
-            throw new NotSupportedException($"Color {color} is not supported.");
         }
 
         public void Clear()

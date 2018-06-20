@@ -20,8 +20,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
             services.AddSingleton<IConsoleColorConverter, NearestConsoleColorConverter>();
+            services.AddTransient<IColoredTextWriter, ConsoleColoredTextWriter>();
             services.AddTransient<IMessageTemplateParser, MessageTemplateParser>();
             services.AddTransient<IMessageTemplateWriter, MessageTemplateWriter>();
+            services.AddTransient<IMessageTemplateColoredWriter, MessageTemplateColoredWriter>();
             services.AddTransient<IMessageTemplateValueFormatter, MessageTemplateValueFormatter>();
             services.AddSingleton<ConsoleOutputLock>();
 

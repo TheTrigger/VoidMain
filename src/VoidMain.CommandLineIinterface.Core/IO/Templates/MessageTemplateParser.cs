@@ -13,7 +13,7 @@ namespace VoidMain.CommandLineIinterface.IO.Templates
         {
             if (messageTemplate == null)
             {
-                throw new ArgumentNullException(messageTemplate);
+                throw new ArgumentNullException(nameof(messageTemplate));
             }
             if (messageTemplate.Length == 0)
             {
