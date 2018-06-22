@@ -24,6 +24,7 @@ namespace VoidMain.CommandLineIinterface.IO.Console
         string ReadLine();
 
         void Write(char value);
+        void Write(char value, int count);
         void Write(string value);
         void Write(object value);
         void Write(string format, params object[] args);

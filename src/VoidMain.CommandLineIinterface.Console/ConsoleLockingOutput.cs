@@ -39,6 +39,12 @@ namespace VoidMain.CommandLineIinterface
             _console.Write(value);
         }
 
+        public void Write(char value, int count)
+        {
+            _lock.ThrowIfLocked();
+            _console.Write(value, count);
+        }
+
         public void Write(string value)
         {
             _lock.ThrowIfLocked();
@@ -99,6 +105,12 @@ namespace VoidMain.CommandLineIinterface
             _coloredTextWriter.Write(foreground, null, value);
         }
 
+        public void Write(Color foreground, char value, int count)
+        {
+            _lock.ThrowIfLocked();
+            _coloredTextWriter.Write(foreground, null, value, count);
+        }
+
         public void Write(Color foreground, string value)
         {
             _lock.ThrowIfLocked();
@@ -129,6 +141,12 @@ namespace VoidMain.CommandLineIinterface
         {
             _lock.ThrowIfLocked();
             _coloredTextWriter.Write(foreground, background, value);
+        }
+
+        public void Write(Color foreground, Color background, char value, int count)
+        {
+            _lock.ThrowIfLocked();
+            _coloredTextWriter.Write(foreground, background, value, count);
         }
 
         public void Write(Color foreground, Color background, string value)

@@ -76,6 +76,13 @@ namespace VoidMain.CommandLineIinterface.IO.Console
         public string ReadLine() => SysConsole.ReadLine();
 
         public void Write(char value) => SysConsole.Write(value);
+        public void Write(char value, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                SysConsole.Write(value);
+            }
+        }
         public void Write(string value) => SysConsole.Write(value);
         public void Write(object value) => SysConsole.Write(value);
         public void Write(string format, params object[] args) => SysConsole.Write(format, args);

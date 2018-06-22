@@ -5,6 +5,7 @@ namespace VoidMain.CommandLineIinterface
     public interface ICommandLineOutput
     {
         void Write(char value);
+        void Write(char value, int count);
         void Write(string value);
         void Write(object value);
         void Write(string format, params object[] args);
@@ -17,6 +18,7 @@ namespace VoidMain.CommandLineIinterface
         void WriteLine(IFormatProvider formatProvider, string format, params object[] args);
 
         void Write(Color foreground, char value);
+        void Write(Color foreground, char value, int count);
         void Write(Color foreground, string value);
         void Write(Color foreground, object value);
 
@@ -24,6 +26,7 @@ namespace VoidMain.CommandLineIinterface
         void WriteLine(Color foreground, object value);
 
         void Write(Color foreground, Color background, char value);
+        void Write(Color foreground, Color background, char value, int count);
         void Write(Color foreground, Color background, string value);
         void Write(Color foreground, Color background, object value);
 
