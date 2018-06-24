@@ -9,6 +9,12 @@ namespace VoidMain.Hosting.Environment
     {
         private const int DefaultBufferSize = 4096;
 
+        public string CurrentDirectory
+        {
+            get => Directory.GetCurrentDirectory();
+            set => Directory.SetCurrentDirectory(value);
+        }
+
         public bool Exists(string path) => FileExists(path) || DirectoryExists(path);
         public bool FileExists(string filePath) => File.Exists(filePath);
         public bool DirectoryExists(string dirPath) => Directory.Exists(dirPath);

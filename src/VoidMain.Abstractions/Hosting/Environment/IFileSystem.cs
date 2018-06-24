@@ -7,6 +7,8 @@ namespace VoidMain.Hosting.Environment
 {
     public interface IFileSystem
     {
+        string CurrentDirectory { get; set; }
+
         bool Exists(string path);
         bool FileExists(string filePath);
         bool DirectoryExists(string dirPath);
