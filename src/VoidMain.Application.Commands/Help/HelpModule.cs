@@ -14,7 +14,7 @@ namespace VoidMain.Application.Commands.Help
         private readonly ApplicationModel _appModel;
         private readonly ICommandResolver _commandResolver;
         private readonly ICommandNameParser _commandNameParser;
-        private readonly HelpProvider _helpProvider;
+        private readonly HelpWriter _helpWriter;
 
         public HelpModule(ApplicationModel appModel,
             ICommandResolver commandResolver,
@@ -28,17 +28,21 @@ namespace VoidMain.Application.Commands.Help
             {
                 throw new ArgumentNullException(nameof(colCtorProvider));
             }
-            _helpProvider = new HelpProvider(colCtorProvider);
+            _helpWriter = new HelpWriter(colCtorProvider);
         }
 
         [Command(Description = "Display help information")]
         public void Help([Operand(Description = "Name of the command")] string commandName = null)
         {
-            string help = String.IsNullOrWhiteSpace(commandName)
-                ? _helpProvider.GetGeneralHelp(_appModel.Commands)
-                : _helpProvider.GetCommandHelp(FindCommand(commandName));
-
-            Output.WriteLine(help);
+            if (String.IsNullOrWhiteSpace(commandName))
+            {
+                _helpWriter.WriteGeneralHelp(Output, _appModel.Commands);
+            }
+            else
+            {
+                var command = FindCommand(commandName);
+                _helpWriter.WriteCommandHelp(Output, command);
+            }
         }
 
         private CommandModel FindCommand(string commandName)
