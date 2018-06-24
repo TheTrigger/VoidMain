@@ -2,11 +2,13 @@
 
 namespace VoidMain.CommandLineIinterface.IO.Prompt
 {
-    public class ConsolePromptMessageOptions
+    public class PromptMessageOptions
     {
         public string Message { get; set; }
+        public Color Foreground { get; set; }
+        public Color Background { get; set; }
 
-        public ConsolePromptMessageOptions(bool defaults = true)
+        public PromptMessageOptions(bool defaults = true)
         {
             if (defaults)
             {

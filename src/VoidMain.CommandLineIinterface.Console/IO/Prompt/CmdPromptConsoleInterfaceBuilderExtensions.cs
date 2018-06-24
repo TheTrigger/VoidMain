@@ -12,9 +12,9 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         public static ConsoleInterfaceBuilder AddPromptMessage(
-            this ConsoleInterfaceBuilder builder, Action<ConsolePromptMessageOptions> options = null)
+            this ConsoleInterfaceBuilder builder, Action<PromptMessageOptions> options = null)
         {
-            builder.Services.AddTransient<IConsolePromptMessage, ConsolePromptMessage>();
+            builder.Services.AddTransient<IPromptMessage, PromptMessage>();
             if (options != null)
             {
                 builder.Services.Configure(options);

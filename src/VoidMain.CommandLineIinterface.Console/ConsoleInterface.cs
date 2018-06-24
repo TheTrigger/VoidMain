@@ -14,19 +14,26 @@ namespace VoidMain.CommandLineIinterface
     public class ConsoleInterface : ICommandLineInterface
     {
         private readonly IConsole _console;
+        private readonly IColoredTextWriter _coloredTextWriter;
         private readonly ConsoleOutputLock _outputLock;
         private readonly ILineReader _lineReader;
         private readonly ICommandLineParser _parser;
-        private readonly IConsolePromptMessage _prompt;
+        private readonly IPromptMessage _prompt;
         private readonly ContextBuilder _contextBuilder;
         private CancellationTokenSource _cliLoopTokenSource;
         private Task _cliLoop;
         public bool IsRunning { get; private set; }
 
-        public ConsoleInterface(IConsole console, ConsoleOutputLock outputLock,
-            ILineReader lineReader, ICommandLineParser parser, IConsolePromptMessage prompt = null)
+        public ConsoleInterface(
+            IConsole console,
+            IColoredTextWriter coloredTextWriter,
+            ConsoleOutputLock outputLock,
+            ILineReader lineReader,
+            ICommandLineParser parser,
+            IPromptMessage prompt = null)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
+            _coloredTextWriter = coloredTextWriter ?? throw new ArgumentNullException(nameof(coloredTextWriter));
             _outputLock = outputLock ?? throw new ArgumentNullException(nameof(outputLock));
             _lineReader = lineReader ?? throw new ArgumentNullException(nameof(lineReader));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -96,7 +103,7 @@ namespace VoidMain.CommandLineIinterface
                     try
                     {
                         _outputLock.Lock();
-                        _prompt?.Print();
+                        _prompt?.Print(_coloredTextWriter);
                         commandLine = await _lineReader.ReadLineAsync(consoleTokenSource.Token)
                             .ConfigureAwait(false);
                     }
