@@ -23,13 +23,6 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 
             syntax.Accept(_visitor, visitorParams);
 
-            int tailLength = syntax.FullSpan.Length - visitorParams.HighlightedLength;
-            if (tailLength > 0)
-            {
-                var tail = new TextSpan(syntax.FullSpan.Source, visitorParams.HighlightedLength, tailLength);
-                styledSpans.Add(new StyledSpan<TStyle>(tail, palette.DefaultStyle));
-            }
-
             return styledSpans;
         }
     }

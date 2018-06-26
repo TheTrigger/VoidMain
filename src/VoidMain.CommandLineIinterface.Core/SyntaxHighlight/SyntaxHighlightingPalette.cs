@@ -20,12 +20,13 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             _styles.Add(@class, style);
         }
 
-        public void GetStyle(SyntaxClass @class, out TStyle style)
+        public TStyle GetStyle(SyntaxClass @class)
         {
-            if (!_styles.TryGetValue(@class, out style))
+            if (!_styles.TryGetValue(@class, out TStyle style))
             {
                 style = DefaultStyle;
             }
+            return style;
         }
 
         public IEnumerator<KeyValuePair<SyntaxClass, TStyle>> GetEnumerator()

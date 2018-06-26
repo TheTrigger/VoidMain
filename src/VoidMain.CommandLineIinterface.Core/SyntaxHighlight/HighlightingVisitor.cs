@@ -6,29 +6,8 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
     public class HighlightingVisitor<TStyle>
         : ICommandLineSyntaxVisitor<HighlightingVisitorParams<TStyle>>
     {
-        private StyledSpan<TStyle> GetStyledSpan(
-            SyntaxClass @class, TextSpan span,
-            SyntaxHighlightingPalette<TStyle> palette)
-        {
-            palette.GetStyle(@class, out TStyle style);
-            return new StyledSpan<TStyle>(span, style);
-        }
-
-        private void FillGapIfExists(
-            int start, TextSpan span,
-            SyntaxHighlightingPalette<TStyle> palette,
-            List<StyledSpan<TStyle>> spans)
-        {
-            if (start < span.Start)
-            {
-                var gap = new TextSpan(span.Source, start, span.Start - start);
-                spans.Add(new StyledSpan<TStyle>(gap, palette.DefaultStyle));
-            }
-        }
-
         public bool VisitCommandLine(CommandLineSyntax commandLine, HighlightingVisitorParams<TStyle> param)
         {
-            param.HighlightedLength = 0;
             return true;
         }
 
@@ -36,12 +15,12 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
         {
             var spans = param.Spans;
             var palette = param.Palette;
+
             foreach (var namePart in commandName.NameParts)
             {
-                FillGapIfExists(param.HighlightedLength, namePart.Span, palette, spans);
-                spans.Add(GetStyledSpan(SyntaxClass.CommandName, namePart.Span, palette));
-                param.HighlightedLength = namePart.Span.End;
+                AddSpans(spans, namePart, SyntaxClass.CommandName, palette);
             }
+
             return false;
         }
 
@@ -57,27 +36,19 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 
             if (option.NameMarker != null)
             {
-                FillGapIfExists(param.HighlightedLength, option.NameMarker.Span, palette, spans);
-                spans.Add(GetStyledSpan(SyntaxClass.OptionNameMarker, option.NameMarker.Span, palette));
-                param.HighlightedLength = option.NameMarker.Span.End;
+                AddSpans(spans, option.NameMarker, SyntaxClass.OptionNameMarker, palette);
             }
 
-            FillGapIfExists(param.HighlightedLength, option.Name.Span, palette, spans);
-            spans.Add(GetStyledSpan(SyntaxClass.OptionName, option.Name.Span, palette));
-            param.HighlightedLength = option.Name.Span.End;
+            AddSpans(spans, option.Name, SyntaxClass.OptionName, palette);
 
             if (option.ValueMarker != null)
             {
-                FillGapIfExists(param.HighlightedLength, option.ValueMarker.Span, palette, spans);
-                spans.Add(GetStyledSpan(SyntaxClass.OptionValueMarker, option.ValueMarker.Span, palette));
-                param.HighlightedLength = option.ValueMarker.Span.End;
+                AddSpans(spans, option.ValueMarker, SyntaxClass.OptionValueMarker, palette);
             }
 
             if (option.Value != null)
             {
-                FillGapIfExists(param.HighlightedLength, option.Value.Span, palette, spans);
-                spans.Add(GetStyledSpan(SyntaxClass.OptionValue, option.Value.Span, palette));
-                param.HighlightedLength = option.Value.Span.End;
+                AddSpans(spans, option.Value, SyntaxClass.OptionValue, palette);
             }
 
             return false;
@@ -85,23 +56,76 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 
         public bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax marker, HighlightingVisitorParams<TStyle> param)
         {
-            FillGapIfExists(param.HighlightedLength, marker.Span, param.Palette, param.Spans);
-            param.Spans.Add(GetStyledSpan(SyntaxClass.OperandsSectionMarker, marker.Span, param.Palette));
-            param.HighlightedLength = marker.Span.End;
+            AddSpans(param.Spans, marker.SectionMarker, SyntaxClass.OperandsSectionMarker, param.Palette);
             return false;
         }
 
         public bool VisitOperand(OperandSyntax operand, HighlightingVisitorParams<TStyle> param)
         {
-            FillGapIfExists(param.HighlightedLength, operand.Span, param.Palette, param.Spans);
-            param.Spans.Add(GetStyledSpan(SyntaxClass.Operand, operand.Span, param.Palette));
-            param.HighlightedLength = operand.Span.End;
+            AddSpans(param.Spans, operand.Value, SyntaxClass.Operand, param.Palette);
             return false;
         }
 
         public bool VisitValue(ValueSyntax value, HighlightingVisitorParams<TStyle> param)
         {
             return false;
+        }
+
+        private void AddSpans(
+            List<StyledSpan<TStyle>> spans,
+            SyntaxToken token,
+            SyntaxClass @class,
+            SyntaxHighlightingPalette<TStyle> palette)
+        {
+            if (token.HasLeadingTrivia)
+            {
+                spans.Add(GetDefaultSpan(token.LeadingTrivia.Span, palette));
+            }
+
+            spans.Add(GetStyledSpan(@class, token.Span, palette));
+
+            if (token.HasTrailingTrivia)
+            {
+                spans.Add(GetDefaultSpan(token.TrailingTrivia.Span, palette));
+            }
+        }
+
+        private void AddSpans(
+            List<StyledSpan<TStyle>> spans,
+            ValueSyntax valueSyntax,
+            SyntaxClass @class,
+            SyntaxHighlightingPalette<TStyle> palette)
+        {
+            var valueTokens = valueSyntax.Tokens;
+            var first = valueTokens[0];
+            var last = valueTokens[valueTokens.Count - 1];
+
+            if (first.HasLeadingTrivia)
+            {
+                spans.Add(GetDefaultSpan(first.LeadingTrivia.Span, palette));
+            }
+
+            spans.Add(GetStyledSpan(@class, valueSyntax.Span, palette));
+
+            if (last.HasTrailingTrivia)
+            {
+                spans.Add(GetDefaultSpan(last.TrailingTrivia.Span, palette));
+            }
+        }
+
+        private StyledSpan<TStyle> GetStyledSpan(
+            SyntaxClass @class, TextSpan span,
+            SyntaxHighlightingPalette<TStyle> palette)
+        {
+            var style = palette.GetStyle(@class);
+            return new StyledSpan<TStyle>(span, style);
+        }
+
+        private StyledSpan<TStyle> GetDefaultSpan(
+            TextSpan span,
+            SyntaxHighlightingPalette<TStyle> palette)
+        {
+            return new StyledSpan<TStyle>(span, palette.DefaultStyle);
         }
     }
 }
