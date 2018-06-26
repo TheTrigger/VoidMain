@@ -16,5 +16,18 @@ namespace VoidMain.Hosting
                 host.Run();
             }
         }
+
+        public static void RunWithCustomDI<TStartup>()
+            where TStartup : class, IStartupWithCustomDI
+        {
+            var host = new CommandsHostBuilder()
+                .UseStartupWithCustomDI<TStartup>()
+                .Build();
+
+            using (host)
+            {
+                host.Run();
+            }
+        }
     }
 }
