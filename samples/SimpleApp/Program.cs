@@ -53,17 +53,17 @@ namespace SimpleApp
             var output = app.Services.GetRequiredService<ICommandLineOutput>();
 
             string welcomeMessage =
-@"===========================================================
+@"=============================================================
  This framework is still in the early development.
  See {0} to learn what features are available.
  Type {1} or press {2} twice to close the application.
-===========================================================";
+=============================================================";
 
             output.WriteLine(new ColoredFormat(welcomeMessage)
             {
                 { "README.md", Color.DarkCyan },
                 { "quit", Color.Yellow },
-                { "Ctrl+C", Color.Black, Color.Gray }
+                { " Ctrl+C ", Color.Black, Color.Gray }
             });
             output.WriteLine();
         }

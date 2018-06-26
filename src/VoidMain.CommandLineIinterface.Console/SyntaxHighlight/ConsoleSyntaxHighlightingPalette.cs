@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VoidMain.CommandLineIinterface.SyntaxHighlight
+﻿namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
     public class ConsoleSyntaxHighlightingPalette : SyntaxHighlightingPalette<ConsoleTextStyle>
     {
@@ -12,12 +10,12 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
         {
         }
 
-        public void Add(SyntaxClass @class, ConsoleColor foreground)
+        public void Add(SyntaxClass @class, Color foreground)
         {
             Add(@class, new ConsoleTextStyle(foreground));
         }
 
-        public void Add(SyntaxClass @class, ConsoleColor foreground, ConsoleColor background)
+        public void Add(SyntaxClass @class, Color foreground, Color background)
         {
             Add(@class, new ConsoleTextStyle(foreground, background));
         }
@@ -27,13 +25,13 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             public DefaultPalette()
                 : base(ConsoleTextStyle.Default)
             {
-                Add(SyntaxClass.CommandName, ConsoleColor.Yellow);
-                Add(SyntaxClass.OptionNameMarker, ConsoleColor.DarkGray);
-                Add(SyntaxClass.OptionName, ConsoleColor.DarkGray);
-                Add(SyntaxClass.OptionValueMarker, ConsoleColor.DarkGray);
-                Add(SyntaxClass.OptionValue, ConsoleColor.White);
-                Add(SyntaxClass.OperandsSectionMarker, ConsoleColor.DarkMagenta);
-                Add(SyntaxClass.Operand, ConsoleColor.DarkCyan);
+                Add(SyntaxClass.CommandName, Color.Yellow);
+                Add(SyntaxClass.OptionNameMarker, Color.DarkGray);
+                Add(SyntaxClass.OptionName, Color.DarkGray);
+                Add(SyntaxClass.OptionValueMarker, Color.DarkGray);
+                Add(SyntaxClass.OptionValue, Color.White);
+                Add(SyntaxClass.OperandsSectionMarker, Color.DarkMagenta);
+                Add(SyntaxClass.Operand, Color.DarkCyan);
             }
         }
     }

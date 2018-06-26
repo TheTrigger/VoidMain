@@ -9,6 +9,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _consoleCursor;
+        private readonly IColoredTextWriter _coloredTextWriter;
         private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
         private IReadOnlyList<StyledSpan<ConsoleTextStyle>> _prevHighlights;
         private readonly InMemoryLineView _line;
@@ -25,10 +26,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         public ConsoleHighlightedLineView(
             IConsole console, IConsoleCursor consoleCursor,
+            IColoredTextWriter coloredTextWriter,
             ITextHighlighter<ConsoleTextStyle> textHighlighter)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _consoleCursor = consoleCursor ?? throw new ArgumentNullException(nameof(consoleCursor));
+            _coloredTextWriter = coloredTextWriter ?? throw new ArgumentNullException(nameof(coloredTextWriter));
             _textHighlighter = textHighlighter ?? throw new ArgumentNullException(nameof(textHighlighter));
             _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
             _line = new InMemoryLineView();
@@ -137,14 +140,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         void ILineViewInputLifecycle.BeforeLineReading()
         {
-            _foreground = _console.ForegroundColor;
-            _background = _console.BackgroundColor;
+            // do nothing
         }
 
         void ILineViewInputLifecycle.AfterLineReading()
         {
-            _console.ForegroundColor = _foreground;
-            _console.BackgroundColor = _background;
+            // do nothing
         }
 
         void ILineViewInputLifecycle.BeforeInputHandling(bool isNextKeyAvailable)
@@ -189,12 +190,16 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
                 if (span.Start != written)
                 {
-                    throw new IndexOutOfRangeException();
+                    throw new IndexOutOfRangeException(); // TODO: add error message
                 }
 
-                ApplyStyle(style);
-                _console.Write(span.Text);
+                _coloredTextWriter.Write(style.Foreground, style.Background, span.Text);
                 written += span.Length;
+            }
+
+            if (written != commandLine.Length)
+            {
+                throw new IndexOutOfRangeException(); // TODO: add error message
             }
 
             int clearSpace = WriteBlank(_prevLength - written);
@@ -217,18 +222,10 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             return index - 1;
         }
 
-        private void ApplyStyle(ConsoleTextStyle style)
-        {
-            _console.ForegroundColor = style.Foreground ?? _foreground;
-            _console.BackgroundColor = style.Background ?? _background;
-        }
-
         private int WriteBlank(int length)
         {
             if (length < 1) return 0;
-            _console.ForegroundColor = _foreground;
-            _console.BackgroundColor = _background;
-            _console.Write(' ', length);
+            _coloredTextWriter.Write(null, null, ' ', length);
             return length;
         }
 

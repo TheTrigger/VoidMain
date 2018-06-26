@@ -103,9 +103,9 @@ public void ConfigureServices(IServiceCollection services)
         {
             options.Palette = new ConsoleSyntaxHighlightingPalette()
             {
-                { SyntaxClass.CommandName, ConsoleColor.Yellow },
-                { SyntaxClass.OptionName, ConsoleColor.Blue, ConsoleColor.Yellow },
-                { SyntaxClass.Operand, new ConsoleTextStyle(ConsoleColor.DarkCyan) }
+                { SyntaxClass.CommandName, Color.Yellow },
+                { SyntaxClass.OptionName, Color.Blue, Color.Yellow },
+                { SyntaxClass.Operand, new ConsoleTextStyle(Color.DarkCyan) }
                 // OptionNameMarker, OptionValueMarker, OptionValue, OperandsSectionMarker
             };
             // or

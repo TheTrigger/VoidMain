@@ -6,11 +6,10 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
     {
         public static ConsoleTextStyle Default { get; } = new ConsoleTextStyle(null);
 
-        public ConsoleColor? Foreground { get; }
-        public ConsoleColor? Background { get; }
+        public Color Foreground { get; }
+        public Color Background { get; }
 
-        public ConsoleTextStyle(ConsoleColor? foreground,
-            ConsoleColor? background = null)
+        public ConsoleTextStyle(Color foreground, Color background = null)
         {
             Foreground = foreground;
             Background = background;
