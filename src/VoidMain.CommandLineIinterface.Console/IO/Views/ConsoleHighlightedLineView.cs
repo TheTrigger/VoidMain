@@ -5,7 +5,7 @@ using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class ConsoleHighlightedLineView : ILineView, ILineViewInputLifecycle
+    public class ConsoleHighlightedLineView : ILineView, IReusableLineView, ILineViewInputLifecycle
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _consoleCursor;
@@ -13,8 +13,6 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
         private IReadOnlyList<StyledSpan<ConsoleTextStyle>> _prevHighlights;
         private readonly InMemoryLineView _line;
-        private ConsoleColor _background;
-        private ConsoleColor _foreground;
         private bool _hasChanges;
         private int _prevLength;
         private int _maxPosition;
@@ -136,24 +134,46 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         #endregion
 
+        #region Reusable View
+
+        public void SetState(string line, int position)
+        {
+            _line.SetState(line, position);
+            _prevHighlights = _textHighlighter.Highlight(line);
+            _hasChanges = false;
+            _prevLength = line.Length;
+            _maxPosition = line.Length;
+        }
+
+        public void ClearState()
+        {
+            _line.ClearState();
+            _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
+            _hasChanges = false;
+            _prevLength = 0;
+            _maxPosition = 0;
+        }
+
+        #endregion
+
         #region Input Lifecycle
 
-        void ILineViewInputLifecycle.BeforeLineReading()
+        public void BeforeLineReading()
         {
             // do nothing
         }
 
-        void ILineViewInputLifecycle.AfterLineReading()
+        public void AfterLineReading()
         {
             // do nothing
         }
 
-        void ILineViewInputLifecycle.BeforeInputHandling(bool isNextKeyAvailable)
+        public void BeforeInputHandling(bool isNextKeyAvailable)
         {
             // do nothing
         }
 
-        void ILineViewInputLifecycle.AfterInputHandling(bool isNextKeyAvailable)
+        public void AfterInputHandling(bool isNextKeyAvailable)
         {
             if (!_hasChanges || isNextKeyAvailable) return;
             RenderLine();

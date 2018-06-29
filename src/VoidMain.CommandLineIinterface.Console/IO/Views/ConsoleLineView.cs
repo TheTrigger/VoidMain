@@ -3,7 +3,7 @@ using VoidMain.CommandLineIinterface.IO.Console;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class ConsoleLineView : ILineView
+    public class ConsoleLineView : ILineView, IReusableLineView
     {
         private readonly IConsole _console;
         private readonly IConsoleCursor _consoleCursor;
@@ -109,6 +109,16 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
             _console.Write(value);
             _line.TypeOver(value);
+        }
+
+        public void SetState(string line, int position)
+        {
+            _line.SetState(line, position);
+        }
+
+        public void ClearState()
+        {
+            _line.ClearState();
         }
     }
 }

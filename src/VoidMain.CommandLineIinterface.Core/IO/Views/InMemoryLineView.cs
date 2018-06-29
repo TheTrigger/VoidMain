@@ -3,7 +3,7 @@ using System.Text;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
-    public class InMemoryLineView : ILineView
+    public class InMemoryLineView : ILineView, IReusableLineView
     {
         private readonly StringBuilder _lineBuilder;
         private string _cache;
@@ -149,6 +149,30 @@ namespace VoidMain.CommandLineIinterface.IO.Views
                 Position += length;
             }
             _cache = null;
+        }
+
+        public void SetState(string line, int position)
+        {
+            if (line == null)
+            {
+                throw new ArgumentNullException(nameof(line));
+            }
+            if (position < 0 || position > line.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position));
+            }
+
+            _cache = null;
+            _lineBuilder.Clear();
+            _lineBuilder.Append(line);
+            Position = position;
+        }
+
+        public void ClearState()
+        {
+            _cache = null;
+            _lineBuilder.Clear();
+            Position = 0;
         }
     }
 }
