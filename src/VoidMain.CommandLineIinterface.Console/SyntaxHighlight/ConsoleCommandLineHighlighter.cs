@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VoidMain.CommandLineIinterface.Parser;
+using VoidMain.CommandLineIinterface.Parser.Syntax;
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
@@ -23,6 +24,26 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 
         public IReadOnlyList<StyledSpan<ConsoleTextStyle>> Highlight(string commandLine)
         {
+            if (commandLine == null)
+            {
+                throw new ArgumentNullException(nameof(commandLine));
+            }
+
+            if (commandLine.Length == 0)
+            {
+                return Array.Empty<StyledSpan<ConsoleTextStyle>>();
+            }
+
+            if (String.IsNullOrWhiteSpace(commandLine))
+            {
+                return new[]
+                {
+                    new StyledSpan<ConsoleTextStyle>(
+                        new TextSpan(commandLine),
+                        _highlightingOptions.Palette.DefaultStyle)
+                };
+            }
+
             var syntax = _parser.Parse(commandLine);
             var highlights = _syntaxHighlighter.GetHighlightedSpans(syntax, _highlightingOptions.Palette);
             return highlights;
