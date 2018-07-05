@@ -26,7 +26,7 @@ namespace VoidMain.CommandLineIinterface.Parser.Syntax
         CommandLineSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0000_0001,
         CommandNameSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0000_0010,
         ArgumentsSectionSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0000_0100,
-        OperandsSectionMarkerSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0000_1000,
+        EndOfOptionsSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0000_1000,
         OptionSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0001_0000,
         OperandSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0010_0000,
         ValueSyntax = ParserNode | 0b0000_0000_0000_0000_0000_0100_0000

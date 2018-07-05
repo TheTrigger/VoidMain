@@ -7,7 +7,7 @@
         OptionName,
         OptionValueMarker,
         OptionValue,
-        OperandsSectionMarker,
+        EndOfOptions,
         Operand
     }
 }

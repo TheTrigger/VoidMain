@@ -30,7 +30,7 @@
                 Add(SyntaxClass.OptionName, Color.DarkGray);
                 Add(SyntaxClass.OptionValueMarker, Color.DarkGray);
                 Add(SyntaxClass.OptionValue, Color.White);
-                Add(SyntaxClass.OperandsSectionMarker, Color.DarkMagenta);
+                Add(SyntaxClass.EndOfOptions, Color.DarkMagenta);
                 Add(SyntaxClass.Operand, Color.DarkCyan);
             }
         }

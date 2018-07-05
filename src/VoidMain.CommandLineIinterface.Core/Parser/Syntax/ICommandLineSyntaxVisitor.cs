@@ -27,10 +27,10 @@
         bool VisitOption(OptionSyntax option, TParam param);
 
         /// <summary>
-        /// Visits OperandsSectionMarkerSyntax node.
+        /// Visits EndOfOptionsSyntax node.
         /// </summary>
         /// <returns>True if need to visit children nodes.</returns>
-        bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax marker, TParam param);
+        bool VisitEndOfOptions(EndOfOptionsSyntax endOfOptions, TParam param);
 
         /// <summary>
         /// Visits OperandSyntax node.

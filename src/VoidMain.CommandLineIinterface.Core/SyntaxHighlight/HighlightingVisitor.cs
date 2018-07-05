@@ -54,9 +54,9 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             return false;
         }
 
-        public bool VisitOperandsSectionMarker(OperandsSectionMarkerSyntax marker, HighlightingVisitorParams<TStyle> param)
+        public bool VisitEndOfOptions(EndOfOptionsSyntax endOfOptions, HighlightingVisitorParams<TStyle> param)
         {
-            AddSpans(param.Spans, marker.SectionMarker, SyntaxClass.OperandsSectionMarker, param.Palette);
+            AddSpans(param.Spans, endOfOptions.Token, SyntaxClass.EndOfOptions, param.Palette);
             return false;
         }
 

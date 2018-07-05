@@ -105,11 +105,11 @@ namespace VoidMain.CommandLineIinterface.Parser
             {
                 var token = cursor.Peek();
 
-                if (!operandsOnly && IsOperandsSectionMarker(token, cursor.Peek(1)))
+                if (!operandsOnly && IsEndOfOptions(token, cursor.Peek(1)))
                 {
                     cursor.MoveNext();
-                    var operandsSectionMarker = new OperandsSectionMarkerSyntax(token);
-                    arguments.Add(operandsSectionMarker);
+                    var endOfOptions = new EndOfOptionsSyntax(token);
+                    arguments.Add(endOfOptions);
                     operandsOnly = true;
                 }
                 else if (!operandsOnly && IsOptionName(token, cursor.Peek(1)))
@@ -129,7 +129,7 @@ namespace VoidMain.CommandLineIinterface.Parser
                 }
                 else
                 {
-                    var operand = ScanOperand(cursor, errors, operandIndex, commandName);
+                    var operand = ScanOperand(cursor, errors, operandIndex);
                     arguments.Add(operand);
                     operandIndex++;
                 }
@@ -231,7 +231,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
 
             bool missingValue = valueMarker != null &&
-                (!HasMoreTokens(cursor) || (valueMarker.HasTrailingTrivia && IsOptionNameOrSectionMarker(token, cursor.Peek(1))));
+                (!HasMoreTokens(cursor) || (valueMarker.HasTrailingTrivia && IsOptionNameOrEndOfOptions(token, cursor.Peek(1))));
 
             if (missingValue)
             {
@@ -262,7 +262,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             }
 
             bool isValue = (valueMarker != null && !valueMarker.HasTrailingTrivia)
-                || !IsOptionNameOrSectionMarker(token, cursor.Peek(1));
+                || !IsOptionNameOrEndOfOptions(token, cursor.Peek(1));
 
             if (isValue)
             {
@@ -274,10 +274,10 @@ namespace VoidMain.CommandLineIinterface.Parser
 
         private OperandSyntax ScanOperand(
             ElementsCursor<SyntaxToken> cursor, List<SyntaxError> errors,
-            int operandIndex, IReadOnlyList<string> commandName)
+            int operandIndex)
         {
             var valueToken = ScanValue(cursor, errors);
-            return new OperandSyntax(valueToken, operandIndex);
+            return new OperandSyntax(operandIndex, valueToken);
         }
 
         private ValueSyntax ScanValue(ElementsCursor<SyntaxToken> cursor, List<SyntaxError> errors)
@@ -322,7 +322,7 @@ namespace VoidMain.CommandLineIinterface.Parser
 
             while (index > span.Start)
             {
-                if(span.Source[index] != quote)
+                if (span.Source[index] != quote)
                 {
                     break;
                 }
@@ -398,7 +398,7 @@ namespace VoidMain.CommandLineIinterface.Parser
             return (token.Kind & SyntaxKind.IdentifierToken) == SyntaxKind.IdentifierToken;
         }
 
-        private bool IsOperandsSectionMarker(SyntaxToken token, SyntaxToken nextToken)
+        private bool IsEndOfOptions(SyntaxToken token, SyntaxToken nextToken)
         {
             return token.Kind == SyntaxKind.DashDashToken
                 && HasSpaceAfterOrEnd(token, nextToken);
@@ -427,9 +427,9 @@ namespace VoidMain.CommandLineIinterface.Parser
             return name.StringValue.Length > 1;
         }
 
-        private bool IsOptionNameOrSectionMarker(SyntaxToken token, SyntaxToken nextToken)
+        private bool IsOptionNameOrEndOfOptions(SyntaxToken token, SyntaxToken nextToken)
         {
-            return IsOptionName(token, nextToken) || IsOperandsSectionMarker(token, nextToken);
+            return IsOptionName(token, nextToken) || IsEndOfOptions(token, nextToken);
         }
 
         private bool IsFlag(Type valueType)

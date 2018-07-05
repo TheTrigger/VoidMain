@@ -50,7 +50,7 @@ namespace AdvancedApp
                         { SyntaxClass.CommandName, Color.Yellow },
                         { SyntaxClass.OptionName, Color.Blue, Color.Yellow },
                         { SyntaxClass.Operand, new ConsoleTextStyle(Color.DarkCyan) }
-                        // OptionNameMarker, OptionValueMarker, OptionValue, OperandsSectionMarker
+                        // OptionNameMarker, OptionValueMarker, OptionValue, EndOfOptions
                     };
                     // or
                     options.Palette = ConsoleSyntaxHighlightingPalette.Default;

@@ -2,14 +2,14 @@
 {
     public sealed class OperandSyntax : ArgumentSyntax
     {
-        public ValueSyntax Value { get; }
         public int Index { get; }
+        public ValueSyntax Value { get; }
 
-        public OperandSyntax(ValueSyntax value, int index)
+        public OperandSyntax(int index, ValueSyntax value)
             : base(SyntaxKind.OperandSyntax, new[] { value })
         {
-            Value = value;
             Index = index;
+            Value = value;
         }
 
         protected override bool AcceptSelf<TParam>(
