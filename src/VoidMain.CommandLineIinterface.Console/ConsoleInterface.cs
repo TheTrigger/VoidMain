@@ -103,7 +103,7 @@ namespace VoidMain.CommandLineIinterface
                     try
                     {
                         _outputLock.Lock();
-                        _prompt?.Print(_coloredTextWriter);
+                        _prompt?.Write(_coloredTextWriter);
                         commandLine = await _lineReader.ReadLineAsync(consoleTokenSource.Token)
                             .ConfigureAwait(false);
                     }

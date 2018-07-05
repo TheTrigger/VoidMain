@@ -2,6 +2,6 @@
 {
     public interface IPromptMessage
     {
-        void Print(IColoredTextWriter writer);
+        void Write(IColoredTextWriter writer);
     }
 }

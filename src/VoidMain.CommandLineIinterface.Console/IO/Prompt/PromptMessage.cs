@@ -10,7 +10,7 @@
             _options.Validate();
         }
 
-        public void Print(IColoredTextWriter writer)
+        public void Write(IColoredTextWriter writer)
         {
             writer.Write(_options.Foreground, _options.Background, _options.Message);
         }
