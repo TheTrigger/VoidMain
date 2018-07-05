@@ -154,6 +154,13 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _maxPosition = 0;
         }
 
+        public void RenderState()
+        {
+            _prevLength = 0;
+            _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
+            RenderLine();
+        }
+
         #endregion
 
         #region Input Lifecycle
@@ -186,26 +193,22 @@ namespace VoidMain.CommandLineIinterface.IO.Views
 
         private void RenderLine()
         {
-            string commandLine = ToString();
-            var highlights = _textHighlighter.Highlight(commandLine);
+            int written = 0;
+            string line = ToString();
+            var highlights = _textHighlighter.Highlight(line);
 
             int lastUnchanged = IndexOfLastUnchanged(_prevHighlights, highlights);
-            _prevHighlights = highlights;
-
-            int pos = Position;
-            int written = 0;
-
-            if (highlights.Count > 0 && lastUnchanged >= 0)
+            if (lastUnchanged >= 0)
             {
                 written = highlights[lastUnchanged].Span.End;
             }
 
-            _consoleCursor.Move(written - pos);
+            _consoleCursor.Move(written - Position);
 
             for (int i = lastUnchanged + 1; i < highlights.Count; i++)
             {
                 var highlight = highlights[i];
-                var style = highlight.Style ?? ConsoleTextStyle.Default;
+                var style = highlight.Style;
                 var span = highlight.Span;
 
                 if (span.Start != written)
@@ -217,14 +220,16 @@ namespace VoidMain.CommandLineIinterface.IO.Views
                 written += span.Length;
             }
 
-            if (written != commandLine.Length)
+            if (written != line.Length)
             {
                 throw new IndexOutOfRangeException(); // TODO: add error message
             }
 
             int clearSpace = WriteBlank(_prevLength - written);
+            _consoleCursor.Move(Position - written - clearSpace);
+
             _prevLength = written;
-            _consoleCursor.Move(pos - written - clearSpace);
+            _prevHighlights = highlights;
         }
 
         private int IndexOfLastUnchanged(

@@ -120,5 +120,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         {
             _line.ClearState();
         }
+
+        public void RenderState()
+        {
+            _consoleCursor.Move(-Position);
+            _console.Write(ToString());
+            _consoleCursor.Move(Position - Length);
+        }
     }
 }

@@ -4,5 +4,6 @@
     {
         void SetState(string line, int position);
         void ClearState();
+        void RenderState();
     }
 }

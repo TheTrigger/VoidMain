@@ -174,5 +174,10 @@ namespace VoidMain.CommandLineIinterface.IO.Views
             _lineBuilder.Clear();
             Position = 0;
         }
+
+        public void RenderState()
+        {
+            // do nothing
+        }
     }
 }
