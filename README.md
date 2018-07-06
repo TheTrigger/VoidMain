@@ -101,7 +101,7 @@ public void ConfigureServices(IServiceCollection services)
         })
         .AddSyntaxHighlighting(options =>
         {
-            options.Palette = new ConsoleSyntaxHighlightingPalette()
+            options.Palette = new SyntaxHighlightingPalette()
             {
                 { SyntaxClass.CommandName, Color.Yellow },
                 { SyntaxClass.OptionName, Color.Blue, Color.Yellow },
@@ -109,7 +109,7 @@ public void ConfigureServices(IServiceCollection services)
                 // OptionNameMarker, OptionValueMarker, OptionValue, EndOfOptions
             };
             // or
-            options.Palette = ConsoleSyntaxHighlightingPalette.Default;
+            options.Palette = SyntaxHighlightingPalette.Default;
         })
         .AddCommandsHistory(options =>
         {

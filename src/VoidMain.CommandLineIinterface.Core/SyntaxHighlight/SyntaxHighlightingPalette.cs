@@ -1,42 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace VoidMain.CommandLineIinterface.SyntaxHighlight
+﻿namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class SyntaxHighlightingPalette<TStyle> : IEnumerable<KeyValuePair<SyntaxClass, TStyle>>
+    public class SyntaxHighlightingPalette : SyntaxHighlightingPalette<TextStyle>
     {
-        private readonly Dictionary<SyntaxClass, TStyle> _styles;
+        public static SyntaxHighlightingPalette Default => new DefaultPalette();
 
-        public TStyle DefaultStyle { get; }
-
-        public SyntaxHighlightingPalette(TStyle defaultStyle = default(TStyle))
+        public SyntaxHighlightingPalette(
+            TextStyle defaultStyle = null)
+            : base(defaultStyle)
         {
-            _styles = new Dictionary<SyntaxClass, TStyle>();
-            DefaultStyle = defaultStyle;
         }
 
-        public void Add(SyntaxClass @class, TStyle style)
+        public void Add(SyntaxClass @class, Color foreground)
         {
-            _styles.Add(@class, style);
+            Add(@class, new TextStyle(foreground));
         }
 
-        public TStyle GetStyle(SyntaxClass @class)
+        public void Add(SyntaxClass @class, Color foreground, Color background)
         {
-            if (!_styles.TryGetValue(@class, out TStyle style))
+            Add(@class, new TextStyle(foreground, background));
+        }
+
+        private class DefaultPalette : SyntaxHighlightingPalette
+        {
+            public DefaultPalette()
+                : base(TextStyle.Default)
             {
-                style = DefaultStyle;
+                Add(SyntaxClass.CommandName, Color.Yellow);
+                Add(SyntaxClass.OptionNameMarker, Color.DarkGray);
+                Add(SyntaxClass.OptionName, Color.DarkGray);
+                Add(SyntaxClass.OptionValueMarker, Color.DarkGray);
+                Add(SyntaxClass.OptionValue, Color.White);
+                Add(SyntaxClass.EndOfOptions, Color.DarkMagenta);
+                Add(SyntaxClass.Operand, Color.DarkCyan);
             }
-            return style;
-        }
-
-        public IEnumerator<KeyValuePair<SyntaxClass, TStyle>> GetEnumerator()
-        {
-            return _styles.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

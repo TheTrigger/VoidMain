@@ -2,15 +2,15 @@
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class ConsoleSyntaxHighlightingOptions
+    public class SyntaxHighlightingOptions
     {
-        public SyntaxHighlightingPalette<ConsoleTextStyle> Palette { get; set; }
+        public SyntaxHighlightingPalette<TextStyle> Palette { get; set; }
 
-        public ConsoleSyntaxHighlightingOptions(bool defaults = true)
+        public SyntaxHighlightingOptions(bool defaults = true)
         {
             if (defaults)
             {
-                Palette = ConsoleSyntaxHighlightingPalette.Default;
+                Palette = SyntaxHighlightingPalette.Default;
             }
         }
 

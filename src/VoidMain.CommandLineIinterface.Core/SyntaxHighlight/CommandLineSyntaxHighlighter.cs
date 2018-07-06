@@ -5,24 +5,24 @@ using VoidMain.CommandLineIinterface.Parser.Syntax;
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class ConsoleCommandLineHighlighter : ITextHighlighter<ConsoleTextStyle>
+    public class CommandLineSyntaxHighlighter : ITextHighlighter<TextStyle>
     {
         private readonly ICommandLineParser _parser;
-        private readonly ISyntaxHighlighter<ConsoleTextStyle> _syntaxHighlighter;
-        private readonly ConsoleSyntaxHighlightingOptions _highlightingOptions;
+        private readonly ISyntaxHighlighter<TextStyle> _syntaxHighlighter;
+        private readonly SyntaxHighlightingOptions _highlightingOptions;
 
-        public ConsoleCommandLineHighlighter(
+        public CommandLineSyntaxHighlighter(
             ICommandLineParser parser,
-            ISyntaxHighlighter<ConsoleTextStyle> syntaxHighlighter,
-            ConsoleSyntaxHighlightingOptions highlightingOptions = null)
+            ISyntaxHighlighter<TextStyle> syntaxHighlighter,
+            SyntaxHighlightingOptions highlightingOptions = null)
         {
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _syntaxHighlighter = syntaxHighlighter ?? throw new ArgumentNullException(nameof(syntaxHighlighter));
-            _highlightingOptions = highlightingOptions ?? new ConsoleSyntaxHighlightingOptions();
+            _highlightingOptions = highlightingOptions ?? new SyntaxHighlightingOptions();
             _highlightingOptions.Validate();
         }
 
-        public IReadOnlyList<StyledSpan<ConsoleTextStyle>> Highlight(string commandLine)
+        public IReadOnlyList<StyledSpan<TextStyle>> Highlight(string commandLine)
         {
             if (commandLine == null)
             {
@@ -31,14 +31,14 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 
             if (commandLine.Length == 0)
             {
-                return Array.Empty<StyledSpan<ConsoleTextStyle>>();
+                return Array.Empty<StyledSpan<TextStyle>>();
             }
 
             if (String.IsNullOrWhiteSpace(commandLine))
             {
                 return new[]
                 {
-                    new StyledSpan<ConsoleTextStyle>(
+                    new StyledSpan<TextStyle>(
                         new TextSpan(commandLine),
                         _highlightingOptions.Palette.DefaultStyle)
                 };

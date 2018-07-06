@@ -10,8 +10,8 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private readonly IConsole _console;
         private readonly IConsoleCursor _consoleCursor;
         private readonly IColoredTextWriter _coloredTextWriter;
-        private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
-        private IReadOnlyList<StyledSpan<ConsoleTextStyle>> _prevHighlights;
+        private readonly ITextHighlighter<TextStyle> _textHighlighter;
+        private IReadOnlyList<StyledSpan<TextStyle>> _prevHighlights;
         private readonly InMemoryLineView _line;
         private bool _hasChanges;
         private int _prevLength;
@@ -25,13 +25,13 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public ConsoleHighlightedLineView(
             IConsole console, IConsoleCursor consoleCursor,
             IColoredTextWriter coloredTextWriter,
-            ITextHighlighter<ConsoleTextStyle> textHighlighter)
+            ITextHighlighter<TextStyle> textHighlighter)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _consoleCursor = consoleCursor ?? throw new ArgumentNullException(nameof(consoleCursor));
             _coloredTextWriter = coloredTextWriter ?? throw new ArgumentNullException(nameof(coloredTextWriter));
             _textHighlighter = textHighlighter ?? throw new ArgumentNullException(nameof(textHighlighter));
-            _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
+            _prevHighlights = Array.Empty<StyledSpan<TextStyle>>();
             _line = new InMemoryLineView();
             ViewType = LineViewType.Normal;
             _hasChanges = false;
@@ -148,7 +148,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public void ClearState()
         {
             _line.ClearState();
-            _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
+            _prevHighlights = Array.Empty<StyledSpan<TextStyle>>();
             _hasChanges = false;
             _prevLength = 0;
             _maxPosition = 0;
@@ -157,7 +157,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         public void RenderState()
         {
             _prevLength = 0;
-            _prevHighlights = Array.Empty<StyledSpan<ConsoleTextStyle>>();
+            _prevHighlights = Array.Empty<StyledSpan<TextStyle>>();
             RenderLine();
         }
 
@@ -233,8 +233,8 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         }
 
         private int IndexOfLastUnchanged(
-           IReadOnlyList<StyledSpan<ConsoleTextStyle>> previous,
-           IReadOnlyList<StyledSpan<ConsoleTextStyle>> current)
+           IReadOnlyList<StyledSpan<TextStyle>> previous,
+           IReadOnlyList<StyledSpan<TextStyle>> current)
         {
             int index = 0;
             while (index < previous.Count && index < current.Count)

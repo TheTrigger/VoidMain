@@ -2,14 +2,14 @@
 
 namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 {
-    public class ConsoleTextStyle : IEquatable<ConsoleTextStyle>
+    public class TextStyle : IEquatable<TextStyle>
     {
-        public static ConsoleTextStyle Default { get; } = new ConsoleTextStyle(null);
+        public static TextStyle Default { get; } = new TextStyle(null);
 
         public Color Foreground { get; }
         public Color Background { get; }
 
-        public ConsoleTextStyle(Color foreground, Color background = null)
+        public TextStyle(Color foreground, Color background = null)
         {
             Foreground = foreground;
             Background = background;
@@ -30,10 +30,10 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
 
         public override bool Equals(object obj)
         {
-            return (obj is ConsoleTextStyle style && Equals(style));
+            return (obj is TextStyle style && Equals(style));
         }
 
-        public bool Equals(ConsoleTextStyle other)
+        public bool Equals(TextStyle other)
         {
             if (ReferenceEquals(other, this)) return true;
             if (ReferenceEquals(other, null)) return false;
@@ -41,7 +41,7 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
                 && Background == other.Background;
         }
 
-        public static bool operator ==(ConsoleTextStyle left, ConsoleTextStyle right)
+        public static bool operator ==(TextStyle left, TextStyle right)
         {
             if (ReferenceEquals(left, null))
             {
@@ -50,7 +50,7 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
             return left.Equals(right);
         }
 
-        public static bool operator !=(ConsoleTextStyle left, ConsoleTextStyle right)
+        public static bool operator !=(TextStyle left, TextStyle right)
         {
             return !(left == right);
         }

@@ -9,12 +9,12 @@ namespace VoidMain.CommandLineIinterface.IO.Views
         private readonly IConsole _console;
         private readonly IConsoleCursor _consoleCursor;
         private readonly IColoredTextWriter _coloredTextWriter;
-        private readonly ITextHighlighter<ConsoleTextStyle> _textHighlighter;
+        private readonly ITextHighlighter<TextStyle> _textHighlighter;
 
         public ConsoleHighlightedLineViewProvider(
             IConsole console, IConsoleCursor consoleCursor,
             IColoredTextWriter coloredTextWriter,
-            ITextHighlighter<ConsoleTextStyle> textHighlighter)
+            ITextHighlighter<TextStyle> textHighlighter)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
             _consoleCursor = consoleCursor ?? throw new ArgumentNullException(nameof(consoleCursor));

@@ -12,11 +12,11 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static ConsoleInterfaceBuilder AddSyntaxHighlighting(
             this ConsoleInterfaceBuilder builder,
-            Action<ConsoleSyntaxHighlightingOptions> options = null)
+            Action<SyntaxHighlightingOptions> options = null)
         {
             var services = builder.Services;
-            services.AddSingleton<ITextHighlighter<ConsoleTextStyle>, ConsoleCommandLineHighlighter>();
-            services.AddSingleton<ISyntaxHighlighter<ConsoleTextStyle>, SyntaxHighlighter<ConsoleTextStyle>>();
+            services.AddSingleton<ITextHighlighter<TextStyle>, CommandLineSyntaxHighlighter>();
+            services.AddSingleton<ISyntaxHighlighter<TextStyle>, SyntaxHighlighter<TextStyle>>();
             services.AddSingleton<ILineViewProvider, ConsoleHighlightedLineViewProvider>();
 
             var parserService = services.FirstOrDefault(_ => _.ServiceType == typeof(ICommandLineParser));

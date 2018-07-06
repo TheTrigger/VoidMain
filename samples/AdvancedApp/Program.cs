@@ -45,15 +45,15 @@ namespace AdvancedApp
                 })
                 .AddSyntaxHighlighting(options =>
                 {
-                    options.Palette = new ConsoleSyntaxHighlightingPalette()
+                    options.Palette = new SyntaxHighlightingPalette()
                     {
                         { SyntaxClass.CommandName, Color.Yellow },
                         { SyntaxClass.OptionName, Color.Blue, Color.Yellow },
-                        { SyntaxClass.Operand, new ConsoleTextStyle(Color.DarkCyan) }
+                        { SyntaxClass.Operand, new TextStyle(Color.DarkCyan) }
                         // OptionNameMarker, OptionValueMarker, OptionValue, EndOfOptions
                     };
                     // or
-                    options.Palette = ConsoleSyntaxHighlightingPalette.Default;
+                    options.Palette = SyntaxHighlightingPalette.Default;
                 })
                 .AddCommandsHistory(options =>
                 {
