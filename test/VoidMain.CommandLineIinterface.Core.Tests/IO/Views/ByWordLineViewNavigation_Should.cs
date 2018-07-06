@@ -14,7 +14,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Tests
         [InlineData("    ", 4, 4)]
         [InlineData("test    ", 0, 4)]
         [InlineData("test    ", 4, 8)]
-        [InlineData("    test", 0, 4)]
+        [InlineData("    test", 0, 8)]
         [InlineData("    test", 4, 8)]
         public void FindNext(string startValue, int startPos, int expectedPos)
         {
@@ -39,7 +39,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Tests
         [InlineData("test", 0, 0)]
         [InlineData("    ", 4, 0)]
         [InlineData("    ", 0, 0)]
-        [InlineData("test    ", 8, 4)]
+        [InlineData("test    ", 8, 0)]
         [InlineData("test    ", 4, 0)]
         [InlineData("    test", 8, 4)]
         [InlineData("    test", 4, 0)]
@@ -63,8 +63,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views.Tests
         private static InMemoryLineView InitView(string startValue, int startPos)
         {
             var lineView = new InMemoryLineView();
-            lineView.Type(startValue);
-            lineView.MoveTo(startPos);
+            lineView.SetState(startValue, startPos);
             return lineView;
         }
 

@@ -5,7 +5,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
     public class ByWordLineViewNavigation : ILineViewNavigation
     {
         private static Predicate<char> IsWhitespace = Char.IsWhiteSpace;
-        private static Predicate<char> IsNotWhitespace = c => !Char.IsWhiteSpace(c);
+        private static Predicate<char> NotWhitespace = c => !Char.IsWhiteSpace(c);
 
         public int FindNextPosition(IReadOnlyLineView lineView)
         {
@@ -14,26 +14,39 @@ namespace VoidMain.CommandLineIinterface.IO.Views
                 return lineView.Length;
             }
 
-            int currPos = lineView.Position + 1;
-            char nextSymbol = lineView[currPos];
+            int nextPos = lineView.Position + 1;
+            char nextSymbol = lineView[nextPos];
 
-            var predicate = IsWhitespace(nextSymbol)
-                ? IsWhitespace
-                : IsNotWhitespace;
-            return SkipWhileForward(lineView, currPos, predicate);
+            if (IsWhitespace(nextSymbol))
+            {
+                nextPos = SkipWhileForward(lineView, nextPos, IsWhitespace);
+                return SkipWhileForward(lineView, nextPos, NotWhitespace);
+            }
+            else
+            {
+                return SkipWhileForward(lineView, nextPos, NotWhitespace);
+            }
         }
 
         public int FindPrevPosition(IReadOnlyLineView lineView)
         {
-            if (lineView.Position == 0) return 0;
+            if (lineView.Position == 0)
+            {
+                return 0;
+            }
 
-            int currPos = lineView.Position - 1;
-            char prevSymbol = lineView[currPos];
+            int prevPos = lineView.Position - 1;
+            char prevSymbol = lineView[prevPos];
 
-            var predicate = IsWhitespace(prevSymbol)
-                ? IsWhitespace
-                : IsNotWhitespace;
-            return SkipWhileBackward(lineView, currPos, predicate) + 1;
+            if (IsWhitespace(prevSymbol))
+            {
+                prevPos = SkipWhileBackward(lineView, prevPos, IsWhitespace);
+                return SkipWhileBackward(lineView, prevPos, NotWhitespace) + 1;
+            }
+            else
+            {
+                return SkipWhileBackward(lineView, prevPos, NotWhitespace) + 1;
+            }
         }
 
         private static int SkipWhileForward(IReadOnlyLineView lineView,
