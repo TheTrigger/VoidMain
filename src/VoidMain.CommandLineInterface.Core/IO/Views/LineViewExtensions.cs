@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.IO.Views
+﻿namespace VoidMain.CommandLineInterface.IO.Views
 {
     public static class LineViewExtensions
     {

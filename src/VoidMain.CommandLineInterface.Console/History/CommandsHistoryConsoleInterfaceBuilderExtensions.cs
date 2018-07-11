@@ -1,6 +1,6 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.History;
-using VoidMain.CommandLineIinterface.IO.InputHandlers;
+using VoidMain.CommandLineInterface.History;
+using VoidMain.CommandLineInterface.IO.InputHandlers;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

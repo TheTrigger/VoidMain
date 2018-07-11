@@ -1,10 +1,10 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.IO.InputHandlers;
-using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.CommandLineInterface.IO.Console;
+using VoidMain.CommandLineInterface.IO.InputHandlers;
+using VoidMain.CommandLineInterface.IO.Views;
 using VoidMain.Hosting.Environment;
 
-namespace VoidMain.CommandLineIinterface.UndoRedo
+namespace VoidMain.CommandLineInterface.UndoRedo
 {
     public class UndoRedoInputHandler : IConsoleInputHandler
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.CommandLineInterface.IO.Views;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.UndoRedo.Tests
+namespace VoidMain.CommandLineInterface.UndoRedo.Tests
 {
     public class UndoRedoManager_Should
     {

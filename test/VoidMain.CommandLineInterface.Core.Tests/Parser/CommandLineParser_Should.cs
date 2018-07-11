@@ -1,10 +1,10 @@
 ﻿using Moq;
 using System;
 using VoidMain.Application;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Parser.Tests
+namespace VoidMain.CommandLineInterface.Parser.Tests
 {
     public class CommandLineParser_Should
     {

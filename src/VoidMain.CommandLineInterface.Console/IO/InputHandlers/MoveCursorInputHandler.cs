@@ -1,8 +1,8 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.CommandLineInterface.IO.Console;
+using VoidMain.CommandLineInterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.IO.InputHandlers
+namespace VoidMain.CommandLineInterface.IO.InputHandlers
 {
     public class MoveCursorInputHandler : IConsoleInputHandler
     {

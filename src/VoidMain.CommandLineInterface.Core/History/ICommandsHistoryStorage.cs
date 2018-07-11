@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.History
+namespace VoidMain.CommandLineInterface.History
 {
     public interface ICommandsHistoryStorage
     {

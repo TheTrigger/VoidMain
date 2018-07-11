@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.Highlighting
+namespace VoidMain.CommandLineInterface.Highlighting
 {
     public class HighlightingPalette<TName, TStyle> : IEnumerable<KeyValuePair<TName, TStyle>>
     {

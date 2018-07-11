@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VoidMain.CommandLineIinterface.IO.Console
+namespace VoidMain.CommandLineInterface.IO.Console
 {
     public class ConsoleKeyReader : IConsoleKeyReader
     {

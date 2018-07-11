@@ -1,13 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 using VoidMain.Application;
-using VoidMain.CommandLineIinterface;
-using VoidMain.CommandLineIinterface.IO;
-using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.IO.InputHandlers;
-using VoidMain.CommandLineIinterface.IO.Templates;
-using VoidMain.CommandLineIinterface.IO.Views;
-using VoidMain.CommandLineIinterface.Parser;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface;
+using VoidMain.CommandLineInterface.IO;
+using VoidMain.CommandLineInterface.IO.Console;
+using VoidMain.CommandLineInterface.IO.InputHandlers;
+using VoidMain.CommandLineInterface.IO.Templates;
+using VoidMain.CommandLineInterface.IO.Views;
+using VoidMain.CommandLineInterface.Parser;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

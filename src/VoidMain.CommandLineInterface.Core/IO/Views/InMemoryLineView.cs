@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace VoidMain.CommandLineIinterface.IO.Views
+namespace VoidMain.CommandLineInterface.IO.Views
 {
     public class InMemoryLineView : ILineView, IReusableLineView
     {

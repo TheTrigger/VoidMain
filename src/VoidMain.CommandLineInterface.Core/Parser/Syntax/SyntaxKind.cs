@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.Parser.Syntax
+namespace VoidMain.CommandLineInterface.Parser.Syntax
 {
     [Flags]
     public enum SyntaxKind

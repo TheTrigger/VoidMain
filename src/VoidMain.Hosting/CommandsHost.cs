@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Builder;
-using VoidMain.CommandLineIinterface;
+using VoidMain.CommandLineInterface;
 
 namespace VoidMain.Hosting
 {

@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface
+﻿namespace VoidMain.CommandLineInterface
 {
     public class Colored<T>
     {

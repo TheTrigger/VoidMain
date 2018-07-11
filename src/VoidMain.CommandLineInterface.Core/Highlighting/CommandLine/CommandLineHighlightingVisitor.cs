@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.Highlighting.CommandLine
+namespace VoidMain.CommandLineInterface.Highlighting.CommandLine
 {
     public class CommandLineHighlightingVisitor<TStyle>
         : ICommandLineSyntaxVisitor<CommandLineHighlightingVisitorParams<TStyle>>

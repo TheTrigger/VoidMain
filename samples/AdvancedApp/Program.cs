@@ -4,10 +4,10 @@ using System.Text;
 using VoidMain.Application.Builder;
 using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
-using VoidMain.CommandLineIinterface;
-using VoidMain.CommandLineIinterface.Highlighting;
-using VoidMain.CommandLineIinterface.Highlighting.CommandLine;
-using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.CommandLineInterface;
+using VoidMain.CommandLineInterface.Highlighting;
+using VoidMain.CommandLineInterface.Highlighting.CommandLine;
+using VoidMain.CommandLineInterface.IO.Views;
 using VoidMain.Hosting;
 
 namespace AdvancedApp

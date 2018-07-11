@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Parser.Syntax.Tests
+namespace VoidMain.CommandLineInterface.Parser.Syntax.Tests
 {
     public class SyntaxKindTests
     {

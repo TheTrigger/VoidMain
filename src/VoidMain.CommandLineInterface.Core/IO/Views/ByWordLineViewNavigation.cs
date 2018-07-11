@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.IO.Views
+namespace VoidMain.CommandLineInterface.IO.Views
 {
     public class ByWordLineViewNavigation : ILineViewNavigation
     {

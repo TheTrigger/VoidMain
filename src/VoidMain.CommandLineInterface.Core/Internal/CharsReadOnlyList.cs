@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace VoidMain.CommandLineIinterface.Internal
+namespace VoidMain.CommandLineInterface.Internal
 {
     [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
     public class CharsReadOnlyList : IReadOnlyList<char>

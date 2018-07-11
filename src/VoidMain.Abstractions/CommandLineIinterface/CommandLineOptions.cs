@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineInterface
 {
     public class CommandLineOptions
     {

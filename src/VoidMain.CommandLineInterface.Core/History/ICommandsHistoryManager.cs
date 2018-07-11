@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.History
+﻿namespace VoidMain.CommandLineInterface.History
 {
     public interface ICommandsHistoryManager
     {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using VoidMain.Hosting.Environment;
 
-namespace VoidMain.CommandLineIinterface.History
+namespace VoidMain.CommandLineInterface.History
 {
     public class CommandsHistoryFileStorage : ICommandsHistoryStorage
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using VoidMain.Application;
 
-namespace VoidMain.CommandLineIinterface.Parser
+namespace VoidMain.CommandLineInterface.Parser
 {
     public class EmptySemanticModel : ISemanticModel
     {

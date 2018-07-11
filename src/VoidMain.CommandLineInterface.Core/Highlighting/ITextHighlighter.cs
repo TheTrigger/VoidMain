@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.Highlighting
+namespace VoidMain.CommandLineInterface.Highlighting
 {
     public interface ITextHighlighter<TStyle>
     {

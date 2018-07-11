@@ -2,7 +2,7 @@
 using VoidMain.Application.Builder;
 using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
-using VoidMain.CommandLineIinterface;
+using VoidMain.CommandLineInterface;
 using VoidMain.Hosting;
 
 namespace SimpleApp

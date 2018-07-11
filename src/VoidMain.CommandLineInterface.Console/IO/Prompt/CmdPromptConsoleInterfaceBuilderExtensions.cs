@@ -1,5 +1,5 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Prompt;
+using VoidMain.CommandLineInterface.IO.Prompt;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

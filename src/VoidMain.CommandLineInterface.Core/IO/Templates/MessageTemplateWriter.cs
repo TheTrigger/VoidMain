@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VoidMain.CommandLineIinterface.IO.Templates
+namespace VoidMain.CommandLineInterface.IO.Templates
 {
     public class MessageTemplateWriter : IMessageTemplateWriter
     {

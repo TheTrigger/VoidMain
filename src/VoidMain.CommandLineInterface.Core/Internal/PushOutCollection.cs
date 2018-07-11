@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace VoidMain.CommandLineIinterface.Internal
+namespace VoidMain.CommandLineInterface.Internal
 {
     [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
     public class PushOutCollection<T> : IReadOnlyList<T>

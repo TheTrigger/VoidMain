@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineInterface
 {
     public class ColoredFormat : IReadOnlyList<Colored<object>>, IEnumerable<Colored<object>>
     {

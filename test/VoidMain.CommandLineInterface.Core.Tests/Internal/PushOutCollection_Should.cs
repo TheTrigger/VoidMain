@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.Internal.Tests
+namespace VoidMain.CommandLineInterface.Internal.Tests
 {
     public class PushOutCollection_Should
     {

@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.IO.InputHandlers
+﻿namespace VoidMain.CommandLineInterface.IO.InputHandlers
 {
     public interface IConsoleInputHandler
     {

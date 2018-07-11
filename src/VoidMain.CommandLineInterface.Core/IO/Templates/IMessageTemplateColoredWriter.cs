@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.IO.Templates
+namespace VoidMain.CommandLineInterface.IO.Templates
 {
     public interface IMessageTemplateColoredWriter
     {

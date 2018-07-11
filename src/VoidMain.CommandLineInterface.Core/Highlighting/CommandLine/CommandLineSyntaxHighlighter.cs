@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using VoidMain.CommandLineIinterface.Parser;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Parser;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.Highlighting.CommandLine
+namespace VoidMain.CommandLineInterface.Highlighting.CommandLine
 {
     public class CommandLineSyntaxHighlighter : ITextHighlighter<TextStyle>
     {

@@ -1,8 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
-using VoidMain.CommandLineIinterface.Parser;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Parser;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.PerformanceTests.CommandLineIinterface.Parser
+namespace VoidMain.PerformanceTests.CommandLineInterface.Parser
 {
     [MemoryDiagnoser]
     public class CommandLineParserTests

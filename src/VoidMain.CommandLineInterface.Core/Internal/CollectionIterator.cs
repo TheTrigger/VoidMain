@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace VoidMain.CommandLineIinterface.Internal
+namespace VoidMain.CommandLineInterface.Internal
 {
     [DebuggerDisplay("Index = {Index}, Current = {Current}")]
     public class CollectionIterator<T>

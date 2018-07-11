@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using VoidMain.Application.Builder;
-using VoidMain.CommandLineIinterface;
+using VoidMain.CommandLineInterface;
 using VoidMain.Hosting.Environment;
 
 namespace VoidMain.Hosting

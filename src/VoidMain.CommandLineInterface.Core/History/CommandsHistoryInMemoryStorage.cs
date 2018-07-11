@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VoidMain.CommandLineIinterface.History
+namespace VoidMain.CommandLineInterface.History
 {
     public class CommandsHistoryInMemoryStorage : ICommandsHistoryStorage
     {

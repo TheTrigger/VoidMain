@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineInterface
 {
     public interface ICommandLineOutput
     {

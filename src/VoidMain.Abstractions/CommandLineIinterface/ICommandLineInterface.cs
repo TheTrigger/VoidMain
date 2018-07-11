@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using VoidMain.Application.Builder;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineInterface
 {
     public interface ICommandLineInterface
     {

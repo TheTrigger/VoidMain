@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.Highlighting.CommandLine
+namespace VoidMain.CommandLineInterface.Highlighting.CommandLine
 {
     public class CommandLineHighlightingOptions
     {

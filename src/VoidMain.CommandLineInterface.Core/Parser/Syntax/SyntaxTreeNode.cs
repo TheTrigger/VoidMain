@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VoidMain.CommandLineIinterface.Parser.Syntax
+namespace VoidMain.CommandLineInterface.Parser.Syntax
 {
     public abstract class SyntaxTreeNode : SyntaxNode, IReadOnlyList<SyntaxNode>
     {

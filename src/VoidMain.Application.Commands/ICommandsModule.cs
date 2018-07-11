@@ -1,4 +1,4 @@
-﻿using VoidMain.CommandLineIinterface;
+﻿using VoidMain.CommandLineInterface;
 
 namespace VoidMain.Application.Commands
 {

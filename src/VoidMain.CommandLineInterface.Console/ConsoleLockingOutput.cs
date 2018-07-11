@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using VoidMain.CommandLineIinterface.IO;
-using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.IO.Templates;
+using VoidMain.CommandLineInterface.IO;
+using VoidMain.CommandLineInterface.IO.Console;
+using VoidMain.CommandLineInterface.IO.Templates;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineInterface
 {
     public class ConsoleLockingOutput : ICommandLineOutput
     {

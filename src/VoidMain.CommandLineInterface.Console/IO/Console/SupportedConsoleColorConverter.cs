@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.IO.Console
+namespace VoidMain.CommandLineInterface.IO.Console
 {
     public class SupportedConsoleColorConverter : IConsoleColorConverter
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.CommandLineInterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.UndoRedo
+namespace VoidMain.CommandLineInterface.UndoRedo
 {
     public class UndoRedoOptions
     {

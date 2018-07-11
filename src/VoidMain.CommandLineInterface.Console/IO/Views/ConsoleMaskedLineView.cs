@@ -1,7 +1,7 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Console;
+using VoidMain.CommandLineInterface.IO.Console;
 
-namespace VoidMain.CommandLineIinterface.IO.Views
+namespace VoidMain.CommandLineInterface.IO.Views
 {
     public class ConsoleMaskedLineView : ILineView, IReusableLineView
     {

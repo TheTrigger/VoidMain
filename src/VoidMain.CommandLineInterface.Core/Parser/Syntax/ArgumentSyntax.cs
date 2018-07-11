@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.Parser.Syntax
+namespace VoidMain.CommandLineInterface.Parser.Syntax
 {
     public abstract class ArgumentSyntax : SyntaxTreeNode
     {

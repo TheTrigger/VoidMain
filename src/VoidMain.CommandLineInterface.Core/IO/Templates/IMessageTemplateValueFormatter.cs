@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.IO.Templates
+namespace VoidMain.CommandLineInterface.IO.Templates
 {
     public interface IMessageTemplateValueFormatter
     {

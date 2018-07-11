@@ -1,7 +1,7 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.Console;
+using VoidMain.CommandLineInterface.IO.Console;
 
-namespace VoidMain.CommandLineIinterface.IO
+namespace VoidMain.CommandLineInterface.IO
 {
     public class ConsoleColoredTextWriter : IColoredTextWriter
     {

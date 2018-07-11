@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
-using VoidMain.PerformanceTests.CommandLineIinterface.Parser;
+using VoidMain.PerformanceTests.CommandLineInterface.Parser;
 
 namespace VoidMain.PerformanceTests
 {

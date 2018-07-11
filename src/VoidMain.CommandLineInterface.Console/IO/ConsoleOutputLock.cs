@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.IO
+namespace VoidMain.CommandLineInterface.IO
 {
     public class ConsoleOutputLock
     {

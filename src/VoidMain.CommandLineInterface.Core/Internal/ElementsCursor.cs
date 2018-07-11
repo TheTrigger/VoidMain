@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace VoidMain.CommandLineIinterface.Internal
+namespace VoidMain.CommandLineInterface.Internal
 {
     [DebuggerDisplay("{Peek(0)} -> {Peek(1)}")]
     public class ElementsCursor<T>

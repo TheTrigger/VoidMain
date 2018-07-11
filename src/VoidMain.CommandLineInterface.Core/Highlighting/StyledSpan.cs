@@ -1,6 +1,6 @@
-﻿using VoidMain.CommandLineIinterface.Parser.Syntax;
+﻿using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.Highlighting
+namespace VoidMain.CommandLineInterface.Highlighting
 {
     public class StyledSpan<TStyle>
     {

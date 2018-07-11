@@ -1,7 +1,7 @@
 ﻿using System;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.IO.Views.Tests
+namespace VoidMain.CommandLineInterface.IO.Views.Tests
 {
     public class InMemoryLineView_Should
     {

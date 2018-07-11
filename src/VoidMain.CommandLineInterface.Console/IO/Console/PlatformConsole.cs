@@ -2,7 +2,7 @@
 using System.IO;
 using SysConsole = System.Console;
 
-namespace VoidMain.CommandLineIinterface.IO.Console
+namespace VoidMain.CommandLineInterface.IO.Console
 {
     public sealed class PlatformConsole : IConsole
     {

@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace VoidMain.CommandLineIinterface.IO.Views.Tests
+namespace VoidMain.CommandLineInterface.IO.Views.Tests
 {
     public class ByWordLineViewNavigation_Should
     {

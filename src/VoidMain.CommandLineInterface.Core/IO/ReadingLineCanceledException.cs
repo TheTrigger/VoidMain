@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace VoidMain.CommandLineIinterface.IO
+namespace VoidMain.CommandLineInterface.IO
 {
     public class ReadingLineCanceledException : OperationCanceledException
     {

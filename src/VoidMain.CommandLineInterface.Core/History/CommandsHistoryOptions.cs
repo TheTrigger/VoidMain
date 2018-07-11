@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.History
+namespace VoidMain.CommandLineInterface.History
 {
     public class CommandsHistoryOptions
     {

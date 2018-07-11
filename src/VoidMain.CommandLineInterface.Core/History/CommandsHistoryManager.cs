@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using VoidMain.CommandLineIinterface.Internal;
+using VoidMain.CommandLineInterface.Internal;
 
-namespace VoidMain.CommandLineIinterface.History
+namespace VoidMain.CommandLineInterface.History
 {
     public class CommandsHistoryManager : ICommandsHistoryManager, IDisposable
     {

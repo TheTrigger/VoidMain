@@ -4,7 +4,7 @@ using System.Linq;
 using VoidMain.Application.Commands.Arguments.CollectionConstructors;
 using VoidMain.Application.Commands.Internal;
 using VoidMain.Application.Commands.Model;
-using VoidMain.CommandLineIinterface;
+using VoidMain.CommandLineInterface;
 
 namespace VoidMain.Application.Commands.Arguments
 {

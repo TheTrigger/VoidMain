@@ -1,6 +1,6 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.IO.InputHandlers;
-using VoidMain.CommandLineIinterface.UndoRedo;
+using VoidMain.CommandLineInterface.IO.InputHandlers;
+using VoidMain.CommandLineInterface.UndoRedo;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

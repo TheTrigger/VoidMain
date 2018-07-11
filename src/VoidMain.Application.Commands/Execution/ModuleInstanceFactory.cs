@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using VoidMain.Application.Commands.Internal;
-using VoidMain.CommandLineIinterface;
+using VoidMain.CommandLineInterface;
 
 namespace VoidMain.Application.Commands.Execution
 {

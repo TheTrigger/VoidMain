@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineIinterface.Parser.Syntax
+﻿namespace VoidMain.CommandLineInterface.Parser.Syntax
 {
     public sealed class OperandSyntax : ArgumentSyntax
     {

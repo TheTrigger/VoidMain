@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using VoidMain.CommandLineIinterface.Internal;
+using VoidMain.CommandLineInterface.Internal;
 
-namespace VoidMain.CommandLineIinterface.IO.Templates
+namespace VoidMain.CommandLineInterface.IO.Templates
 {
     public class MessageTemplateParser : IMessageTemplateParser
     {

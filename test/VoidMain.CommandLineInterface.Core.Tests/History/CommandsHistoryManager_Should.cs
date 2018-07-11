@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace VoidMain.CommandLineIinterface.History.Tests
+namespace VoidMain.CommandLineInterface.History.Tests
 {
     public class CommandsHistoryManager_Should
     {

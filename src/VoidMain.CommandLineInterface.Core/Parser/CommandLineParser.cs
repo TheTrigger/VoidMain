@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using VoidMain.Application;
-using VoidMain.CommandLineIinterface.Internal;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Internal;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.Parser
+namespace VoidMain.CommandLineInterface.Parser
 {
     public class CommandLineParser : ICommandLineParser
     {

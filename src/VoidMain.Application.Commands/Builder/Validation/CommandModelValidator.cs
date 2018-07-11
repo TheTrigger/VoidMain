@@ -5,7 +5,7 @@ using System.Reflection;
 using VoidMain.Application.Commands.Arguments.CollectionConstructors;
 using VoidMain.Application.Commands.Arguments.ValueParsers;
 using VoidMain.Application.Commands.Model;
-using VoidMain.CommandLineIinterface;
+using VoidMain.CommandLineInterface;
 
 namespace VoidMain.Application.Commands.Builder.Validation
 {

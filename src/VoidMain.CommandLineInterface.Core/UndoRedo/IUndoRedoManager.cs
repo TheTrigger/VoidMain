@@ -1,6 +1,6 @@
-﻿using VoidMain.CommandLineIinterface.IO.Views;
+﻿using VoidMain.CommandLineInterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.UndoRedo
+namespace VoidMain.CommandLineInterface.UndoRedo
 {
     public interface IUndoRedoManager
     {

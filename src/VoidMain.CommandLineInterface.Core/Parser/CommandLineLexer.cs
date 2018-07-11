@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using VoidMain.CommandLineIinterface.Internal;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Internal;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.Parser
+namespace VoidMain.CommandLineInterface.Parser
 {
     public class CommandLineLexer : ICommandLineLexer
     {

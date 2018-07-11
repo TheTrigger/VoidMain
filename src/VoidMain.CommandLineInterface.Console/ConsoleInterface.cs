@@ -2,14 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Builder;
-using VoidMain.CommandLineIinterface.Internal;
-using VoidMain.CommandLineIinterface.IO;
-using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.IO.Prompt;
-using VoidMain.CommandLineIinterface.Parser;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Internal;
+using VoidMain.CommandLineInterface.IO;
+using VoidMain.CommandLineInterface.IO.Console;
+using VoidMain.CommandLineInterface.IO.Prompt;
+using VoidMain.CommandLineInterface.Parser;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface
+namespace VoidMain.CommandLineInterface
 {
     public class ConsoleInterface : ICommandLineInterface
     {

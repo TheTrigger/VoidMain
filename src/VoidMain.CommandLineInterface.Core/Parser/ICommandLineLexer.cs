@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using VoidMain.CommandLineIinterface.Parser.Syntax;
+using VoidMain.CommandLineInterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.Parser
+namespace VoidMain.CommandLineInterface.Parser
 {
     public interface ICommandLineLexer
     {

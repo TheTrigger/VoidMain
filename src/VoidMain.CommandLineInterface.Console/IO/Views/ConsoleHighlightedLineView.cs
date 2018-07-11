@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using VoidMain.CommandLineIinterface.Highlighting;
-using VoidMain.CommandLineIinterface.IO.Console;
+using VoidMain.CommandLineInterface.Highlighting;
+using VoidMain.CommandLineInterface.IO.Console;
 
-namespace VoidMain.CommandLineIinterface.IO.Views
+namespace VoidMain.CommandLineInterface.IO.Views
 {
     public class ConsoleHighlightedLineView : ILineView, IReusableLineView, ILineViewInputLifecycle
     {

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-namespace VoidMain.CommandLineIinterface.History
+namespace VoidMain.CommandLineInterface.History
 {
     public class CommandsHistoryFileStorageOptions
     {

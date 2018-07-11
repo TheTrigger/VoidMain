@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.IO.Prompt
+namespace VoidMain.CommandLineInterface.IO.Prompt
 {
     public class PromptMessageOptions
     {

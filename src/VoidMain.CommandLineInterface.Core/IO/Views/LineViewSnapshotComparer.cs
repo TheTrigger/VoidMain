@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VoidMain.CommandLineIinterface.IO.Views
+namespace VoidMain.CommandLineInterface.IO.Views
 {
     public class LineViewSnapshotComparer
     {

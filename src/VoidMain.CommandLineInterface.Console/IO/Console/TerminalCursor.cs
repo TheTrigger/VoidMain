@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.IO.Console
+namespace VoidMain.CommandLineInterface.IO.Console
 {
     public class TerminalCursor : IConsoleCursor
     {

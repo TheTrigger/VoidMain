@@ -1,8 +1,8 @@
 ﻿using System;
-using VoidMain.CommandLineIinterface.Internal;
-using VoidMain.CommandLineIinterface.IO.Views;
+using VoidMain.CommandLineInterface.Internal;
+using VoidMain.CommandLineInterface.IO.Views;
 
-namespace VoidMain.CommandLineIinterface.UndoRedo
+namespace VoidMain.CommandLineInterface.UndoRedo
 {
     public class UndoRedoManager : IUndoRedoManager
     {
