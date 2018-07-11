@@ -15,8 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\VoidMain.Abstractions\VoidMain.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\VoidMain.Application.Commands\VoidMain.Application.Commands.csproj" />
-    <ProjectReference Include="..\..\src\VoidMain.CommandLineIinterface.Console\VoidMain.CommandLineIinterface.Console.csproj" />
-    <ProjectReference Include="..\..\src\VoidMain.CommandLineIinterface.Core\VoidMain.CommandLineIinterface.Core.csproj" />
+    <ProjectReference Include="..\..\src\VoidMain.CommandLineInterface.Console\VoidMain.CommandLineInterface.Console.csproj" />
+    <ProjectReference Include="..\..\src\VoidMain.CommandLineInterface.Core\VoidMain.CommandLineInterface.Core.csproj" />
     <ProjectReference Include="..\..\src\VoidMain.Hosting\VoidMain.Hosting.csproj" />
   </ItemGroup>
 

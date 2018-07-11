@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleApp", "samples\Simple
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Hosting", "src\VoidMain.Hosting\VoidMain.Hosting.csproj", "{834DE313-B35B-4962-AE9B-56D04B778A77}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface.Core", "src\VoidMain.CommandLineIinterface.Core\VoidMain.CommandLineIinterface.Core.csproj", "{3F25F0BF-557D-4434-99F1-BF5EBFCF3CE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineInterface.Core", "src\VoidMain.CommandLineInterface.Core\VoidMain.CommandLineInterface.Core.csproj", "{3F25F0BF-557D-4434-99F1-BF5EBFCF3CE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Application.Commands", "src\VoidMain.Application.Commands\VoidMain.Application.Commands.csproj", "{6C012817-11D4-49E5-8731-F7C7DE0EAF41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface.Core.Tests", "test\VoidMain.CommandLineIinterface.Core.Tests\VoidMain.CommandLineIinterface.Core.Tests.csproj", "{D38CE9F0-0526-4CC1-A0BF-5EA34128C0BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineInterface.Core.Tests", "test\VoidMain.CommandLineInterface.Core.Tests\VoidMain.CommandLineInterface.Core.Tests.csproj", "{D38CE9F0-0526-4CC1-A0BF-5EA34128C0BA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3E6E63F-93F0-450B-978C-050CFE51027B}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineIinterface.Console", "src\VoidMain.CommandLineIinterface.Console\VoidMain.CommandLineIinterface.Console.csproj", "{C138A66F-CDB5-4400-A2C9-F20ABB0C94AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineInterface.Console", "src\VoidMain.CommandLineInterface.Console\VoidMain.CommandLineInterface.Console.csproj", "{C138A66F-CDB5-4400-A2C9-F20ABB0C94AC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedApp", "samples\AdvancedApp\AdvancedApp.csproj", "{16F24161-F537-40A6-ACFB-96581680FAC1}"
 EndProject
