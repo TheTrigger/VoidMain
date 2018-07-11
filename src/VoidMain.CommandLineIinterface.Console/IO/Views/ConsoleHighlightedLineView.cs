@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using VoidMain.CommandLineIinterface.Highlighting;
 using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {
@@ -216,7 +216,7 @@ namespace VoidMain.CommandLineIinterface.IO.Views
                     throw new IndexOutOfRangeException(); // TODO: add error message
                 }
 
-                _coloredTextWriter.Write(style.Foreground, style.Background, span.Text);
+                _coloredTextWriter.Write(style?.Foreground, style?.Background, span.Text);
                 written += span.Length;
             }
 

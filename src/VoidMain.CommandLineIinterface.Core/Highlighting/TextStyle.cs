@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.CommandLineIinterface.SyntaxHighlight
+namespace VoidMain.CommandLineIinterface.Highlighting
 {
     public class TextStyle : IEquatable<TextStyle>
     {

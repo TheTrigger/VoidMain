@@ -101,15 +101,15 @@ public void ConfigureServices(IServiceCollection services)
         })
         .AddSyntaxHighlighting(options =>
         {
-            options.Palette = new SyntaxHighlightingPalette()
+            options.Palette = new CommandLineHighlightingPalette()
             {
-                { SyntaxClass.CommandName, Color.Yellow },
-                { SyntaxClass.OptionName, Color.Blue, Color.Yellow },
-                { SyntaxClass.Operand, new ConsoleTextStyle(Color.DarkCyan) }
+                { CommandLineStyleName.CommandName, Color.Yellow },
+                { CommandLineStyleName.OptionName, Color.Blue, Color.Yellow },
+                { CommandLineStyleName.Operand, new ConsoleTextStyle(Color.DarkCyan) }
                 // OptionNameMarker, OptionValueMarker, OptionValue, EndOfOptions
             };
             // or
-            options.Palette = SyntaxHighlightingPalette.Default;
+            options.Palette = CommandLineHighlightingPalette.Default;
         })
         .AddCommandsHistory(options =>
         {

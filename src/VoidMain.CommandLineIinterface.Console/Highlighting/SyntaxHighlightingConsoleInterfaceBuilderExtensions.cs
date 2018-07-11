@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using VoidMain.Application;
+using VoidMain.CommandLineIinterface.Highlighting;
+using VoidMain.CommandLineIinterface.Highlighting.CommandLine;
 using VoidMain.CommandLineIinterface.IO.Views;
 using VoidMain.CommandLineIinterface.Parser;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
-using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -12,11 +13,10 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static ConsoleInterfaceBuilder AddSyntaxHighlighting(
             this ConsoleInterfaceBuilder builder,
-            Action<SyntaxHighlightingOptions> options = null)
+            Action<CommandLineHighlightingOptions> options = null)
         {
             var services = builder.Services;
             services.AddSingleton<ITextHighlighter<TextStyle>, CommandLineSyntaxHighlighter>();
-            services.AddSingleton<ISyntaxHighlighter<TextStyle>, SyntaxHighlighter<TextStyle>>();
             services.AddSingleton<ILineViewProvider, ConsoleHighlightedLineViewProvider>();
 
             var parserService = services.FirstOrDefault(_ => _.ServiceType == typeof(ICommandLineParser));

@@ -5,8 +5,9 @@ using VoidMain.Application.Builder;
 using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
 using VoidMain.CommandLineIinterface;
+using VoidMain.CommandLineIinterface.Highlighting;
+using VoidMain.CommandLineIinterface.Highlighting.CommandLine;
 using VoidMain.CommandLineIinterface.IO.Views;
-using VoidMain.CommandLineIinterface.SyntaxHighlight;
 using VoidMain.Hosting;
 
 namespace AdvancedApp
@@ -45,15 +46,15 @@ namespace AdvancedApp
                 })
                 .AddSyntaxHighlighting(options =>
                 {
-                    options.Palette = new SyntaxHighlightingPalette()
+                    options.Palette = new CommandLineHighlightingPalette()
                     {
-                        { SyntaxClass.CommandName, Color.Yellow },
-                        { SyntaxClass.OptionName, Color.Blue, Color.Yellow },
-                        { SyntaxClass.Operand, new TextStyle(Color.DarkCyan) }
+                        { CommandLineStyleName.CommandName, Color.Yellow },
+                        { CommandLineStyleName.OptionName, Color.Blue, Color.Yellow },
+                        { CommandLineStyleName.Operand, new TextStyle(Color.DarkCyan) }
                         // OptionNameMarker, OptionValueMarker, OptionValue, EndOfOptions
                     };
                     // or
-                    options.Palette = SyntaxHighlightingPalette.Default;
+                    options.Palette = CommandLineHighlightingPalette.Default;
                 })
                 .AddCommandsHistory(options =>
                 {

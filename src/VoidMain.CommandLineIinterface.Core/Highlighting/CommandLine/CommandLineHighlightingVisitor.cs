@@ -1,72 +1,72 @@
 ﻿using System.Collections.Generic;
 using VoidMain.CommandLineIinterface.Parser.Syntax;
 
-namespace VoidMain.CommandLineIinterface.SyntaxHighlight
+namespace VoidMain.CommandLineIinterface.Highlighting.CommandLine
 {
-    public class HighlightingVisitor<TStyle>
-        : ICommandLineSyntaxVisitor<HighlightingVisitorParams<TStyle>>
+    public class CommandLineHighlightingVisitor<TStyle>
+        : ICommandLineSyntaxVisitor<CommandLineHighlightingVisitorParams<TStyle>>
     {
-        public bool VisitCommandLine(CommandLineSyntax commandLine, HighlightingVisitorParams<TStyle> param)
+        public bool VisitCommandLine(CommandLineSyntax commandLine, CommandLineHighlightingVisitorParams<TStyle> param)
         {
             return true;
         }
 
-        public bool VisitCommandName(CommandNameSyntax commandName, HighlightingVisitorParams<TStyle> param)
+        public bool VisitCommandName(CommandNameSyntax commandName, CommandLineHighlightingVisitorParams<TStyle> param)
         {
             var spans = param.Spans;
             var palette = param.Palette;
 
             foreach (var namePart in commandName.NameParts)
             {
-                AddSpans(spans, namePart, SyntaxClass.CommandName, palette);
+                AddSpans(spans, namePart, CommandLineStyleName.CommandName, palette);
             }
 
             return false;
         }
 
-        public bool VisitArgumentsSection(ArgumentsSectionSyntax argumentsSection, HighlightingVisitorParams<TStyle> param)
+        public bool VisitArgumentsSection(ArgumentsSectionSyntax argumentsSection, CommandLineHighlightingVisitorParams<TStyle> param)
         {
             return true;
         }
 
-        public bool VisitOption(OptionSyntax option, HighlightingVisitorParams<TStyle> param)
+        public bool VisitOption(OptionSyntax option, CommandLineHighlightingVisitorParams<TStyle> param)
         {
             var spans = param.Spans;
             var palette = param.Palette;
 
             if (option.NameMarker != null)
             {
-                AddSpans(spans, option.NameMarker, SyntaxClass.OptionNameMarker, palette);
+                AddSpans(spans, option.NameMarker, CommandLineStyleName.OptionNameMarker, palette);
             }
 
-            AddSpans(spans, option.Name, SyntaxClass.OptionName, palette);
+            AddSpans(spans, option.Name, CommandLineStyleName.OptionName, palette);
 
             if (option.ValueMarker != null)
             {
-                AddSpans(spans, option.ValueMarker, SyntaxClass.OptionValueMarker, palette);
+                AddSpans(spans, option.ValueMarker, CommandLineStyleName.OptionValueMarker, palette);
             }
 
             if (option.Value != null)
             {
-                AddSpans(spans, option.Value, SyntaxClass.OptionValue, palette);
+                AddSpans(spans, option.Value, CommandLineStyleName.OptionValue, palette);
             }
 
             return false;
         }
 
-        public bool VisitEndOfOptions(EndOfOptionsSyntax endOfOptions, HighlightingVisitorParams<TStyle> param)
+        public bool VisitEndOfOptions(EndOfOptionsSyntax endOfOptions, CommandLineHighlightingVisitorParams<TStyle> param)
         {
-            AddSpans(param.Spans, endOfOptions.Token, SyntaxClass.EndOfOptions, param.Palette);
+            AddSpans(param.Spans, endOfOptions.Token, CommandLineStyleName.EndOfOptions, param.Palette);
             return false;
         }
 
-        public bool VisitOperand(OperandSyntax operand, HighlightingVisitorParams<TStyle> param)
+        public bool VisitOperand(OperandSyntax operand, CommandLineHighlightingVisitorParams<TStyle> param)
         {
-            AddSpans(param.Spans, operand.Value, SyntaxClass.Operand, param.Palette);
+            AddSpans(param.Spans, operand.Value, CommandLineStyleName.Operand, param.Palette);
             return false;
         }
 
-        public bool VisitValue(ValueSyntax value, HighlightingVisitorParams<TStyle> param)
+        public bool VisitValue(ValueSyntax value, CommandLineHighlightingVisitorParams<TStyle> param)
         {
             return false;
         }
@@ -74,8 +74,8 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
         private void AddSpans(
             List<StyledSpan<TStyle>> spans,
             SyntaxToken token,
-            SyntaxClass @class,
-            SyntaxHighlightingPalette<TStyle> palette)
+            CommandLineStyleName @class,
+            HighlightingPalette<CommandLineStyleName, TStyle> palette)
         {
             if (token.HasLeadingTrivia)
             {
@@ -93,8 +93,8 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
         private void AddSpans(
             List<StyledSpan<TStyle>> spans,
             ValueSyntax valueSyntax,
-            SyntaxClass @class,
-            SyntaxHighlightingPalette<TStyle> palette)
+            CommandLineStyleName @class,
+            HighlightingPalette<CommandLineStyleName, TStyle> palette)
         {
             var valueTokens = valueSyntax.Tokens;
             var first = valueTokens[0];
@@ -114,16 +114,16 @@ namespace VoidMain.CommandLineIinterface.SyntaxHighlight
         }
 
         private StyledSpan<TStyle> GetStyledSpan(
-            SyntaxClass @class, TextSpan span,
-            SyntaxHighlightingPalette<TStyle> palette)
+            CommandLineStyleName @class, TextSpan span,
+            HighlightingPalette<CommandLineStyleName, TStyle> palette)
         {
-            var style = palette.GetStyle(@class);
+            var style = palette.Get(@class);
             return new StyledSpan<TStyle>(span, style);
         }
 
         private StyledSpan<TStyle> GetDefaultSpan(
             TextSpan span,
-            SyntaxHighlightingPalette<TStyle> palette)
+            HighlightingPalette<CommandLineStyleName, TStyle> palette)
         {
             return new StyledSpan<TStyle>(span, palette.DefaultStyle);
         }

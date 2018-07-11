@@ -1,6 +1,6 @@
 ﻿using System;
+using VoidMain.CommandLineIinterface.Highlighting;
 using VoidMain.CommandLineIinterface.IO.Console;
-using VoidMain.CommandLineIinterface.SyntaxHighlight;
 
 namespace VoidMain.CommandLineIinterface.IO.Views
 {

@@ -1,6 +1,6 @@
-﻿namespace VoidMain.CommandLineIinterface.SyntaxHighlight
+﻿namespace VoidMain.CommandLineIinterface.Highlighting.CommandLine
 {
-    public enum SyntaxClass
+    public enum CommandLineStyleName
     {
         CommandName,
         OptionNameMarker,
