@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidMain.Application.Builder;
@@ -184,31 +185,68 @@ namespace VoidMain.CommandLineInterface
 
         private void PrintParseErrors(CommandLineSyntax commandLineSyntax)
         {
-            _console.WriteLine(commandLineSyntax.FullSpan);
-
             var errors = commandLineSyntax.Errors;
+
+            _console.WriteLine(commandLineSyntax.FullSpan);
+            PrintParseErrorsMarkers(errors);
+
             int indexSpace = errors.Count.ToString().Length;
 
             for (int i = 0; i < errors.Count; i++)
             {
                 var error = errors[i];
-                var span = error.Span;
-
-                _console.Write(' ', span.Start);
-                _console.Write('^', span.IsEmpty ? 1 : span.Length);
-
-                string index = (i + 1).ToString().PadLeft(indexSpace);
-                _console.WriteLine(index);
-            }
-
-            for (int i = 0; i < errors.Count; i++)
-            {
-                var error = errors[i];
-                string index = (i + 1).ToString().PadLeft(indexSpace);
-                _console.WriteLine($"{index}) {error.Message}");
+                string errorIndex = (i + 1).ToString().PadLeft(indexSpace);
+                _console.WriteLine($"{errorIndex}) {error.Message}");
             }
 
             _console.WriteLine();
+        }
+
+        private void PrintParseErrorsMarkers(IReadOnlyList<SyntaxError> errors)
+        {
+            var errorMarkers = new List<SyntaxError>(errors);
+            bool hasMoreMarkers = false;
+            int linePos = 0;
+
+            do
+            {
+                hasMoreMarkers = false;
+                linePos = 0;
+
+                for (int i = 0; i < errorMarkers.Count; i++)
+                {
+                    var marker = errorMarkers[i];
+                    if (marker == null)
+                    {
+                        // Already printed
+                        continue;
+                    }
+
+                    var span = marker.Span;
+                    if (span.Start < linePos)
+                    {
+                        hasMoreMarkers = true;
+                        continue;
+                    }
+
+                    int markerOffset = span.Start - linePos;
+                    _console.Write(' ', markerOffset);
+                    linePos += markerOffset;
+
+                    int markerWidth = span.IsEmpty ? 1 : span.Length;
+                    _console.Write('^', markerWidth);
+                    linePos += markerWidth;
+
+                    string markerIndex = (i + 1).ToString();
+                    _console.Write(markerIndex);
+                    linePos += markerIndex.Length;
+
+                    // Mark as printed
+                    errorMarkers[i] = null;
+                }
+
+                _console.WriteLine();
+            } while (hasMoreMarkers);
         }
 
         private void PrintErrorMessage(Exception ex, bool verbose)
