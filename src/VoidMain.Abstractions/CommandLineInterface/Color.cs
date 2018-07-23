@@ -26,50 +26,51 @@ namespace VoidMain.CommandLineInterface
         private const int GreenShift = 8;
         private const int BlueShift = 0;
 
-        private readonly long _value;
+        public uint Value { get; }
 
-        public byte A => (byte)((_value >> AlphaShift) & 0xFF);
-        public byte R => (byte)((_value >> RedShift) & 0xFF);
-        public byte G => (byte)((_value >> GreenShift) & 0xFF);
-        public byte B => (byte)((_value >> BlueShift) & 0xFF);
+        public byte A => (byte)((Value >> AlphaShift) & 0xFF);
+        public byte R => (byte)((Value >> RedShift) & 0xFF);
+        public byte G => (byte)((Value >> GreenShift) & 0xFF);
+        public byte B => (byte)((Value >> BlueShift) & 0xFF);
 
         private Color() { }
 
         public Color(byte red, byte green, byte blue)
         {
-            _value = MakeArgb(255, red, green, blue);
+            Value = MakeArgb(255, red, green, blue);
         }
 
-        private static long MakeArgb(byte alpha, byte red, byte green, byte blue)
+        public Color(byte alpha, byte red, byte green, byte blue)
         {
-            return (long)(unchecked((uint)(
+            Value = MakeArgb(alpha, red, green, blue);
+        }
+
+        public Color(uint value)
+        {
+            Value = value;
+        }
+
+        public string ToHexString() => Value.ToString("X8");
+
+        private static uint MakeArgb(byte alpha, byte red, byte green, byte blue)
+        {
+            return (unchecked((uint)(
                 red << RedShift |
                 green << GreenShift |
                 blue << BlueShift |
                 alpha << AlphaShift
-                ))) & 0xffffffff;
+                )));
         }
 
         public bool Equals(Color other)
         {
             if (ReferenceEquals(other, null)) return false;
             if (ReferenceEquals(other, this)) return true;
-            return _value == other._value;
+            return Value == other.Value;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Color);
-        }
-
-        public override int GetHashCode()
-        {
-            return _value.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return "#" + _value.ToString("X8");
-        }
+        public override bool Equals(object obj) => Equals(obj as Color);
+        public override int GetHashCode() => Value.GetHashCode();
+        public override string ToString() => "#" + ToHexString();
     }
 }
