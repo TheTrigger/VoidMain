@@ -16,18 +16,36 @@ namespace Microsoft.Extensions.DependencyInjection
         public static ConsoleInterfaceBuilder AddConsoleInterfaceCore(
             this IServiceCollection services)
         {
+            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
             services.AddSingleton<ICommandLineInterface, ConsoleInterface>();
 
             services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
-            services.AddSingleton<IConsoleColorConverter, NearestConsoleColorConverter>();
-            services.AddTransient<IColoredTextWriter, ConsoleColoredTextWriter>();
+
+            if (isWindows)
+            {
+                if (WindowsVirtualTerminal.TryEnable())
+                {
+                    services.AddTransient<IColoredTextWriter, ConsoleAnsiColoredTextWriter>();
+                }
+                else
+                {
+                    services.AddSingleton<IConsoleColorConverter, NearestConsoleColorConverter>();
+                    services.AddTransient<IColoredTextWriter, ConsoleColoredTextWriter>();
+                }
+            }
+            else
+            {
+                services.AddTransient<IColoredTextWriter, ConsoleAnsiColoredTextWriter>();
+            }
+
             services.AddTransient<IMessageTemplateParser, MessageTemplateParser>();
             services.AddTransient<IMessageTemplateWriter, MessageTemplateWriter>();
             services.AddTransient<IMessageTemplateColoredWriter, MessageTemplateColoredWriter>();
             services.AddTransient<IMessageTemplateValueFormatter, MessageTemplateValueFormatter>();
             services.AddSingleton<ConsoleOutputLock>();
 
-            var cursorType = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            var cursorType = isWindows
                 ? typeof(CmdCursor)
                 : typeof(TerminalCursor);
             services.AddSingleton(typeof(IConsoleCursor), cursorType);
