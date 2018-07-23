@@ -52,7 +52,6 @@ namespace VoidMain.CommandLineInterface.IO
                 ThrowIfCancellationRequested(token, hadUserInput: lineView.Length > 0);
             }
 
-            ThrowIfCancellationRequested(token, hadUserInput: lineView.Length > 0);
             return default(string);
         }
 

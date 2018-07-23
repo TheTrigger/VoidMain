@@ -32,6 +32,12 @@ namespace VoidMain.CommandLineInterface.IO.Console
         }
 
 #pragma warning disable PC001 // API not supported on all platforms
+        public string Title
+        {
+            get => SysConsole.Title;
+            set => SysConsole.Title = value;
+        }
+
         public int BufferHeight
         {
             get => SysConsole.BufferHeight;

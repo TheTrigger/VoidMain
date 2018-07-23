@@ -10,6 +10,8 @@ namespace VoidMain.CommandLineInterface.IO.Console
         TextReader In { get; set; }
         TextWriter Out { get; set; }
 
+        string Title { get; set; }
+
         int BufferHeight { get; set; }
         int BufferWidth { get; set; }
         int CursorTop { get; set; }
