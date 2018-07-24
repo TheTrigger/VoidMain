@@ -11,7 +11,11 @@ namespace VoidMain.CommandLineInterface
         private readonly List<Colored<object>> _args;
 
         public int Count => _args.Count;
-        public Colored<object> this[int index] => _args[index];
+        public Colored<object> this[int index]
+        {
+            get => _args[index];
+            set => _args[index] = value;
+        }
 
         public ColoredFormat(
             Colored<string> template,
@@ -59,6 +63,8 @@ namespace VoidMain.CommandLineInterface
             _args.Add(new Colored<object>(arg, foreground, background));
             return this;
         }
+
+        public void ClearArgs() => _args.Clear();
 
         public IEnumerator<Colored<object>> GetEnumerator() => _args.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => _args.GetEnumerator();
