@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using System;
+using System.Globalization;
+using Xunit;
 
 namespace VoidMain.CommandLineInterface.Tests
 {
@@ -68,9 +70,69 @@ namespace VoidMain.CommandLineInterface.Tests
             Assert.Equal(blue, color.B);
         }
 
+        [Theory]
+        [InlineData("00000000")]
+        [InlineData("0000000A")]
+        [InlineData("000000A0")]
+        [InlineData("00000A00")]
+        [InlineData("0000A000")]
+        [InlineData("000A0000")]
+        [InlineData("00A00000")]
+        [InlineData("0A000000")]
+        [InlineData("A0000000")]
+        [InlineData("059afADF")]
+        public void ParseHexString(string hexString)
+        {
+            // Arrange, Act
+            var color = new Color(hexString);
+            uint expected = UInt32.Parse(hexString, NumberStyles.HexNumber);
+
+            // Assert
+            Assert.Equal(expected, color.Value);
+        }
+
+        [Fact]
+        public void ThrowOnNullHexString()
+        {
+            // Arrange, Act, Assert
+            Assert.Throws<ArgumentNullException>(() => new Color(null));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("AB")]
+        [InlineData("XYZ")]
+        [InlineData("####")]
+        [InlineData("12345")]
+        [InlineData("1234567")]
+        [InlineData("123456789")]
+        public void ThrowOnInvalidHexString(string hexString)
+        {
+            // Arrange, Act, Assert
+            Assert.Throws<FormatException>(() => new Color(hexString));
+        }
+
         #endregion
 
-        #region Equals
+        [Theory]
+        [InlineData("012", "FF001122")]
+        [InlineData("3456", "33445566")]
+        [InlineData("789ABC", "FF789ABC")]
+        [InlineData("DEF01234", "DEF01234")]
+        [InlineData("#012", "FF001122")]
+        [InlineData("#3456", "33445566")]
+        [InlineData("#789ABC", "FF789ABC")]
+        [InlineData("#DEF01234", "DEF01234")]
+        public void ToHexString(string hexString, string expected)
+        {
+            // Arrange, Act
+            var color = new Color(hexString);
+
+            // Assert
+            Assert.Equal(expected, color.ToHexString(), ignoreCase: true);
+        }
+
+        #region Equals tests
 
         [Theory]
         [InlineData(255, 192, 128, 64)]

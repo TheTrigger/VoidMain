@@ -50,6 +50,67 @@ namespace VoidMain.CommandLineInterface
             Value = value;
         }
 
+        public Color(string hexString)
+        {
+            if (hexString == null)
+            {
+                throw new ArgumentNullException(nameof(hexString));
+            }
+
+            // Index of the first digit
+            int i = hexString.Length > 0 && hexString[0] == '#' ? 1 : 0;
+            int length = hexString.Length - i;
+
+            int alpha = 255;
+            int red = 0;
+            int green = 0;
+            int blue = 0;
+
+            if (length == 8)
+            {
+                alpha = HexToInt(hexString[i++]) * 16 + HexToInt(hexString[i++]);
+                length -= 2;
+            }
+            if (length == 6)
+            {
+                red = HexToInt(hexString[i++]) * 16 + HexToInt(hexString[i++]);
+                green = HexToInt(hexString[i++]) * 16 + HexToInt(hexString[i++]);
+                blue = HexToInt(hexString[i++]) * 16 + HexToInt(hexString[i]); // No increment, last one
+
+                Value = MakeArgb((byte)alpha, (byte)red, (byte)green, (byte)blue);
+                return;
+            }
+
+            if (length == 4)
+            {
+                alpha = HexToInt(hexString[i++]);
+                alpha = alpha * 16 + alpha;
+                length--;
+            }
+            if (length == 3)
+            {
+                red = HexToInt(hexString[i++]);
+                red = red * 16 + red;
+                green = HexToInt(hexString[i++]);
+                green = green * 16 + green;
+                blue = HexToInt(hexString[i]); // No increment, last one
+                blue = blue * 16 + blue;
+
+                Value = MakeArgb((byte)alpha, (byte)red, (byte)green, (byte)blue);
+                return;
+            }
+
+            throw new FormatException("Input string was not in a correct format.");
+        }
+
+        private static int HexToInt(char hex)
+        {
+            if (hex >= '0' && hex <= '9') return hex - '0';
+            if (hex >= 'a' && hex <= 'f') return hex - 'a' + 10;
+            if (hex >= 'A' && hex <= 'F') return hex - 'A' + 10;
+            throw new FormatException("Input string was not in a correct format.");
+        }
+
         public string ToHexString() => Value.ToString("X8");
 
         private static uint MakeArgb(byte alpha, byte red, byte green, byte blue)
