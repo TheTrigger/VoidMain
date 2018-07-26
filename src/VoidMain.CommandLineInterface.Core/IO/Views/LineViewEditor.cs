@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using VoidMain.CommandLineInterface.IO.Console;
 using VoidMain.CommandLineInterface.IO.InputHandlers;
-using VoidMain.CommandLineInterface.IO.Views;
 
-namespace VoidMain.CommandLineInterface.IO
+namespace VoidMain.CommandLineInterface.IO.Views
 {
     public class LineViewEditor : ILineViewEditor
     {

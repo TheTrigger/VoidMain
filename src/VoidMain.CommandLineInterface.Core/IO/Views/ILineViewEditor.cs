@@ -1,8 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using VoidMain.CommandLineInterface.IO.Views;
 
-namespace VoidMain.CommandLineInterface.IO
+namespace VoidMain.CommandLineInterface.IO.Views
 {
     public interface ILineViewEditor
     {

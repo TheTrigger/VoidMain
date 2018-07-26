@@ -1,5 +1,4 @@
 ﻿using System;
-using VoidMain.CommandLineInterface.IO.Console;
 
 namespace VoidMain.CommandLineInterface.IO.InputHandlers
 {

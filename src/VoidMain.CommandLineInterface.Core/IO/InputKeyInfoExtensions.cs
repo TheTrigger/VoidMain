@@ -1,4 +1,4 @@
-﻿namespace VoidMain.CommandLineInterface.IO.Console
+﻿namespace VoidMain.CommandLineInterface.IO
 {
     public static class InputKeyInfoExtensions
     {

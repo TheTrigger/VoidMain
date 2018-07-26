@@ -1,6 +1,5 @@
 ﻿using System;
 using VoidMain.CommandLineInterface.IO;
-using VoidMain.CommandLineInterface.IO.Console;
 using VoidMain.CommandLineInterface.IO.InputHandlers;
 using VoidMain.CommandLineInterface.IO.Views;
 using VoidMain.Hosting.Environment;
