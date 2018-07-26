@@ -52,11 +52,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IConsole>(_ => PlatformConsole.Instance);
 
             services.AddSingleton<ILineReader, ConsoleLineReader>();
-            services.AddTransient<ILineViewEditor, LineViewConsoleEditor>();
-            services.AddTransient<IConsoleKeyReader, ConsoleKeyReader>();
-            services.AddTransient<IConsoleInputHandler, TypeCharacterInputHandler>();
-            services.AddTransient<IConsoleInputHandler, DeleteCharacterInputHandler>();
-            services.AddTransient<IConsoleInputHandler, MoveCursorInputHandler>();
+            services.AddTransient<ILineViewEditor, LineViewEditor>();
+            services.AddTransient<IInputKeyReader, ConsoleKeyReader>();
+            services.AddTransient<IConsoleKeyConverter, ConsoleKeyConverter>();
+            services.AddTransient<IInputHandler, TypeCharacterInputHandler>();
+            services.AddTransient<IInputHandler, DeleteCharacterInputHandler>();
+            services.AddTransient<IInputHandler, MoveCursorInputHandler>();
 
             services.AddSingleton<ILineViewNavigation, ByWordLineViewNavigation>();
 

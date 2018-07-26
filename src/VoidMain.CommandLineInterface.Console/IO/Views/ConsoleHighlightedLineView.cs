@@ -175,14 +175,14 @@ namespace VoidMain.CommandLineInterface.IO.Views
             // do nothing
         }
 
-        public void BeforeInputHandling(bool isNextKeyAvailable)
+        public void BeforeInputHandling(bool hasMoreInput)
         {
             // do nothing
         }
 
-        public void AfterInputHandling(bool isNextKeyAvailable)
+        public void AfterInputHandling(bool hasMoreInput)
         {
-            if (!_hasChanges || isNextKeyAvailable) return;
+            if (!_hasChanges || hasMoreInput) return;
             RenderLine();
             _hasChanges = false;
         }

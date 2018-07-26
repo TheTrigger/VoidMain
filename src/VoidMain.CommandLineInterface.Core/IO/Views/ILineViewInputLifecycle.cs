@@ -5,7 +5,7 @@
         void BeforeLineReading();
         void AfterLineReading();
 
-        void BeforeInputHandling(bool isNextKeyAvailable);
-        void AfterInputHandling(bool isNextKeyAvailable);
+        void BeforeInputHandling(bool hasMoreInput);
+        void AfterInputHandling(bool hasMoreInput);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using VoidMain.CommandLineInterface.IO;
 using VoidMain.CommandLineInterface.IO.Console;
 using VoidMain.CommandLineInterface.IO.InputHandlers;
 using VoidMain.CommandLineInterface.IO.Views;
@@ -6,7 +7,7 @@ using VoidMain.Hosting.Environment;
 
 namespace VoidMain.CommandLineInterface.UndoRedo
 {
-    public class UndoRedoInputHandler : IConsoleInputHandler
+    public class UndoRedoInputHandler : IInputHandler
     {
         private readonly IUndoRedoManager _undoRedoManager;
         private readonly IClock _clock;
@@ -25,11 +26,11 @@ namespace VoidMain.CommandLineInterface.UndoRedo
             _lastSnapshotTime = DateTime.MinValue;
         }
 
-        public void Handle(ConsoleInputEventArgs args)
+        public void Handle(InputEventArgs args)
         {
             switch (args.Input.Key)
             {
-                case ConsoleKey.Z:
+                case InputKey.Z:
                     if (args.Input.HasControlKey())
                     {
                         Undo(args);
@@ -39,7 +40,7 @@ namespace VoidMain.CommandLineInterface.UndoRedo
                         AddSnapshot(args.LineView);
                     }
                     break;
-                case ConsoleKey.Y:
+                case InputKey.Y:
                     if (args.Input.HasControlKey())
                     {
                         Redo(args);
@@ -49,7 +50,7 @@ namespace VoidMain.CommandLineInterface.UndoRedo
                         AddSnapshot(args.LineView);
                     }
                     break;
-                case ConsoleKey.Enter:
+                case InputKey.Enter:
                     ClearSnapshots();
                     break;
                 default:
@@ -58,7 +59,7 @@ namespace VoidMain.CommandLineInterface.UndoRedo
             }
         }
 
-        private void Undo(ConsoleInputEventArgs args)
+        private void Undo(InputEventArgs args)
         {
             var lineView = args.LineView;
             var currentSnapshot = lineView.TakeSnapshot();
@@ -69,7 +70,7 @@ namespace VoidMain.CommandLineInterface.UndoRedo
             }
         }
 
-        private void Redo(ConsoleInputEventArgs args)
+        private void Redo(InputEventArgs args)
         {
             var lineView = args.LineView;
             var currentSnapshot = lineView.TakeSnapshot();

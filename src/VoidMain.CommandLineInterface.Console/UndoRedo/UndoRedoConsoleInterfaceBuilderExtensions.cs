@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
                this ConsoleInterfaceBuilder builer, Action<UndoRedoOptions> options = null)
         {
             var services = builer.Services;
-            services.AddTransient<IConsoleInputHandler, UndoRedoInputHandler>();
+            services.AddTransient<IInputHandler, UndoRedoInputHandler>();
             services.AddSingleton<IUndoRedoManager, UndoRedoManager>();
 
             if (options != null)

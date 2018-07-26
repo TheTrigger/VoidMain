@@ -1,25 +1,23 @@
-﻿using System;
-
-namespace VoidMain.CommandLineInterface.IO.Console
+﻿namespace VoidMain.CommandLineInterface.IO.Console
 {
-    public static class ConsoleKeyInfoExtensions
+    public static class InputKeyInfoExtensions
     {
-        public static bool HasAltKey(this ConsoleKeyInfo keyInfo)
+        public static bool HasAltKey(this InputKeyInfo keyInfo)
         {
-            return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Alt);
+            return (keyInfo.Modifiers & InputModifiers.Alt) == InputModifiers.Alt;
         }
 
-        public static bool HasShiftKey(this ConsoleKeyInfo keyInfo)
+        public static bool HasShiftKey(this InputKeyInfo keyInfo)
         {
-            return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Shift);
+            return (keyInfo.Modifiers & InputModifiers.Shift) == InputModifiers.Shift;
         }
 
-        public static bool HasControlKey(this ConsoleKeyInfo keyInfo)
+        public static bool HasControlKey(this InputKeyInfo keyInfo)
         {
-            return keyInfo.Modifiers.HasFlag(ConsoleModifiers.Control);
+            return (keyInfo.Modifiers & InputModifiers.Control) == InputModifiers.Control;
         }
 
-        public static bool HasNoModifiers(this ConsoleKeyInfo keyInfo)
+        public static bool HasNoModifiers(this InputKeyInfo keyInfo)
         {
             return keyInfo.Modifiers == 0;
         }

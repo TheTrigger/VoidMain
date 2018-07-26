@@ -4,7 +4,7 @@ using VoidMain.CommandLineInterface.IO.Views;
 
 namespace VoidMain.CommandLineInterface.IO.InputHandlers
 {
-    public class MoveCursorInputHandler : IConsoleInputHandler
+    public class MoveCursorInputHandler : IInputHandler
     {
         private readonly ILineViewNavigation _lineViewNavigation;
 
@@ -15,22 +15,22 @@ namespace VoidMain.CommandLineInterface.IO.InputHandlers
             _lineViewNavigation = lineViewNavigation ?? throw new ArgumentNullException(nameof(lineViewNavigation));
         }
 
-        public void Handle(ConsoleInputEventArgs args)
+        public void Handle(InputEventArgs args)
         {
             if (args.IsHandledHint) return;
 
             switch (args.Input.Key)
             {
-                case ConsoleKey.Home:
+                case InputKey.Home:
                     MoveToStart(args);
                     break;
-                case ConsoleKey.End:
+                case InputKey.End:
                     MoveToEnd(args);
                     break;
-                case ConsoleKey.LeftArrow:
+                case InputKey.LeftArrow:
                     MoveLeft(args);
                     break;
-                case ConsoleKey.RightArrow:
+                case InputKey.RightArrow:
                     MoveRight(args);
                     break;
                 default:
@@ -38,19 +38,19 @@ namespace VoidMain.CommandLineInterface.IO.InputHandlers
             }
         }
 
-        private void MoveToStart(ConsoleInputEventArgs args)
+        private void MoveToStart(InputEventArgs args)
         {
             args.LineView.MoveTo(0);
             args.IsHandledHint = true;
         }
 
-        private void MoveToEnd(ConsoleInputEventArgs args)
+        private void MoveToEnd(InputEventArgs args)
         {
             args.LineView.MoveTo(args.LineView.Length);
             args.IsHandledHint = true;
         }
 
-        private void MoveLeft(ConsoleInputEventArgs args)
+        private void MoveLeft(InputEventArgs args)
         {
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
@@ -69,7 +69,7 @@ namespace VoidMain.CommandLineInterface.IO.InputHandlers
             }
         }
 
-        private void MoveRight(ConsoleInputEventArgs args)
+        private void MoveRight(InputEventArgs args)
         {
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;

@@ -4,7 +4,7 @@ using VoidMain.CommandLineInterface.IO.Views;
 
 namespace VoidMain.CommandLineInterface.IO.InputHandlers
 {
-    public class DeleteCharacterInputHandler : IConsoleInputHandler
+    public class DeleteCharacterInputHandler : IInputHandler
     {
         private readonly ILineViewNavigation _lineViewNavigation;
 
@@ -15,19 +15,19 @@ namespace VoidMain.CommandLineInterface.IO.InputHandlers
             _lineViewNavigation = lineViewNavigation ?? throw new ArgumentNullException(nameof(lineViewNavigation));
         }
 
-        public void Handle(ConsoleInputEventArgs args)
+        public void Handle(InputEventArgs args)
         {
             if (args.IsHandledHint) return;
 
             switch (args.Input.Key)
             {
-                case ConsoleKey.Backspace:
+                case InputKey.Backspace:
                     DeleteBackward(args);
                     break;
-                case ConsoleKey.Delete:
+                case InputKey.Delete:
                     DeleteForward(args);
                     break;
-                case ConsoleKey.Escape:
+                case InputKey.Escape:
                     Clear(args);
                     break;
                 default:
@@ -35,7 +35,7 @@ namespace VoidMain.CommandLineInterface.IO.InputHandlers
             }
         }
 
-        private void DeleteBackward(ConsoleInputEventArgs args)
+        private void DeleteBackward(InputEventArgs args)
         {
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
@@ -54,7 +54,7 @@ namespace VoidMain.CommandLineInterface.IO.InputHandlers
             }
         }
 
-        private void DeleteForward(ConsoleInputEventArgs args)
+        private void DeleteForward(InputEventArgs args)
         {
             bool fast = args.Input.HasControlKey();
             var lineView = args.LineView;
@@ -73,7 +73,7 @@ namespace VoidMain.CommandLineInterface.IO.InputHandlers
             }
         }
 
-        private void Clear(ConsoleInputEventArgs args)
+        private void Clear(InputEventArgs args)
         {
             args.LineView.Clear();
             args.IsHandledHint = true;

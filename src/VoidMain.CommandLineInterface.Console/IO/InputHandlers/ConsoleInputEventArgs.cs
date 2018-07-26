@@ -1,13 +1,10 @@
-﻿using System;
-using VoidMain.CommandLineInterface.IO.Views;
+﻿using VoidMain.CommandLineInterface.IO.Views;
 
 namespace VoidMain.CommandLineInterface.IO.InputHandlers
 {
-    public class ConsoleInputEventArgs
+    public class InputEventArgs
     {
-        public ConsoleKeyInfo Input { get; set; }
-
-        public bool IsNextKeyAvailable { get; set; }
+        public InputKeyInfo Input { get; set; }
 
         /// <summary>
         /// This flag can hint the following input handlers to omit handling.

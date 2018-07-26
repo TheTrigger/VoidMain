@@ -1,8 +1,8 @@
 ﻿namespace VoidMain.CommandLineInterface.IO.InputHandlers
 {
-    public interface IConsoleInputHandler
+    public interface IInputHandler
     {
         int Order { get; }
-        void Handle(ConsoleInputEventArgs args);
+        void Handle(InputEventArgs args);
     }
 }

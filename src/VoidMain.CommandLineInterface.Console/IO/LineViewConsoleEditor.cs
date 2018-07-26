@@ -9,14 +9,14 @@ using VoidMain.CommandLineInterface.IO.Views;
 
 namespace VoidMain.CommandLineInterface.IO
 {
-    public class LineViewConsoleEditor : ILineViewEditor
+    public class LineViewEditor : ILineViewEditor
     {
-        private readonly IConsoleKeyReader _keyReader;
-        private readonly IConsoleInputHandler[] _inputHandlers;
+        private readonly IInputKeyReader _keyReader;
+        private readonly IInputHandler[] _inputHandlers;
 
-        public LineViewConsoleEditor(
-            IConsoleKeyReader keyReader,
-            IEnumerable<IConsoleInputHandler> inputHandlers)
+        public LineViewEditor(
+            IInputKeyReader keyReader,
+            IEnumerable<IInputHandler> inputHandlers)
         {
             _keyReader = keyReader ?? throw new ArgumentNullException(nameof(keyReader));
             if (inputHandlers == null)
@@ -36,34 +36,28 @@ namespace VoidMain.CommandLineInterface.IO
             token.ThrowIfCancellationRequested();
 
             var inputLifecycle = lineView as ILineViewInputLifecycle;
-            var eventArgs = new ConsoleInputEventArgs();
+            var eventArgs = new InputEventArgs();
 
             inputLifecycle?.BeforeLineReading();
             try
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var key = await _keyReader.ReadKeyAsync(intercept: true, token: token)
+                    var keyInfo = await _keyReader.ReadKeyAsync(intercept: true, token: token)
                         .ConfigureAwait(false);
-                    var keyInfo = key.KeyInfo;
-                    bool isNextKeyAvailable = key.IsNextKeyAvailable;
 
-                    eventArgs.LineView = lineView;
                     eventArgs.Input = keyInfo;
-                    eventArgs.IsNextKeyAvailable = isNextKeyAvailable;
                     eventArgs.IsHandledHint = false;
+                    eventArgs.LineView = lineView;
 
-                    inputLifecycle?.BeforeInputHandling(isNextKeyAvailable);
+                    inputLifecycle?.BeforeInputHandling(keyInfo.HasMoreInput);
                     for (int i = 0; i < _inputHandlers.Length; i++)
                     {
                         _inputHandlers[i].Handle(eventArgs);
                     }
-                    inputLifecycle?.AfterInputHandling(isNextKeyAvailable);
+                    inputLifecycle?.AfterInputHandling(keyInfo.HasMoreInput);
 
-                    if (keyInfo.Key == ConsoleKey.Enter)
-                    {
-                        return;
-                    }
+                    if (keyInfo.Key == InputKey.Enter) return;
                 }
             }
             finally

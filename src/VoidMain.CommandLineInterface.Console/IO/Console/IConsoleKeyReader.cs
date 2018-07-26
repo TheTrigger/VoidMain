@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 
 namespace VoidMain.CommandLineInterface.IO.Console
 {
-    public interface IConsoleKeyReader
+    public interface IInputKeyReader
     {
-        Task<ExtendedConsoleKeyInfo> ReadKeyAsync(
-            bool intercept = false, CancellationToken token = default(CancellationToken));
+        Task<InputKeyInfo> ReadKeyAsync(
+            bool intercept = false,
+            CancellationToken token = default(CancellationToken));
     }
 }

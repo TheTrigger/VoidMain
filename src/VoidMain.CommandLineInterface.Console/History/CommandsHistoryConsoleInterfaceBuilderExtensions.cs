@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this ConsoleInterfaceBuilder builder, Action<CommandsHistoryOptions> options = null)
         {
             var services = builder.Services;
-            services.AddTransient<IConsoleInputHandler, CommandsHistoryInputHandler>();
+            services.AddTransient<IInputHandler, CommandsHistoryInputHandler>();
             services.AddSingleton<ICommandsHistoryManager, CommandsHistoryManager>();
             if (options != null)
             {

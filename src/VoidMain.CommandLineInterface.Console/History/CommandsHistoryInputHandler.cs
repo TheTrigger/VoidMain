@@ -1,10 +1,11 @@
 ﻿using System;
+using VoidMain.CommandLineInterface.IO;
 using VoidMain.CommandLineInterface.IO.InputHandlers;
 using VoidMain.CommandLineInterface.IO.Views;
 
 namespace VoidMain.CommandLineInterface.History
 {
-    public class CommandsHistoryInputHandler : IConsoleInputHandler
+    public class CommandsHistoryInputHandler : IInputHandler
     {
         private readonly ICommandsHistoryManager _historyManager;
         private LineViewSnapshot? _temp;
@@ -17,19 +18,19 @@ namespace VoidMain.CommandLineInterface.History
             _temp = null;
         }
 
-        public void Handle(ConsoleInputEventArgs args)
+        public void Handle(InputEventArgs args)
         {
             if (args.IsHandledHint) return;
 
             switch (args.Input.Key)
             {
-                case ConsoleKey.UpArrow:
+                case InputKey.UpArrow:
                     SetPrevCommand(args);
                     break;
-                case ConsoleKey.DownArrow:
+                case InputKey.DownArrow:
                     SetNextCommand(args);
                     break;
-                case ConsoleKey.Enter:
+                case InputKey.Enter:
                     AddCommand(args);
                     break;
                 default:
@@ -37,7 +38,7 @@ namespace VoidMain.CommandLineInterface.History
             }
         }
 
-        private void SetPrevCommand(ConsoleInputEventArgs args)
+        private void SetPrevCommand(InputEventArgs args)
         {
             if (_historyManager.TryGetPrevCommand(out string command))
             {
@@ -50,7 +51,7 @@ namespace VoidMain.CommandLineInterface.History
             }
         }
 
-        private void SetNextCommand(ConsoleInputEventArgs args)
+        private void SetNextCommand(InputEventArgs args)
         {
             if (_historyManager.TryGetNextCommand(out string command))
             {
@@ -65,7 +66,7 @@ namespace VoidMain.CommandLineInterface.History
             }
         }
 
-        private void AddCommand(ConsoleInputEventArgs args)
+        private void AddCommand(InputEventArgs args)
         {
             string command = args.LineView.ToString();
             _historyManager.AddCommand(command);
