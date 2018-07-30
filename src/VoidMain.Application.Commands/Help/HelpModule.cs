@@ -32,9 +32,9 @@ namespace VoidMain.Application.Commands.Help
         }
 
         [Command(Description = "Display help information")]
-        public void Help([Operand(Description = "Name of the command")] string commandName = null)
+        public void Help([Operand(Description = "Name of the command")] string[] commandName = null)
         {
-            if (String.IsNullOrWhiteSpace(commandName))
+            if (commandName.Length == 0)
             {
                 _helpWriter.WriteGeneralHelp(Output, _appModel.Commands);
             }
@@ -45,9 +45,9 @@ namespace VoidMain.Application.Commands.Help
             }
         }
 
-        private CommandModel FindCommand(string commandName)
+        private CommandModel FindCommand(string[] commandName)
         {
-            var name = _commandNameParser.Parse(commandName);
+            var name = _commandNameParser.Parse(String.Join(" ", commandName));
             var context = new Dictionary<string, object>();
             ContextHelper.SetCommandName(context, name.Parts as string[] ?? name.Parts.ToArray());
 
