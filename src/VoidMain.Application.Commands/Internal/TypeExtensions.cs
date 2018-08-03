@@ -33,6 +33,13 @@ namespace VoidMain.Application.Commands.Internal
             return type.FullName == "System.DBNull";
         }
 
+        public static bool IsParameterizedGeneric(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+            return typeInfo.IsGenericType
+                && !typeInfo.ContainsGenericParameters;
+        }
+
         public static bool IsParams(this ParameterInfo param)
         {
             return param.IsDefined(typeof(ParamArrayAttribute));

@@ -236,17 +236,14 @@ namespace VoidMain.Application.Commands.Arguments
             ICollectionConstructor sourceCtor, object sourceCollection,
             ICollectionConstructor targetCtor, Type targetCollectionType)
         {
-            var elementType = targetCtor.GetElementType(targetCollectionType);
-            var source = sourceCtor.Wrap(sourceCollection);
-            var target = targetCtor.Create(elementType, source.Count);
+            int count = sourceCtor.GetElementsCount(sourceCollection);
+            object[] values = new object[count];
+            sourceCtor.Deconstruct(sourceCollection, values);
 
-            for (int i = 0; i < source.Count; i++)
-            {
-                var value = source.GetValue(i);
-                target.SetValue(i, value);
-            }
+            var targetElementType = targetCtor.GetElementType(targetCollectionType);
+            var targetCollection = targetCtor.Construct(targetElementType, values);
 
-            return target.Collection;
+            return targetCollection;
         }
 
         private object ParseValue(ArgumentModel arg, ParseArguments parseArgs, out int valuesUsed)
@@ -259,19 +256,19 @@ namespace VoidMain.Application.Commands.Arguments
                 valuesUsed = parseArgs.Values.Length - parseArgs.ValuesOffset;
 
                 var argElemType = colCtor.GetElementType(argType);
-                var colAdapter = colCtor.Create(argElemType, valuesUsed);
-
                 var valueType = argElemType.UnwrapIfNullable();
                 var parser = _valueParserProvider.GetParser(valueType, arg.ValueParser);
+
+                object[] values = new object[valuesUsed];
 
                 for (int i = 0; i < valuesUsed; i++)
                 {
                     string stringValue = parseArgs.Values[parseArgs.ValuesOffset + i];
-                    var value = ParseValue(stringValue, valueType, parser);
-                    colAdapter.SetValue(i, value);
+                    values[i] = ParseValue(stringValue, valueType, parser);
                 }
 
-                return colAdapter.Collection;
+                var collection = colCtor.Construct(argElemType, values);
+                return collection;
             }
             else
             {

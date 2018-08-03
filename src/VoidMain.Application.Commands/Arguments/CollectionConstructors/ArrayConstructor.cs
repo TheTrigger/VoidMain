@@ -1,61 +1,67 @@
 ﻿using System;
-using System.Reflection;
+using System.Collections.Generic;
+using VoidMain.Application.Commands.Internal;
 
 namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
 {
     public class ArrayConstructor : ICollectionConstructor
     {
+        private static readonly Type[] SupportedTypes =
+        {
+            typeof(IEnumerable<>),
+            typeof(ICollection<>),
+            typeof(IReadOnlyCollection<>),
+            typeof(IList<>),
+            typeof(IReadOnlyList<>)
+        };
+
         public Type GetElementType(Type collectionType)
         {
             if (collectionType.IsArray)
             {
                 return collectionType.GetElementType();
             }
-            if (collectionType.GetTypeInfo().IsGenericType)
+
+            if (collectionType.IsParameterizedGeneric())
             {
-                return collectionType.GenericTypeArguments[0];
+                var definition = collectionType.GetGenericTypeDefinition();
+                int index = Array.IndexOf(SupportedTypes, definition);
+                if (index >= 0)
+                {
+                    return collectionType.GenericTypeArguments[0];
+                }
             }
 
-            throw new ArgumentException("Collection type must be an array or one of it's generic interfaces.");
+            throw new NotSupportedException("Collection type must be an Array or one of its generic interfaces.");
         }
 
-        public ICollectionAdapter Create(Type elementType, int count)
-        {
-            var array = Array.CreateInstance(elementType, count);
-            return new Adapter(array);
-        }
-
-        public ICollectionAdapter Wrap(object collection)
+        public int GetElementsCount(object collection)
         {
             var array = collection as Array;
             if (array == null)
             {
-                throw new ArgumentException("Collection must be an array.");
+                throw new NotSupportedException("Collection must be an Array.");
             }
-            return new Adapter(array);
+
+            return array.GetLength(0);
         }
 
-        public class Adapter : ICollectionAdapter
+        public object Construct(Type elementType, object[] elements)
         {
-            private readonly Array _array;
+            var array = Array.CreateInstance(elementType, elements.Length);
+            Array.Copy(elements, array, elements.Length);
+            return array;
+        }
 
-            public object Collection => _array;
-            public int Count => _array.Length;
-
-            public Adapter(Array array)
+        public void Deconstruct(object collection, object[] elements)
+        {
+            var array = collection as Array;
+            if (array == null)
             {
-                _array = array;
+                throw new NotSupportedException("Collection must be an Array.");
             }
 
-            public object GetValue(int index)
-            {
-                return _array.GetValue(index);
-            }
-
-            public void SetValue(int index, object value)
-            {
-                _array.SetValue(value, index);
-            }
+            Array.Copy(array, elements, array.Length);
         }
     }
 }
