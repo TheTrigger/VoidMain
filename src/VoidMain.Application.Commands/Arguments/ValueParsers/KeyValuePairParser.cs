@@ -9,24 +9,43 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
         private static readonly char[] Separators = { '=', ':' };
         private static readonly Type KeyValyeDefinition = typeof(KeyValuePair<,>);
 
-        private readonly IValueParserProvider _valueParserProvider;
+        private readonly Type _keyValueType;
+        private readonly Type _keyType;
+        private readonly Type _valueType;
+        private readonly IValueParser _keyParser;
+        private readonly IValueParser _valueParser;
 
-        public KeyValuePairParser(IValueParserProvider valueParserProvider)
+        public KeyValuePairParser(Type keyValueType, IValueParserProvider valueParserProvider)
         {
-            _valueParserProvider = valueParserProvider ?? throw new ArgumentNullException(nameof(valueParserProvider));
-        }
-
-        public object Parse(string stringValue, Type keyValueType, IFormatProvider formatProvider)
-        {
-            if (!keyValueType.IsParameterizedGeneric())
+            if (valueParserProvider == null)
             {
-                throw new NotSupportedException();
+                throw new ArgumentNullException(nameof(valueParserProvider));
+            }
+            _keyValueType = keyValueType ?? throw new ArgumentNullException(nameof(keyValueType));
+
+            if (!IsParameterizedKeyValuePair(keyValueType))
+            {
+                throw new ArgumentException();
             }
 
-            var definition = keyValueType.GetGenericTypeDefinition();
-            if (definition != KeyValyeDefinition)
+            _keyType = keyValueType.GenericTypeArguments[0];
+            _valueType = keyValueType.GenericTypeArguments[1];
+
+            _keyParser = valueParserProvider.GetParser(_keyType, parserType: null);
+            _valueParser = valueParserProvider.GetParser(_valueType, parserType: null);
+        }
+
+        private bool IsParameterizedKeyValuePair(Type type)
+        {
+            return type.IsParameterizedGeneric()
+                && type.GetGenericTypeDefinition() == KeyValyeDefinition;
+        }
+
+        public object Parse(string stringValue, Type valueType, IFormatProvider formatProvider)
+        {
+            if (valueType != _keyValueType)
             {
-                throw new NotSupportedException();
+                throw new ArgumentException();
             }
 
             int separatorIndex = stringValue.IndexOfAny(Separators);
@@ -35,17 +54,13 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
                 throw new FormatException();
             }
 
-            var keyType = keyValueType.GenericTypeArguments[0];
             string keyString = stringValue.Substring(0, separatorIndex);
-            var keyParser = _valueParserProvider.GetParser(keyType, parserType: null);
-            object key = keyParser.Parse(keyString, keyType, formatProvider);
-
-            var valueType = keyValueType.GenericTypeArguments[1];
             string valueString = stringValue.Substring(separatorIndex + 1);
-            var valueParser = _valueParserProvider.GetParser(valueType, parserType: null);
-            object value = valueParser.Parse(valueString, valueType, formatProvider);
 
-            var keyValue = Activator.CreateInstance(keyValueType, key, value);
+            object key = _keyParser.Parse(keyString, _keyType, formatProvider);
+            object value = _valueParser.Parse(valueString, _valueType, formatProvider);
+
+            var keyValue = Activator.CreateInstance(_keyValueType, key, value);
             return keyValue;
         }
     }

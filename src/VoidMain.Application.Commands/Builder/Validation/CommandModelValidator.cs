@@ -12,6 +12,7 @@ namespace VoidMain.Application.Commands.Builder.Validation
     public class CommandModelValidator : ICommandModelValidator
     {
         private readonly TypeInfo ValueParserType = typeof(IValueParser).GetTypeInfo();
+        private readonly TypeInfo ValueParserFactoryType = typeof(IValueParserFactory).GetTypeInfo();
 
         private readonly ICollectionConstructorProvider _collectionCtorProvider;
         private readonly CommandLineOptions _cliOptions;
@@ -79,7 +80,8 @@ namespace VoidMain.Application.Commands.Builder.Validation
 
                 if (arg.ValueParser != null && !IsValueParser(arg.ValueParser))
                 {
-                    errors.Add(GetErrorMessage(arg, "Argument value parser must implement `" + nameof(IValueParser) + "` interface"));
+                    errors.Add(GetErrorMessage(arg, "Argument value parser must implement "
+                        + nameof(IValueParser) + " or " + nameof(IValueParserFactory) + " interface"));
                 }
 
                 if (lastOperand != null && IsCollectionOperand(arg) && arg != lastOperand)
@@ -91,7 +93,7 @@ namespace VoidMain.Application.Commands.Builder.Validation
 
         private bool IsValueParser(Type type)
         {
-            return ValueParserType.IsAssignableFrom(type);
+            return ValueParserType.IsAssignableFrom(type) || ValueParserFactoryType.IsAssignableFrom(type);
         }
 
         private bool IsCollectionOperand(ArgumentModel arg)

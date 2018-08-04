@@ -5,9 +5,9 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
 {
     public class ValueParserProviderOptions
     {
-        public TypeOrInstance<IValueParser> DefaultParser { get; set; }
-        public TypeOrInstance<IValueParser> EnumParser { get; set; }
-        public Dictionary<Type, TypeOrInstance<IValueParser>> ValueParsers { get; set; }
+        public TypeOrInstance<IValueParserMetadata> DefaultParser { get; set; }
+        public TypeOrInstance<IValueParserMetadata> EnumParser { get; set; }
+        public Dictionary<Type, TypeOrInstance<IValueParserMetadata>> ValueParsers { get; set; }
 
         public ValueParserProviderOptions(bool defaults = true)
         {
@@ -15,7 +15,7 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
             {
                 DefaultParser = typeof(ChangeTypeValueParser);
                 EnumParser = typeof(EnumValueParser);
-                ValueParsers = new Dictionary<Type, TypeOrInstance<IValueParser>>
+                ValueParsers = new Dictionary<Type, TypeOrInstance<IValueParserMetadata>>
                 {
                     [typeof(String)] = typeof(StringValueParser),
                     [typeof(Guid)] = typeof(GuidValueParser),
