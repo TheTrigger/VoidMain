@@ -230,6 +230,10 @@ namespace VoidMain.CommandLineInterface.IO.Views
 
             _prevLength = written;
             _prevHighlights = highlights;
+            if (written > _maxPosition)
+            {
+                _maxPosition = written;
+            }
         }
 
         private int IndexOfLastUnchanged(
