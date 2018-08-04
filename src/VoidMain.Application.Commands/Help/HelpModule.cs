@@ -34,7 +34,7 @@ namespace VoidMain.Application.Commands.Help
         [Command(Description = "Display help information")]
         public void Help([Operand(Description = "Name of the command")] string[] commandName = null)
         {
-            if (commandName.Length == 0)
+            if (commandName == null || commandName.Length == 0)
             {
                 _helpWriter.WriteGeneralHelp(Output, _appModel.Commands);
             }
