@@ -25,7 +25,9 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
 
             if (!IsParameterizedKeyValuePair(keyValueType))
             {
-                throw new ArgumentException();
+                throw new ArgumentException(
+                    "Value type must be a parameterized KeyValuePair<TKey, TValye> type.",
+                    nameof(keyValueType));
             }
 
             _keyType = keyValueType.GenericTypeArguments[0];
@@ -45,13 +47,15 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
         {
             if (valueType != _keyValueType)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(
+                    "Value type must be a " + _keyValueType.Name + " type.",
+                    nameof(valueType));
             }
 
             int separatorIndex = stringValue.IndexOfAny(Separators);
-            if (separatorIndex < 1)
+            if (separatorIndex < 0)
             {
-                throw new FormatException();
+                throw new FormatException("Key-value separator was not found.");
             }
 
             string keyString = stringValue.Substring(0, separatorIndex);
