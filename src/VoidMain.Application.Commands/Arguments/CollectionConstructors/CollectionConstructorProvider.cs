@@ -60,8 +60,8 @@ namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
 
             if (collectionType.GetTypeInfo().IsGenericType)
             {
-                var genericDefinition = collectionType.GetGenericTypeDefinition();
-                if (_options.CollectionConstructors.TryGetValue(genericDefinition, out config))
+                var definition = collectionType.GetGenericTypeDefinition();
+                if (_options.CollectionConstructors.TryGetValue(definition, out config))
                 {
                     constructor = GetInstance(config, _services);
                     return true;

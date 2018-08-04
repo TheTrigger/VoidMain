@@ -38,6 +38,15 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
                 return GetInstance(config, _services);
             }
 
+            if (valueType.GetTypeInfo().IsGenericType)
+            {
+                var definition = valueType.GetGenericTypeDefinition();
+                if (_options.ValueParsers.TryGetValue(definition, out config))
+                {
+                    return GetInstance(config, _services);
+                }
+            }
+
             return GetInstance(_options.DefaultParser, _services);
         }
 
