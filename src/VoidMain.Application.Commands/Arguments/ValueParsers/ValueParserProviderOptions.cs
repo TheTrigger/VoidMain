@@ -21,7 +21,8 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
                     [typeof(Guid)] = typeof(GuidValueParser),
                     [typeof(IntPtr)] = typeof(IntPtrValueParser),
                     [typeof(TimeSpan)] = typeof(TimeSpanValueParser),
-                    [typeof(Uri)] = typeof(UriValueParser)
+                    [typeof(Uri)] = typeof(UriValueParser),
+                    [typeof(KeyValuePair<,>)] = typeof(KeyValuePairParserFactory)
                 };
             }
         }

@@ -12,16 +12,24 @@ namespace VoidMain.Application.Commands.Arguments.CollectionConstructors
         {
             if (defaults)
             {
-                ArrayConstructor = typeof(ArrayConstructor);
+                var arrayCtor = typeof(ArrayConstructor);
                 var listCtor = typeof(ListConstructor);
+                var dictCtor = typeof(DictionaryConstructor);
+
+                ArrayConstructor = arrayCtor;
                 CollectionConstructors = new Dictionary<Type, TypeOrInstance<ICollectionConstructor>>
                 {
-                    [typeof(IEnumerable<>)] = ArrayConstructor,
-                    [typeof(ICollection<>)] = ArrayConstructor,
-                    [typeof(IReadOnlyCollection<>)] = ArrayConstructor,
-                    [typeof(IReadOnlyList<>)] = ArrayConstructor,
+                    [typeof(IEnumerable<>)] = arrayCtor,
+                    [typeof(ICollection<>)] = arrayCtor,
+                    [typeof(IReadOnlyCollection<>)] = arrayCtor,
+                    [typeof(IReadOnlyList<>)] = arrayCtor,
+
                     [typeof(IList<>)] = listCtor,
-                    [typeof(List<>)] = listCtor
+                    [typeof(List<>)] = listCtor,
+
+                    [typeof(IDictionary<,>)] = dictCtor,
+                    [typeof(IReadOnlyDictionary<,>)] = dictCtor,
+                    [typeof(Dictionary<,>)] = dictCtor,
                 };
             }
         }
