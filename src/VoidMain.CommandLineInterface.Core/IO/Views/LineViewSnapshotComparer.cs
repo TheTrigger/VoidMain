@@ -12,12 +12,12 @@ namespace VoidMain.CommandLineInterface.IO.Views
         {
             public bool Equals(LineViewSnapshot x, LineViewSnapshot y)
             {
-                return x.LineContent == y.LineContent;
+                return x.Content == y.Content;
             }
 
             public int GetHashCode(LineViewSnapshot obj)
             {
-                return obj.LineContent?.GetHashCode() ?? 0;
+                return obj.Content?.GetHashCode() ?? 0;
             }
         }
     }

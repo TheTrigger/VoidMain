@@ -16,61 +16,44 @@ namespace VoidMain.CommandLineInterface.IO
 
         public void Write(Color foreground, Color background, char value)
         {
-            bool fgChanged = ChangeForeground(foreground, out var prevFg);
-            bool bgChanged = ChangeBackground(background, out var prevBg);
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value);
 
-            if (fgChanged) _console.ForegroundColor = prevFg;
-            if (bgChanged) _console.BackgroundColor = prevBg;
+            _console.ResetColors();
         }
 
         public void Write(Color foreground, Color background, char value, int count)
         {
-            if (count <= 0)
-            {
-                return;
-            }
+            if (count <= 0) return;
 
-            bool fgChanged = ChangeForeground(foreground, out var prevFg);
-            bool bgChanged = ChangeBackground(background, out var prevBg);
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value, count);
 
-            if (fgChanged) _console.ForegroundColor = prevFg;
-            if (bgChanged) _console.BackgroundColor = prevBg;
+            _console.ResetColors();
         }
 
         public void Write(Color foreground, Color background, string value)
         {
-            if (String.IsNullOrEmpty(value))
-            {
-                return;
-            }
-
-            bool fgChanged = ChangeForeground(foreground, out var prevFg);
-            bool bgChanged = ChangeBackground(background, out var prevBg);
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value);
 
-            if (fgChanged) _console.ForegroundColor = prevFg;
-            if (bgChanged) _console.BackgroundColor = prevBg;
+            _console.ResetColors();
         }
 
         public void Write(Color foreground, Color background, object value)
         {
-            if (value == null)
-            {
-                return;
-            }
-
-            bool fgChanged = ChangeForeground(foreground, out var prevFg);
-            bool bgChanged = ChangeBackground(background, out var prevBg);
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value);
 
-            if (fgChanged) _console.ForegroundColor = prevFg;
-            if (bgChanged) _console.BackgroundColor = prevBg;
+            _console.ResetColors();
         }
 
         public void WriteLine()
@@ -78,28 +61,16 @@ namespace VoidMain.CommandLineInterface.IO
             _console.WriteLine();
         }
 
-        private bool ChangeForeground(Color foreground, out ConsoleColor prevFg)
+        private void ChangeForeground(Color foreground)
         {
-            prevFg = _console.ForegroundColor;
-            if (foreground == null)
-            {
-                return false;
-            }
-
+            if (foreground == null) return;
             _console.ForegroundColor = ConvertColor(foreground);
-            return true;
         }
 
-        private bool ChangeBackground(Color background, out ConsoleColor prevBg)
+        private void ChangeBackground(Color background)
         {
-            prevBg = _console.BackgroundColor;
-            if (background == null)
-            {
-                return false;
-            }
-
+            if (background == null) return;
             _console.BackgroundColor = ConvertColor(background);
-            return true;
         }
 
         private ConsoleColor ConvertColor(Color color)

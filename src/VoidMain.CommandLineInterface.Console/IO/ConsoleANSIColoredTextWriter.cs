@@ -24,8 +24,8 @@ namespace VoidMain.CommandLineInterface.IO
 
         public void Write(Color foreground, Color background, char value)
         {
-            ChangeColor(foreground, ForegroundCode);
-            ChangeColor(background, BackgroundCode);
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value);
 
@@ -34,8 +34,10 @@ namespace VoidMain.CommandLineInterface.IO
 
         public void Write(Color foreground, Color background, char value, int count)
         {
-            ChangeColor(foreground, ForegroundCode);
-            ChangeColor(background, BackgroundCode);
+            if (count <= 0) return;
+
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value, count);
 
@@ -44,8 +46,8 @@ namespace VoidMain.CommandLineInterface.IO
 
         public void Write(Color foreground, Color background, string value)
         {
-            ChangeColor(foreground, ForegroundCode);
-            ChangeColor(background, BackgroundCode);
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value);
 
@@ -54,8 +56,8 @@ namespace VoidMain.CommandLineInterface.IO
 
         public void Write(Color foreground, Color background, object value)
         {
-            ChangeColor(foreground, ForegroundCode);
-            ChangeColor(background, BackgroundCode);
+            ChangeForeground(foreground);
+            ChangeBackground(background);
 
             _console.Write(value);
 
@@ -67,10 +69,22 @@ namespace VoidMain.CommandLineInterface.IO
             _console.WriteLine();
         }
 
-        private void ChangeColor(Color color, string colorCode)
+        private void ChangeForeground(Color foreground)
         {
-            if (color == null) return;
+            if (foreground == null) return;
+            string colorCommand = GetColorCommand(foreground, ForegroundCode);
+            _console.Write(colorCommand);
+        }
 
+        private void ChangeBackground(Color background)
+        {
+            if (background == null) return;
+            string colorCommand = GetColorCommand(background, BackgroundCode);
+            _console.Write(colorCommand);
+        }
+
+        private string GetColorCommand(Color color, string colorCode)
+        {
             _command.Append(CommandBegin)
                 .Append(colorCode)
                 .Append(color.R)
@@ -80,8 +94,10 @@ namespace VoidMain.CommandLineInterface.IO
                 .Append(color.B)
                 .Append(CommandEnd);
 
-            _console.Write(_command.ToString());
+            string colorCommand = _command.ToString();
             _command.Clear();
+
+            return colorCommand;
         }
 
         private void ResetColors()

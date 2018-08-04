@@ -16,5 +16,12 @@
             Character = character;
             HasMoreInput = hasMoreInput;
         }
+
+        public override string ToString()
+        {
+            return Modifiers == InputModifiers.None
+                ? Key.ToString()
+                : $"{Modifiers} + {Key}";
+        }
     }
 }

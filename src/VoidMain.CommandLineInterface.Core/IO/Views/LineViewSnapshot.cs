@@ -4,32 +4,32 @@ namespace VoidMain.CommandLineInterface.IO.Views
 {
     public struct LineViewSnapshot : IEquatable<LineViewSnapshot>
     {
-        public string LineContent { get; }
-        public int CursorPosition { get; }
+        public string Content { get; }
+        public int Position { get; }
 
         public LineViewSnapshot(ILineView lineView)
         {
-            LineContent = lineView.ToString();
-            CursorPosition = lineView.Position;
+            Content = lineView.ToString();
+            Position = lineView.Position;
         }
 
-        public LineViewSnapshot(string lineContent, int cursorPosition)
+        public LineViewSnapshot(string content, int position)
         {
-            LineContent = lineContent;
-            CursorPosition = cursorPosition;
+            Content = content;
+            Position = position;
         }
 
         public void ApplyTo(ILineView lineView)
         {
-            lineView.ReplaceWith(LineContent);
-            lineView.MoveTo(CursorPosition);
+            lineView.ReplaceWith(Content);
+            lineView.MoveTo(Position);
         }
 
-        public override string ToString() => LineContent;
+        public override string ToString() => Content;
 
         public override int GetHashCode()
         {
-            return (LineContent?.GetHashCode() ?? 0) ^ CursorPosition;
+            return (Content?.GetHashCode() ?? 0) ^ Position;
         }
 
         public override bool Equals(object obj)
@@ -39,8 +39,8 @@ namespace VoidMain.CommandLineInterface.IO.Views
 
         public bool Equals(LineViewSnapshot other)
         {
-            return LineContent == other.LineContent
-                && CursorPosition == other.CursorPosition;
+            return Content == other.Content
+                && Position == other.Position;
         }
 
         public static bool operator ==(LineViewSnapshot left, LineViewSnapshot right) => left.Equals(right);
