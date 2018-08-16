@@ -105,7 +105,7 @@ public void ConfigureServices(IServiceCollection services)
             {
                 { CommandLineStyleName.CommandName, Color.Yellow },
                 { CommandLineStyleName.OptionName, Color.Blue, Color.Yellow },
-                { CommandLineStyleName.Operand, new ConsoleTextStyle(Color.DarkCyan) }
+                { CommandLineStyleName.Operand, new TextStyle(Color.DarkCyan) }
                 // OptionNameMarker, OptionValueMarker, OptionValue, EndOfOptions
             };
             // or
