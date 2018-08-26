@@ -31,6 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IMethodInvokerProvider, MethodInvokerProvider>();
             services.AddSingleton<ICollectionConstructorProvider, CollectionConstructorProvider>();
             services.AddSingleton<IValueParserProvider, ValueParserProvider>();
+            services.AddSingleton<IMultiValueParser, MultiValueParser>();
             services.AddTransient<ISemanticModel, CommandsSemanticModel>();
             return services;
         }

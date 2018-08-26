@@ -18,8 +18,8 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         [Fact]
         public void RequireCollectionConstructorProvider()
         {
-            var parserProvider = new Mock<IValueParserProvider>().Object;
-            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(null, parserProvider));
+            var multiValueParser = new Mock<IMultiValueParser>().Object;
+            Assert.Throws<ArgumentNullException>(() => new ArgumentsParser(null, multiValueParser));
         }
 
         [Fact]
@@ -433,7 +433,8 @@ namespace VoidMain.Application.Commands.Arguments.Tests
         {
             var colCtorProvider = new CollectionConstructorProvider(new CachedTypeActivator(), EmptyServices);
             var parserProvider = new ValueParserProvider(new CachedTypeActivator(), EmptyServices);
-            return new ArgumentsParser(colCtorProvider, parserProvider, options);
+            var multiValueParser = new MultiValueParser(colCtorProvider, parserProvider);
+            return new ArgumentsParser(colCtorProvider, multiValueParser, options);
         }
 
         public interface IRegisteredService { }

@@ -15,7 +15,7 @@ namespace VoidMain.Application.Commands.Arguments
         {
             public string[] Values { get; set; }
             public int ValuesOffset { get; set; }
-            public MultiValueStrategy MultiValueStrategy { get; set; }
+            public SingleValuePolicy SingleValuePolicy { get; set; }
             public IServiceProvider Services { get; set; }
         }
 
@@ -26,18 +26,18 @@ namespace VoidMain.Application.Commands.Arguments
         private static bool NotParseException(Exception ex) => !(ex is ArgumentParseException);
 
         private readonly ICollectionConstructorProvider _collectionCtorProvider;
-        private readonly IValueParserProvider _valueParserProvider;
+        private readonly IMultiValueParser _multiValueParser;
         private readonly ArgumentsParserOptions _options;
         private readonly CommandLineOptions _cliOptions;
 
         public ArgumentsParser(
             ICollectionConstructorProvider collectionCtorProvider,
-            IValueParserProvider valueParserProvider,
+            IMultiValueParser multiValueParser,
             ArgumentsParserOptions options = null,
             CommandLineOptions cliOptions = null)
         {
             _collectionCtorProvider = collectionCtorProvider ?? throw new ArgumentNullException(nameof(collectionCtorProvider));
-            _valueParserProvider = valueParserProvider ?? throw new ArgumentNullException(nameof(valueParserProvider));
+            _multiValueParser = multiValueParser ?? throw new ArgumentNullException(nameof(multiValueParser));
             _options = options ?? new ArgumentsParserOptions();
             _options.Validate();
             _cliOptions = cliOptions ?? new CommandLineOptions();
@@ -65,8 +65,11 @@ namespace VoidMain.Application.Commands.Arguments
             }
         }
 
-        public object[] Parse(IReadOnlyList<ArgumentModel> argsModel,
-            KeyValuePair<string, string>[] options, string[] operands, IServiceProvider services)
+        public object[] Parse(
+            IReadOnlyList<ArgumentModel> argsModel,
+            KeyValuePair<string, string>[] options,
+            string[] operands,
+            IServiceProvider services)
         {
             Validate(argsModel, options, operands, services);
 
@@ -84,19 +87,19 @@ namespace VoidMain.Application.Commands.Arguments
                         case ArgumentKind.Service:
                             parseArgs.Values = null;
                             parseArgs.ValuesOffset = 0;
-                            parseArgs.MultiValueStrategy = _options.MultiValueStrategy;
+                            parseArgs.SingleValuePolicy = _options.OptionsSingleValuePolicy;
                             values[i] = GetServiceOrDefault(arg, parseArgs);
                             break;
                         case ArgumentKind.Option:
                             parseArgs.Values = GetOptionValues(options, arg);
                             parseArgs.ValuesOffset = 0;
-                            parseArgs.MultiValueStrategy = _options.MultiValueStrategy;
+                            parseArgs.SingleValuePolicy = _options.OptionsSingleValuePolicy;
                             values[i] = ParseValueOrGetDefault(arg, parseArgs, out int _);
                             break;
                         case ArgumentKind.Operand:
                             parseArgs.Values = operands;
                             parseArgs.ValuesOffset = operandsOffset;
-                            parseArgs.MultiValueStrategy = MultiValueStrategy.UseFirstValue;
+                            parseArgs.SingleValuePolicy = SingleValuePolicy.UseFirstValue;
                             values[i] = ParseValueOrGetDefault(arg, parseArgs, out int operandsUsed);
                             operandsOffset += operandsUsed;
                             break;
@@ -248,65 +251,24 @@ namespace VoidMain.Application.Commands.Arguments
 
         private object ParseValue(ArgumentModel arg, ParseArguments parseArgs, out int valuesUsed)
         {
-            var argType = arg.Type;
-            bool isCollection = _collectionCtorProvider.TryGetConstructor(argType, out ICollectionConstructor colCtor);
+            IReadOnlyList<string> stringValues = null;
 
-            if (isCollection)
+            if(parseArgs.ValuesOffset == 0)
             {
-                valuesUsed = parseArgs.Values.Length - parseArgs.ValuesOffset;
-
-                var argElemType = colCtor.GetElementType(argType);
-                var valueType = argElemType.UnwrapIfNullable();
-                var parser = _valueParserProvider.GetParser(valueType, arg.ValueParser);
-
-                object[] values = new object[valuesUsed];
-
-                for (int i = 0; i < valuesUsed; i++)
-                {
-                    string stringValue = parseArgs.Values[parseArgs.ValuesOffset + i];
-                    values[i] = ParseValue(stringValue, valueType, parser);
-                }
-
-                var collection = colCtor.Construct(argElemType, values);
-                return collection;
+                stringValues = parseArgs.Values;
             }
             else
             {
-                string stringValue = GetStringValue(parseArgs, out valuesUsed);
-                var valueType = argType.UnwrapIfNullable();
-                var parser = _valueParserProvider.GetParser(valueType, arg.ValueParser);
-                return ParseValue(stringValue, valueType, parser);
-            }
-        }
-
-        private static string GetStringValue(ParseArguments parseArgs, out int valuesUsed)
-        {
-            switch (parseArgs.MultiValueStrategy)
-            {
-                case MultiValueStrategy.UseFirstValue:
-                    valuesUsed = 1;
-                    return parseArgs.Values[parseArgs.ValuesOffset];
-                case MultiValueStrategy.UseLastValue:
-                    valuesUsed = parseArgs.Values.Length - parseArgs.ValuesOffset;
-                    return parseArgs.Values[parseArgs.Values.Length - 1];
-                default:
-                    throw new NotSupportedException($"Unknown multivalue strategy `{parseArgs.MultiValueStrategy}`.");
-            }
-        }
-
-        private object ParseValue(string stringValue, Type valueType, IValueParser parser)
-        {
-            if (stringValue == null)
-            {
-                if (valueType == BooleanType)
-                {
-                    // Flag without a value is true by default.
-                    return TrueValue;
-                }
-                stringValue = String.Empty;
+                int valuesCount = parseArgs.Values.Length - parseArgs.ValuesOffset;
+                stringValues = new ArraySegment<string>(parseArgs.Values, parseArgs.ValuesOffset, valuesCount);
             }
 
-            return parser.Parse(stringValue, valueType, _options.FormatProvider);
+            var result = _multiValueParser.Parse(
+                arg.Type, stringValues, parseArgs.SingleValuePolicy,
+                arg.ValueParser, _options.FormatProvider);
+
+            valuesUsed = result.ValuesUsed;
+            return result.Value;
         }
     }
 }
