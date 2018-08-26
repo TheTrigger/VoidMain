@@ -18,6 +18,7 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
                 ValueParsers = new Dictionary<Type, TypeOrInstance<IValueParserMetadata>>
                 {
                     [typeof(String)] = typeof(StringValueParser),
+                    [typeof(Boolean)] = typeof(BooleanValueParser),
                     [typeof(Guid)] = typeof(GuidValueParser),
                     [typeof(IntPtr)] = typeof(IntPtrValueParser),
                     [typeof(TimeSpan)] = typeof(TimeSpanValueParser),

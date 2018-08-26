@@ -113,7 +113,7 @@ namespace VoidMain.CommandLineInterface.Internal
         {
             if (valueSyntax == null || valueSyntax.Tokens.Count == 0)
             {
-                return null;
+                return String.Empty;
             }
 
             if (valueSyntax.Tokens.Count == 1)
