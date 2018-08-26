@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using VoidMain.Application.Builder;
 using VoidMain.Application.Commands;
 using VoidMain.Application.Commands.Builder;
@@ -16,9 +17,11 @@ namespace SimpleApp
         }
 
         [Command(Name = "command name")]
-        public void Command(string option, bool flag, string[] operands)
+        public void Command(string[] operands, string option, bool flag = false)
         {
-            Output.WriteLine("Command was executed.");
+            Output.WriteLine("Operands: " + String.Join(", ", operands));
+            Output.WriteLine("Option: " + option);
+            Output.WriteLine("Flag: " + flag);
         }
     }
 
