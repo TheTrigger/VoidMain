@@ -43,7 +43,7 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
                 && type.GetGenericTypeDefinition() == KeyValyeDefinition;
         }
 
-        public object Parse(string stringValue, Type valueType, IFormatProvider formatProvider)
+        public object Parse(string stringValue, Type valueType, IFormatProvider formatProvider = null)
         {
             if (valueType != _keyValueType)
             {

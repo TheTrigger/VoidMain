@@ -11,7 +11,7 @@ namespace VoidMain.Application.Commands.Arguments.ValueParsers
             _ignoreCase = ignoreCase;
         }
 
-        public object Parse(string stringValue, Type valueType, IFormatProvider formatProvider)
+        public object Parse(string stringValue, Type valueType, IFormatProvider formatProvider = null)
         {
             return Enum.Parse(valueType, stringValue, _ignoreCase);
         }
