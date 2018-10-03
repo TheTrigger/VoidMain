@@ -12,7 +12,7 @@ namespace VoidMain.Application.Commands.Help
         private readonly int NestedLineOffset = 2;
         private readonly int DescriptionOffset = 4;
         private readonly int MaxNameLength = 30;
-        private readonly string OptionNameAliasSeparator = ", ";
+        private readonly string OptionNameAliasSeparator = "|";
 
         private readonly ICommandFormatter _commandFormatter;
 
