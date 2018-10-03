@@ -18,7 +18,7 @@ namespace VoidMain.CommandLineInterface.IO.Templates
         public void Write(
             MessageTemplate messageTemplate,
             IReadOnlyList<object> args,
-            TextWriter textWriter,
+            ITextWriter textWriter,
             IFormatProvider formatProvider = null)
         {
             if (messageTemplate == null)
@@ -55,14 +55,14 @@ namespace VoidMain.CommandLineInterface.IO.Templates
         }
 
         private void WriteValueWithPadding(
-            TextWriter textWriter,
+            ITextWriter textWriter,
             MessageTemplate.ArgumentToken arg,
             string formatedValue)
         {
             if (arg.Alignment > 0)
             {
                 int padLeft = arg.Alignment - formatedValue.Length;
-                WritePadding(textWriter, padLeft);
+                textWriter.Write(' ', padLeft);
             }
 
             textWriter.Write(formatedValue);
@@ -70,15 +70,7 @@ namespace VoidMain.CommandLineInterface.IO.Templates
             if (arg.Alignment < 0)
             {
                 int padRight = -arg.Alignment - formatedValue.Length;
-                WritePadding(textWriter, padRight);
-            }
-        }
-
-        private void WritePadding(TextWriter textWriter, int length)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                textWriter.Write(' ');
+                textWriter.Write(' ', padRight);
             }
         }
 

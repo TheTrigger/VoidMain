@@ -4,7 +4,7 @@ using VoidMain.CommandLineInterface.IO.Console;
 
 namespace VoidMain.CommandLineInterface.IO
 {
-    public class ConsoleAnsiColoredTextWriter : IColoredTextWriter
+    public class ConsoleAnsiColoredTextWriter : ConsoleTextWriter, IColoredTextWriter
     {
         private const string CommandBegin = "\x1b";
         private const string CommandEnd = "m";
@@ -13,12 +13,11 @@ namespace VoidMain.CommandLineInterface.IO
         private const string BackgroundCode = "[48;2;";
         private const string ResetColorsCommand = CommandBegin + "[0" + CommandEnd;
 
-        private readonly IConsole _console;
         private readonly StringBuilder _command;
 
         public ConsoleAnsiColoredTextWriter(IConsole console)
+            : base(console)
         {
-            _console = console ?? throw new ArgumentNullException(nameof(console));
             _command = new StringBuilder(64);
         }
 
@@ -26,9 +25,7 @@ namespace VoidMain.CommandLineInterface.IO
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value);
-
+            Write(value);
             ResetColors();
         }
 
@@ -38,9 +35,7 @@ namespace VoidMain.CommandLineInterface.IO
 
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value, count);
-
+            Write(value, count);
             ResetColors();
         }
 
@@ -48,9 +43,7 @@ namespace VoidMain.CommandLineInterface.IO
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value);
-
+            Write(value);
             ResetColors();
         }
 
@@ -58,15 +51,8 @@ namespace VoidMain.CommandLineInterface.IO
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value);
-
+            Write(value);
             ResetColors();
-        }
-
-        public void WriteLine()
-        {
-            _console.WriteLine();
         }
 
         private void ChangeForeground(Color foreground)

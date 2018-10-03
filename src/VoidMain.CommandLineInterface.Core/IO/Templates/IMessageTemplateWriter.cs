@@ -9,7 +9,7 @@ namespace VoidMain.CommandLineInterface.IO.Templates
         void Write(
             MessageTemplate messageTemplate,
             IReadOnlyList<object> args,
-            TextWriter textWriter,
+            ITextWriter textWriter,
             IFormatProvider formatProvider = null);
     }
 }

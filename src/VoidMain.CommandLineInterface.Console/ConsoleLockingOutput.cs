@@ -66,7 +66,7 @@ namespace VoidMain.CommandLineInterface
         {
             _lock.ThrowIfLocked();
             var parsedTemplate = _templateParser.Parse(format);
-            _templateWriter.Write(parsedTemplate, args, _console.Out, formatProvider);
+            _templateWriter.Write(parsedTemplate, args, _coloredTextWriter, formatProvider);
         }
 
         public void WriteLine()

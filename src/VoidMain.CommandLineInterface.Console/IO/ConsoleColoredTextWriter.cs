@@ -3,14 +3,13 @@ using VoidMain.CommandLineInterface.IO.Console;
 
 namespace VoidMain.CommandLineInterface.IO
 {
-    public class ConsoleColoredTextWriter : IColoredTextWriter
+    public class ConsoleColoredTextWriter : ConsoleTextWriter, IColoredTextWriter
     {
-        private readonly IConsole _console;
         private readonly IConsoleColorConverter _colorConverter;
 
         public ConsoleColoredTextWriter(IConsole console, IConsoleColorConverter colorConverter)
+            : base(console)
         {
-            _console = console ?? throw new ArgumentNullException(nameof(console));
             _colorConverter = colorConverter ?? throw new ArgumentNullException(nameof(colorConverter));
         }
 
@@ -18,9 +17,7 @@ namespace VoidMain.CommandLineInterface.IO
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value);
-
+            Write(value);
             _console.ResetColors();
         }
 
@@ -30,9 +27,7 @@ namespace VoidMain.CommandLineInterface.IO
 
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value, count);
-
+            Write(value, count);
             _console.ResetColors();
         }
 
@@ -40,9 +35,7 @@ namespace VoidMain.CommandLineInterface.IO
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value);
-
+            Write(value);
             _console.ResetColors();
         }
 
@@ -50,15 +43,8 @@ namespace VoidMain.CommandLineInterface.IO
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-
-            _console.Write(value);
-
+            Write(value);
             _console.ResetColors();
-        }
-
-        public void WriteLine()
-        {
-            _console.WriteLine();
         }
 
         private void ChangeForeground(Color foreground)
