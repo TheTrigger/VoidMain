@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <Version>0.4.0</Version>
     <Authors>Maxim Kornilov</Authors>
     <PackageLicenseUrl>https://github.com/Maxim-Kornilov/VoidMain/blob/master/LICENSE</PackageLicenseUrl>
