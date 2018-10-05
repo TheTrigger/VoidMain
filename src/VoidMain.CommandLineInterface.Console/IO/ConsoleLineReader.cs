@@ -22,13 +22,13 @@ namespace VoidMain.CommandLineInterface.IO
             _viewProvider = viewProvider ?? throw new ArgumentNullException(nameof(viewProvider));
         }
 
-        public Task<string> ReadLineAsync(CancellationToken token = default(CancellationToken))
+        public Task<string> ReadLineAsync(CancellationToken token = default)
         {
             var viewOptions = LineViewOptions.Normal;
             return ReadLineAsync(viewOptions, token);
         }
 
-        public Task<string> ReadLineAsync(char? mask, CancellationToken token = default(CancellationToken))
+        public Task<string> ReadLineAsync(char? mask, CancellationToken token = default)
         {
             var viewOptions = mask.HasValue
                 ? LineViewOptions.Masked(mask.Value)

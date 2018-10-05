@@ -17,8 +17,7 @@ namespace VoidMain.CommandLineInterface.Parser
             _syntaxFactory = syntaxFactory ?? throw new ArgumentNullException(nameof(syntaxFactory));
         }
 
-        public IEnumerable<SyntaxToken> Lex(string commandLine,
-            CancellationToken cancellation = default(CancellationToken))
+        public IEnumerable<SyntaxToken> Lex(string commandLine, CancellationToken cancellation = default)
         {
             if (commandLine == null)
             {

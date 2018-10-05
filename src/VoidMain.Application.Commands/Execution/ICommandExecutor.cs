@@ -8,6 +8,6 @@ namespace VoidMain.Application.Commands.Execution
     public interface ICommandExecutor
     {
         Task<object> ExecuteAsync(CommandModel command, object[] arguments,
-            IServiceProvider services, CancellationToken token = default(CancellationToken));
+            IServiceProvider services, CancellationToken token = default);
     }
 }

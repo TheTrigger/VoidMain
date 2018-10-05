@@ -40,9 +40,7 @@ namespace VoidMain.CommandLineInterface.IO.Console
             _slowPollingTime = options.MaxPollingTime;
         }
 
-        public async Task<InputKeyInfo> ReadKeyAsync(
-            bool intercept = false,
-            CancellationToken token = default(CancellationToken))
+        public async Task<InputKeyInfo> ReadKeyAsync(bool intercept = false, CancellationToken token = default)
         {
             int pollingTime = _fastPollingTime;
             int attempts = 0;

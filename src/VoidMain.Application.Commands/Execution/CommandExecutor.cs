@@ -35,7 +35,7 @@ namespace VoidMain.Application.Commands.Execution
         }
 
         public async Task<object> ExecuteAsync(CommandModel command, object[] arguments,
-            IServiceProvider services, CancellationToken token = default(CancellationToken))
+            IServiceProvider services, CancellationToken token = default)
         {
             Validate(command, arguments, services);
 

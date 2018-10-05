@@ -24,7 +24,7 @@ namespace VoidMain.CommandLineInterface.IO.Views
             _inputHandlers = inputHandlers.OrderBy(_ => _.Order).ToArray();
         }
 
-        public async Task Edit(ILineView lineView, CancellationToken token = default(CancellationToken))
+        public async Task Edit(ILineView lineView, CancellationToken token = default)
         {
             if(lineView == null)
             {

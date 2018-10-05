@@ -45,7 +45,7 @@ namespace VoidMain.CommandLineInterface
             IsRunning = false;
         }
 
-        public async Task StartAsync(CommandDelegate application, CancellationToken token = default(CancellationToken))
+        public async Task StartAsync(CommandDelegate application, CancellationToken token = default)
         {
             await Task.Yield();
 
@@ -64,14 +64,14 @@ namespace VoidMain.CommandLineInterface
             _cliLoop = CommandLineLoop(application, _cliLoopTokenSource.Token);
         }
 
-        public async Task StopAsync(CancellationToken token = default(CancellationToken))
+        public async Task StopAsync(CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
             _cliLoopTokenSource.Cancel();
             await WaitForShutdownAsync(token).ConfigureAwait(false);
         }
 
-        public Task WaitForShutdownAsync(CancellationToken token = default(CancellationToken))
+        public Task WaitForShutdownAsync(CancellationToken token = default)
         {
             if (_cliLoop == null)
             {

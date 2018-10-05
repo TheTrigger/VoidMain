@@ -22,8 +22,7 @@ namespace VoidMain.CommandLineInterface.Parser
             _syntaxFactory = syntaxFactory ?? throw new ArgumentNullException(nameof(syntaxFactory));
         }
 
-        public CommandLineSyntax Parse(string commandLine,
-            CancellationToken cancellation = default(CancellationToken))
+        public CommandLineSyntax Parse(string commandLine, CancellationToken cancellation = default)
         {
             if (commandLine == null)
             {

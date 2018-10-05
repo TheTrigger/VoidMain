@@ -5,7 +5,7 @@ namespace VoidMain.CommandLineInterface.IO
 {
     public interface ILineReader
     {
-        Task<string> ReadLineAsync(CancellationToken token = default(CancellationToken));
-        Task<string> ReadLineAsync(char? mask, CancellationToken token = default(CancellationToken));
+        Task<string> ReadLineAsync(CancellationToken token = default);
+        Task<string> ReadLineAsync(char? mask, CancellationToken token = default);
     }
 }

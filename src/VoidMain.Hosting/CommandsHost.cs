@@ -24,20 +24,20 @@ namespace VoidMain.Hosting
             _isDisposed = false;
         }
 
-        public async Task StartAsync(CancellationToken token = default(CancellationToken))
+        public async Task StartAsync(CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             await _cli.StartAsync(_app, token).ConfigureAwait(false);
         }
 
-        public async Task StopAsync(CancellationToken token = default(CancellationToken))
+        public async Task StopAsync(CancellationToken token = default)
         {
             await _cli.StopAsync(token).ConfigureAwait(false);
             await WaitForShutdownAsync(token).ConfigureAwait(false);
         }
 
-        public Task WaitForShutdownAsync(CancellationToken token = default(CancellationToken))
+        public Task WaitForShutdownAsync(CancellationToken token = default)
         {
             return _cli.WaitForShutdownAsync(token);
         }

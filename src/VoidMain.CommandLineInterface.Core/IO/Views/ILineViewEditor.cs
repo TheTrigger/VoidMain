@@ -5,6 +5,6 @@ namespace VoidMain.CommandLineInterface.IO.Views
 {
     public interface ILineViewEditor
     {
-        Task Edit(ILineView lineView, CancellationToken token = default(CancellationToken));
+        Task Edit(ILineView lineView, CancellationToken token = default);
     }
 }

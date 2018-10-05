@@ -10,7 +10,7 @@ namespace VoidMain.Hosting
             host.RunAsync().GetAwaiter().GetResult();
         }
 
-        public static async Task RunAsync(this ICommandsHost host, CancellationToken token = default(CancellationToken))
+        public static async Task RunAsync(this ICommandsHost host, CancellationToken token = default)
         {
             using (host)
             {

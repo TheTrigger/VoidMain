@@ -5,8 +5,6 @@ namespace VoidMain.CommandLineInterface.IO
 {
     public interface IInputKeyReader
     {
-        Task<InputKeyInfo> ReadKeyAsync(
-            bool intercept = false,
-            CancellationToken token = default(CancellationToken));
+        Task<InputKeyInfo> ReadKeyAsync(bool intercept = false, CancellationToken token = default);
     }
 }

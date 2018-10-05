@@ -6,6 +6,6 @@ namespace VoidMain.CommandLineInterface.Parser
 {
     public interface ICommandLineParser
     {
-        CommandLineSyntax Parse(string commandLine, CancellationToken cancellation = default(CancellationToken));
+        CommandLineSyntax Parse(string commandLine, CancellationToken cancellation = default);
     }
 }

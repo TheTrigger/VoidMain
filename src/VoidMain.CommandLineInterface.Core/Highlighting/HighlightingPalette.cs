@@ -9,7 +9,7 @@ namespace VoidMain.CommandLineInterface.Highlighting
 
         public TStyle DefaultStyle { get; set; }
 
-        public HighlightingPalette(TStyle defaultStyle = default(TStyle))
+        public HighlightingPalette(TStyle defaultStyle = default)
         {
             _styles = new Dictionary<TName, TStyle>();
             DefaultStyle = defaultStyle;
