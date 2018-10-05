@@ -41,7 +41,7 @@ public class ExampleModule : CommandsModule
     }
 
     [Command(Name = "command name")]
-    public void Command(string option, bool flag, string[] operands)
+    public void Command(string[] operands, string option, bool flag = false)
     {
         Output.WriteLine("Command was executed.");
     }
