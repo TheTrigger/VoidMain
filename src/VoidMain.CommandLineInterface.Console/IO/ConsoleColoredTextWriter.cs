@@ -13,37 +13,14 @@ namespace VoidMain.CommandLineInterface.IO
             _colorConverter = colorConverter ?? throw new ArgumentNullException(nameof(colorConverter));
         }
 
-        public void Write(Color foreground, Color background, char value)
+        public void SetColors(Color foreground, Color background)
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-            Write(value);
-            _console.ResetColors();
         }
 
-        public void Write(Color foreground, Color background, char value, int count)
+        public void ResetColors()
         {
-            if (count <= 0) return;
-
-            ChangeForeground(foreground);
-            ChangeBackground(background);
-            Write(value, count);
-            _console.ResetColors();
-        }
-
-        public void Write(Color foreground, Color background, string value)
-        {
-            ChangeForeground(foreground);
-            ChangeBackground(background);
-            Write(value);
-            _console.ResetColors();
-        }
-
-        public void Write(Color foreground, Color background, object value)
-        {
-            ChangeForeground(foreground);
-            ChangeBackground(background);
-            Write(value);
             _console.ResetColors();
         }
 

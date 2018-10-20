@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using VoidMain.CommandLineInterface.IO.Console;
 
 namespace VoidMain.CommandLineInterface.IO
@@ -21,38 +20,15 @@ namespace VoidMain.CommandLineInterface.IO
             _command = new StringBuilder(64);
         }
 
-        public void Write(Color foreground, Color background, char value)
+        public void SetColors(Color foreground, Color background)
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
-            Write(value);
-            ResetColors();
         }
 
-        public void Write(Color foreground, Color background, char value, int count)
+        public void ResetColors()
         {
-            if (count <= 0) return;
-
-            ChangeForeground(foreground);
-            ChangeBackground(background);
-            Write(value, count);
-            ResetColors();
-        }
-
-        public void Write(Color foreground, Color background, string value)
-        {
-            ChangeForeground(foreground);
-            ChangeBackground(background);
-            Write(value);
-            ResetColors();
-        }
-
-        public void Write(Color foreground, Color background, object value)
-        {
-            ChangeForeground(foreground);
-            ChangeBackground(background);
-            Write(value);
-            ResetColors();
+            _console.Write(ResetColorsCommand);
         }
 
         private void ChangeForeground(Color foreground)
@@ -84,11 +60,6 @@ namespace VoidMain.CommandLineInterface.IO
             _command.Clear();
 
             return colorCommand;
-        }
-
-        private void ResetColors()
-        {
-            _console.Write(ResetColorsCommand);
         }
     }
 }
