@@ -34,7 +34,9 @@ namespace VoidMain.CommandLineInterface
         void WriteLine(Color foreground, Color background, object value);
 
         void Write(ColoredFormat format);
+        void Write(IFormatProvider formatProvider, ColoredFormat format);
         void WriteLine(ColoredFormat format);
+        void WriteLine(IFormatProvider formatProvider, ColoredFormat format);
 
         void Clear();
     }

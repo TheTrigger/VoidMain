@@ -177,6 +177,11 @@ namespace VoidMain.CommandLineInterface
 
         public void Write(ColoredFormat format)
         {
+            Write(null, format);
+        }
+
+        public void Write(IFormatProvider formatProvider, ColoredFormat format)
+        {
             _lock.ThrowIfLocked();
 
             var template = format.Template;
@@ -184,12 +189,18 @@ namespace VoidMain.CommandLineInterface
             var coloredTemplate = new Colored<MessageTemplate>(
                 parsedTemplate, template.Foreground, template.Background);
             IReadOnlyList<Colored<object>> coloredArgs = format;
-            _templateColoredWriter.Write(coloredTemplate, coloredArgs, _coloredTextWriter, format.FormatProvider);
+            _templateColoredWriter.Write(coloredTemplate, coloredArgs, _coloredTextWriter, formatProvider);
         }
 
         public void WriteLine(ColoredFormat format)
         {
-            Write(format);
+            Write(null, format);
+            _console.WriteLine();
+        }
+
+        public void WriteLine(IFormatProvider formatProvider, ColoredFormat format)
+        {
+            Write(formatProvider, format);
             _console.WriteLine();
         }
 

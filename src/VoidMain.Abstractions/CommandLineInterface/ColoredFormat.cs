@@ -7,7 +7,6 @@ namespace VoidMain.CommandLineInterface
     public class ColoredFormat : IReadOnlyList<Colored<object>>, IEnumerable<Colored<object>>
     {
         public Colored<string> Template { get; }
-        public IFormatProvider FormatProvider { get; }
         private readonly List<Colored<object>> _args;
 
         public int Count => _args.Count;
@@ -17,9 +16,7 @@ namespace VoidMain.CommandLineInterface
             set => _args[index] = value;
         }
 
-        public ColoredFormat(
-            Colored<string> template,
-            IFormatProvider formatProvider = null)
+        public ColoredFormat(Colored<string> template)
         {
             if (template == null)
             {
@@ -30,21 +27,19 @@ namespace VoidMain.CommandLineInterface
                 throw new ArgumentNullException(nameof(template) + "." + nameof(template.Value));
             }
             Template = template;
-            FormatProvider = formatProvider;
             _args = new List<Colored<object>>();
         }
 
         public ColoredFormat(
             string template,
-            Color foreground = null, Color background = null,
-            IFormatProvider formatProvider = null)
+            Color foreground = null,
+            Color background = null)
         {
             if (template == null)
             {
                 throw new ArgumentNullException(nameof(template));
             }
             Template = new Colored<string>(template, foreground, background);
-            FormatProvider = formatProvider;
             _args = new List<Colored<object>>();
         }
 
