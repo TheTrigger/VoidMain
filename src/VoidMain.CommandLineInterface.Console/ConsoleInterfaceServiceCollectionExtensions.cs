@@ -49,7 +49,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 ? typeof(CmdCursor)
                 : typeof(TerminalCursor);
             services.AddSingleton(typeof(IConsoleCursor), cursorType);
-            services.AddSingleton<IConsole>(_ => PlatformConsole.Instance);
+            services.AddSingleton<IConsole, SystemConsole>();
 
             services.AddSingleton<ILineReader, ConsoleLineReader>();
             services.AddTransient<ILineViewEditor, LineViewEditor>();

@@ -4,15 +4,8 @@ using SysConsole = System.Console;
 
 namespace VoidMain.CommandLineInterface.IO.Console
 {
-    public sealed class PlatformConsole : IConsole
+    public sealed class SystemConsole : IConsole
     {
-        private PlatformConsole() { }
-
-        private static readonly Lazy<PlatformConsole> _instance
-            = new Lazy<PlatformConsole>(() => new PlatformConsole());
-
-        public static PlatformConsole Instance => _instance.Value;
-
         public event ConsoleCancelEventHandler CancelKeyPress
         {
             add => SysConsole.CancelKeyPress += value;
