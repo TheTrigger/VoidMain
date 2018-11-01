@@ -15,23 +15,32 @@ namespace VoidMain.CommandLineInterface.IO.Console
         {
             if (offset == 0) return;
 
-            int left = _console.CursorLeft + offset;
-            if (0 <= left && left < _console.BufferWidth)
+            int lineWidth = _console.BufferWidth;
+            int cursorTop = _console.CursorTop;
+            int cursorLeft = _console.CursorLeft;
+
+            int leftOffset = cursorLeft + offset;
+            if (0 <= leftOffset && leftOffset < lineWidth)
             {
-                _console.CursorLeft = left;
+                _console.SetCursorPosition(cursorTop, leftOffset);
                 return;
             }
 
+
             if (offset > 0)
             {
-                _console.CursorTop += left / _console.BufferWidth;
-                _console.CursorLeft = left % _console.BufferWidth;
+                cursorTop += leftOffset / lineWidth;
+                cursorLeft = leftOffset % lineWidth;
             }
             else
             {
-                _console.CursorTop += left / _console.BufferWidth - 1;
-                _console.CursorLeft = _console.BufferWidth + left % _console.BufferWidth;
+                int rightStart = lineWidth - 1;
+                int rigthOffset = rightStart - cursorLeft - offset;
+                cursorTop -= rigthOffset / lineWidth;
+                cursorLeft = rightStart - rigthOffset % lineWidth;
             }
+
+            _console.SetCursorPosition(cursorTop, cursorLeft);
         }
     }
 }

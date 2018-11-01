@@ -23,7 +23,6 @@ namespace VoidMain.CommandLineInterface.IO.Console
         int CursorTop { get; set; }
         int CursorLeft { get; set; }
         bool IsCursorVisible { get; set; }
-
         void SetCursorPosition(int top, int left);
 
         ConsoleColor BackgroundColor { get; set; }
