@@ -19,17 +19,27 @@ namespace VoidMain.CommandLineInterface.IO.Console
             remove => SysConsole.CancelKeyPress -= value;
         }
 
-        public TextReader In
+        public TextReader Input
         {
             get => SysConsole.In;
             set => SysConsole.SetIn(value);
         }
 
-        public TextWriter Out
+        public TextWriter Output
         {
             get => SysConsole.Out;
             set => SysConsole.SetOut(value);
         }
+
+        public TextWriter Error
+        {
+            get => SysConsole.Error;
+            set => SysConsole.SetError(value);
+        }
+
+        public bool IsInputRedirected => SysConsole.IsInputRedirected;
+        public bool IsOutputRedirected => SysConsole.IsOutputRedirected;
+        public bool IsErrorRedirected => SysConsole.IsErrorRedirected;
 
 #pragma warning disable PC001 // API not supported on all platforms
         public string Title
@@ -63,6 +73,16 @@ namespace VoidMain.CommandLineInterface.IO.Console
             set => SysConsole.CursorLeft = value;
         }
 
+        public bool IsCursorVisible
+        {
+#pragma warning disable PC001 // API not supported on all platforms
+            get => SysConsole.CursorVisible;
+#pragma warning restore PC001 // API not supported on all platforms
+            set => SysConsole.CursorVisible = value;
+        }
+
+        public void SetCursorPosition(int top, int left) => SysConsole.SetCursorPosition(left, top);
+
         public ConsoleColor BackgroundColor
         {
             get => SysConsole.BackgroundColor;
@@ -77,7 +97,7 @@ namespace VoidMain.CommandLineInterface.IO.Console
 
         public void ResetColors() => SysConsole.ResetColor();
 
-        public bool KeyAvailable => SysConsole.KeyAvailable;
+        public bool IsKeyAvailable => SysConsole.KeyAvailable;
         public ConsoleKeyInfo ReadKey(bool intercept) => SysConsole.ReadKey(intercept);
         public string ReadLine() => SysConsole.ReadLine();
 

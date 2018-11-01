@@ -47,10 +47,10 @@ namespace VoidMain.CommandLineInterface.IO.Console
 
             while (!token.IsCancellationRequested)
             {
-                if (_console.KeyAvailable)
+                if (_console.IsKeyAvailable)
                 {
                     var keyInfo = _console.ReadKey(intercept);
-                    bool hasMoreInput = _console.KeyAvailable;
+                    bool hasMoreInput = _console.IsKeyAvailable;
                     var key = _keyConverter.ConvertKey(keyInfo.Key);
                     var modifiers = _keyConverter.ConvertModifiers(keyInfo.Modifiers);
 
