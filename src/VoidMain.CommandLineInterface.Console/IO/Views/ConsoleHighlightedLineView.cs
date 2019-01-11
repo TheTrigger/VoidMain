@@ -211,11 +211,6 @@ namespace VoidMain.CommandLineInterface.IO.Views
                 var style = highlight.Style;
                 var span = highlight.Span;
 
-                if (span.Start != written)
-                {
-                    throw new IndexOutOfRangeException(); // TODO: add error message
-                }
-
                 _coloredTextWriter.Write(style?.Foreground, style?.Background, span.Text);
                 written += span.Length;
             }

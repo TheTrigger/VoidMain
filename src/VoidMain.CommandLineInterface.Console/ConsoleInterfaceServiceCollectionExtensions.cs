@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using VoidMain.Application;
+﻿using VoidMain.Application;
 using VoidMain.CommandLineInterface;
 using VoidMain.CommandLineInterface.IO;
 using VoidMain.CommandLineInterface.IO.Console;
@@ -16,28 +15,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static ConsoleInterfaceBuilder AddConsoleInterfaceCore(
             this IServiceCollection services)
         {
-            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
             services.AddSingleton<ICommandLineInterface, ConsoleInterface>();
 
             services.AddSingleton<ICommandLineOutput, ConsoleLockingOutput>();
-
-            if (isWindows)
-            {
-                if (WindowsVirtualTerminal.TryEnable())
-                {
-                    services.AddTransient<IColoredTextWriter, ConsoleAnsiColoredTextWriter>();
-                }
-                else
-                {
-                    services.AddSingleton<IConsoleColorConverter, NearestConsoleColorConverter>();
-                    services.AddTransient<IColoredTextWriter, ConsoleColoredTextWriter>();
-                }
-            }
-            else
-            {
-                services.AddTransient<IColoredTextWriter, ConsoleAnsiColoredTextWriter>();
-            }
+            services.AddSingleton<IConsoleColorConverter, NearestConsoleColorConverter>();
+            services.AddTransient<IColoredTextWriter, ConsoleColoredTextWriter>();
 
             services.AddTransient<IMessageTemplateParser, MessageTemplateParser>();
             services.AddTransient<IMessageTemplateWriter, MessageTemplateWriter>();
@@ -45,10 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IMessageTemplateValueFormatter, MessageTemplateValueFormatter>();
             services.AddSingleton<ConsoleOutputLock>();
 
-            var cursorType = isWindows
-                ? typeof(CmdCursor)
-                : typeof(TerminalCursor);
-            services.AddSingleton(typeof(IConsoleCursor), cursorType);
+            services.AddSingleton<IConsoleCursor, CmdCursor>();
             services.AddSingleton<IConsole, SystemConsole>();
 
             services.AddSingleton<ILineReader, ConsoleLineReader>();
