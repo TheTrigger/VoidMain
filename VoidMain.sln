@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{58517825-D495-41AC-8027-91EDDA9C0D3C}"
 EndProject
@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Abstractions.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.PerformanceTests", "test\VoidMain.PerformanceTests\VoidMain.PerformanceTests.csproj", "{671C872C-4A50-4CB2-8F38-7215988F77C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidMain.CommandLineInterface.Console.Tests", "test\VoidMain.CommandLineInterface.Console.Tests\VoidMain.CommandLineInterface.Console.Tests.csproj", "{9DC69308-2008-4576-8390-B7C7BC5ADC09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.CommandLineInterface.Console.Tests", "test\VoidMain.CommandLineInterface.Console.Tests\VoidMain.CommandLineInterface.Console.Tests.csproj", "{9DC69308-2008-4576-8390-B7C7BC5ADC09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
