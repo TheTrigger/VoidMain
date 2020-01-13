@@ -13,7 +13,7 @@ namespace VoidMain.CommandLineInterface.IO
             _colorConverter = colorConverter ?? throw new ArgumentNullException(nameof(colorConverter));
         }
 
-        public void SetColors(Color foreground, Color background)
+        public void SetColors(Color? foreground, Color? background)
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
@@ -24,16 +24,16 @@ namespace VoidMain.CommandLineInterface.IO
             _console.ResetColors();
         }
 
-        private void ChangeForeground(Color foreground)
+        private void ChangeForeground(Color? foreground)
         {
             if (foreground == null) return;
-            _console.ForegroundColor = ConvertColor(foreground);
+            _console.ForegroundColor = ConvertColor(foreground.Value);
         }
 
-        private void ChangeBackground(Color background)
+        private void ChangeBackground(Color? background)
         {
             if (background == null) return;
-            _console.BackgroundColor = ConvertColor(background);
+            _console.BackgroundColor = ConvertColor(background.Value);
         }
 
         private ConsoleColor ConvertColor(Color color)

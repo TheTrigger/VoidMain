@@ -6,22 +6,22 @@ namespace VoidMain.CommandLineInterface.IO.Console
     {
         private readonly Color[] _colors =
         {
-            Color.Black,
-            Color.DarkBlue,
-            Color.DarkGreen,
-            Color.DarkCyan,
-            Color.DarkRed,
-            Color.DarkMagenta,
-            Color.DarkYellow,
-            Color.Gray,
-            Color.DarkGray,
-            Color.Blue,
-            Color.Green,
-            Color.Cyan,
-            Color.Red,
-            Color.Magenta,
-            Color.Yellow,
-            Color.White
+            Colors.Black,
+            Colors.DarkRed,
+            Colors.DarkGreen,
+            Colors.DarkBlue,
+            Colors.DarkYellow,
+            Colors.DarkMagenta,
+            Colors.DarkCyan,
+            Colors.DarkGray,
+            Colors.Gray,
+            Colors.Red,
+            Colors.Green,
+            Colors.Blue,
+            Colors.Yellow,
+            Colors.Magenta,
+            Colors.Cyan,
+            Colors.White
         };
 
         private readonly SupportedConsoleColorConverter _supportedConverter = new SupportedConsoleColorConverter();
@@ -33,7 +33,7 @@ namespace VoidMain.CommandLineInterface.IO.Console
                 return true;
             }
 
-            var nearest = Color.White;
+            var nearest = Colors.White;
             double delta = double.MaxValue;
 
             foreach (var c in _colors)

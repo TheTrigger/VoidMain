@@ -7,22 +7,22 @@ namespace VoidMain.CommandLineInterface.IO.Console
     {
         private readonly Dictionary<Color, ConsoleColor> _colors = new Dictionary<Color, ConsoleColor>
         {
-            [Color.Black] = ConsoleColor.Black,
-            [Color.DarkBlue] = ConsoleColor.DarkBlue,
-            [Color.DarkGreen] = ConsoleColor.DarkGreen,
-            [Color.DarkCyan] = ConsoleColor.DarkCyan,
-            [Color.DarkRed] = ConsoleColor.DarkRed,
-            [Color.DarkMagenta] = ConsoleColor.DarkMagenta,
-            [Color.DarkYellow] = ConsoleColor.DarkYellow,
-            [Color.Gray] = ConsoleColor.Gray,
-            [Color.DarkGray] = ConsoleColor.DarkGray,
-            [Color.Blue] = ConsoleColor.Blue,
-            [Color.Green] = ConsoleColor.Green,
-            [Color.Cyan] = ConsoleColor.Cyan,
-            [Color.Red] = ConsoleColor.Red,
-            [Color.Magenta] = ConsoleColor.Magenta,
-            [Color.Yellow] = ConsoleColor.Yellow,
-            [Color.White] = ConsoleColor.White
+            [Colors.Black] = ConsoleColor.Black,
+            [Colors.DarkRed] = ConsoleColor.DarkRed,
+            [Colors.DarkGreen] = ConsoleColor.DarkGreen,
+            [Colors.DarkBlue] = ConsoleColor.DarkBlue,
+            [Colors.DarkYellow] = ConsoleColor.DarkYellow,
+            [Colors.DarkMagenta] = ConsoleColor.DarkMagenta,
+            [Colors.DarkCyan] = ConsoleColor.DarkCyan,
+            [Colors.DarkGray] = ConsoleColor.DarkGray,
+            [Colors.Gray] = ConsoleColor.Gray,
+            [Colors.Red] = ConsoleColor.Red,
+            [Colors.Green] = ConsoleColor.Green,
+            [Colors.Blue] = ConsoleColor.Blue,
+            [Colors.Yellow] = ConsoleColor.Yellow,
+            [Colors.Magenta] = ConsoleColor.Magenta,
+            [Colors.Cyan] = ConsoleColor.Cyan,
+            [Colors.White] = ConsoleColor.White
         };
 
         public bool TryConvert(Color color, out ConsoleColor consoleColor)

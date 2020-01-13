@@ -64,9 +64,9 @@ namespace SimpleApp
 
             output.WriteLine(new ColoredFormat(welcomeMessage)
             {
-                { "README.md", Color.DarkCyan },
-                { "quit", Color.Yellow },
-                { " Ctrl+C ", Color.Black, Color.Gray }
+                { "README.md", Colors.DarkCyan },
+                { "quit", Colors.Yellow },
+                { " Ctrl+C ", Colors.Black, Colors.Gray }
             });
             output.WriteLine();
         }

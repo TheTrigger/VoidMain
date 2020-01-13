@@ -71,21 +71,27 @@ namespace VoidMain.CommandLineInterface.Tests
         }
 
         [Theory]
-        [InlineData("00000000")]
-        [InlineData("0000000A")]
-        [InlineData("000000A0")]
-        [InlineData("00000A00")]
-        [InlineData("0000A000")]
-        [InlineData("000A0000")]
-        [InlineData("00A00000")]
-        [InlineData("0A000000")]
-        [InlineData("A0000000")]
-        [InlineData("059afADF")]
-        public void ParseHexString(string hexString)
+        [InlineData("00000000", UInt32.MinValue)]
+        [InlineData("0000000F", 15)]
+        [InlineData("000000F0", 240)]
+        [InlineData("00000F00", 3_840)]
+        [InlineData("0000F000", 61_440)]
+        [InlineData("000F0000", 983_040)]
+        [InlineData("00F00000", 15_728_640)]
+        [InlineData("0F000000", 251_658_240)]
+        [InlineData("F0000000", 4_026_531_840)]
+        [InlineData("FFFFFFFF", UInt32.MaxValue)]
+        [InlineData("01234567", 19_088_743)]
+        [InlineData("89abcdef", 2_309_737_967)]
+        [InlineData("89ABCDEF", 2_309_737_967)]
+        [InlineData("#01234567", 19_088_743)]
+        [InlineData("012", 4_278_194_466)]
+        [InlineData("0123", 1_122_867)]
+        [InlineData("012345", 4_278_264_645)]
+        public void Parse(string value, uint expected)
         {
             // Arrange, Act
-            var color = new Color(hexString);
-            uint expected = UInt32.Parse(hexString, NumberStyles.HexNumber);
+            var color = Color.Parse(value);
 
             // Assert
             Assert.Equal(expected, color.Value);
@@ -95,7 +101,7 @@ namespace VoidMain.CommandLineInterface.Tests
         public void ThrowOnNullHexString()
         {
             // Arrange, Act, Assert
-            Assert.Throws<ArgumentNullException>(() => new Color(null));
+            Assert.Throws<ArgumentNullException>(() => Color.Parse(null));
         }
 
         [Theory]
@@ -109,27 +115,30 @@ namespace VoidMain.CommandLineInterface.Tests
         public void ThrowOnInvalidHexString(string hexString)
         {
             // Arrange, Act, Assert
-            Assert.Throws<FormatException>(() => new Color(hexString));
+            Assert.Throws<FormatException>(() => Color.Parse(hexString));
         }
 
         #endregion
 
         [Theory]
-        [InlineData("012", "FF001122")]
-        [InlineData("3456", "33445566")]
-        [InlineData("789ABC", "FF789ABC")]
-        [InlineData("DEF01234", "DEF01234")]
-        [InlineData("#012", "FF001122")]
-        [InlineData("#3456", "33445566")]
-        [InlineData("#789ABC", "FF789ABC")]
-        [InlineData("#DEF01234", "DEF01234")]
+        [InlineData("012", "#FF001122")]
+        [InlineData("3456", "#33445566")]
+        [InlineData("789ABC", "#FF789ABC")]
+        [InlineData("DEF01234", "#DEF01234")]
+        [InlineData("#012", "#FF001122")]
+        [InlineData("#3456", "#33445566")]
+        [InlineData("#789ABC", "#FF789ABC")]
+        [InlineData("#DEF01234", "#DEF01234")]
         public void ToHexString(string hexString, string expected)
         {
-            // Arrange, Act
-            var color = new Color(hexString);
+            // Arrange
+            var color = Color.Parse(hexString);
+
+            // Act
+            string actual = color.ToString("argb-hex");
 
             // Assert
-            Assert.Equal(expected, color.ToHexString(), ignoreCase: true);
+            Assert.Equal(expected, actual, ignoreCase: true);
         }
 
         #region Equals tests
@@ -157,17 +166,6 @@ namespace VoidMain.CommandLineInterface.Tests
 
             // Act, Assert
             Assert.Equal(a, b);
-        }
-
-        [Fact]
-        public void NotEqualsToNull()
-        {
-            // Arrange
-            var color = new Color(0, 0, 0, 0);
-            Color nullColor = null;
-
-            // Act, Assert
-            Assert.NotEqual(nullColor, color);
         }
 
         [Theory]

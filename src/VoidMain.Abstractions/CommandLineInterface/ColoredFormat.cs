@@ -32,8 +32,8 @@ namespace VoidMain.CommandLineInterface
 
         public ColoredFormat(
             string template,
-            Color foreground = null,
-            Color background = null)
+            Color? foreground = null,
+            Color? background = null)
         {
             if (template == null)
             {
@@ -53,7 +53,7 @@ namespace VoidMain.CommandLineInterface
             return this;
         }
 
-        public ColoredFormat Add(object arg, Color foreground = null, Color background = null)
+        public ColoredFormat Add(object arg, Color? foreground = null, Color? background = null)
         {
             _args.Add(new Colored<object>(arg, foreground, background));
             return this;

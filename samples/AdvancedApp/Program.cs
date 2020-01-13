@@ -48,9 +48,9 @@ namespace AdvancedApp
                 {
                     options.Palette = new CommandLineHighlightingPalette()
                     {
-                        { CommandLineStyleName.CommandName, Color.Yellow },
-                        { CommandLineStyleName.OptionName, Color.Blue, Color.Yellow },
-                        { CommandLineStyleName.Operand, new TextStyle(Color.DarkCyan) }
+                        { CommandLineStyleName.CommandName, Colors.Yellow },
+                        { CommandLineStyleName.OptionName, Colors.Blue, Colors.Yellow },
+                        { CommandLineStyleName.Operand, new TextStyle(Colors.DarkCyan) }
                         // OptionNameMarker, OptionValueMarker, OptionValue, EndOfOptions
                     };
                     // or
@@ -108,9 +108,9 @@ namespace AdvancedApp
 
             output.WriteLine(new ColoredFormat(welcomeMessage)
             {
-                { "README.md", Color.DarkCyan },
-                { "quit", Color.Yellow },
-                { " Ctrl+C ", Color.Black, Color.Gray }
+                { "README.md", Colors.DarkCyan },
+                { "quit", Colors.Yellow },
+                { " Ctrl+C ", Colors.Black, Colors.Gray }
             });
             output.WriteLine();
         }

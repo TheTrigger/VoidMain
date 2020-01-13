@@ -21,13 +21,13 @@
         public static CommandLineHighlightingPalette Default =>
             new CommandLineHighlightingPalette()
             {
-                { CommandLineStyleName.CommandName, Color.Yellow },
-                { CommandLineStyleName.OptionNameMarker, Color.DarkGray },
-                { CommandLineStyleName.OptionName, Color.DarkGray },
-                { CommandLineStyleName.OptionValueMarker, Color.DarkGray },
-                { CommandLineStyleName.OptionValue, Color.White },
-                { CommandLineStyleName.EndOfOptions, Color.DarkMagenta },
-                { CommandLineStyleName.Operand, Color.DarkCyan }
+                { CommandLineStyleName.CommandName, Colors.Yellow },
+                { CommandLineStyleName.OptionNameMarker, Colors.DarkGray },
+                { CommandLineStyleName.OptionName, Colors.DarkGray },
+                { CommandLineStyleName.OptionValueMarker, Colors.DarkGray },
+                { CommandLineStyleName.OptionValue, Colors.White },
+                { CommandLineStyleName.EndOfOptions, Colors.DarkMagenta },
+                { CommandLineStyleName.Operand, Colors.DarkCyan }
             };
     }
 }

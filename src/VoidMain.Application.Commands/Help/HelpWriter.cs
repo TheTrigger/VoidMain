@@ -46,13 +46,13 @@ namespace VoidMain.Application.Commands.Help
 
         private void PrintUsage(ICommandLineOutput output)
         {
-            output.WriteLine(Color.White, "USAGE:");
+            output.WriteLine(Colors.White, "USAGE:");
             output.Write(' ', NestedLineOffset);
             output.WriteLine(new ColoredFormat("{0} [{1}] [{2}]")
             {
-                { "command name", Color.Yellow},
-                { "options...", Color.DarkGreen },
-                { "operands...", Color.DarkCyan }
+                { "command name", Colors.Yellow},
+                { "options...", Colors.DarkGreen },
+                { "operands...", Colors.DarkCyan }
             });
         }
 
@@ -68,18 +68,18 @@ namespace VoidMain.Application.Commands.Help
 
             int maxNameLength = GetMax(commandsInfo, _ => _.Name.Length, MaxNameLength);
 
-            output.WriteLine(Color.White, "COMMANDS:");
+            output.WriteLine(Colors.White, "COMMANDS:");
 
             foreach (var cmdInfo in commandsInfo)
             {
                 output.Write(' ', NestedLineOffset);
-                output.Write(Color.Yellow, cmdInfo.Name);
+                output.Write(Colors.Yellow, cmdInfo.Name);
 
                 if (!String.IsNullOrWhiteSpace(cmdInfo.Command.Description))
                 {
                     int descrOffset = GetPadding(cmdInfo.Name.Length, maxNameLength) + DescriptionOffset;
                     output.Write(' ', descrOffset);
-                    output.Write(Color.DarkGray, cmdInfo.Command.Description);
+                    output.Write(Colors.DarkGray, cmdInfo.Command.Description);
                 }
 
                 output.WriteLine();
@@ -93,21 +93,21 @@ namespace VoidMain.Application.Commands.Help
         public void WriteCommandHelp(ICommandLineOutput output, CommandModel command)
         {
             string commandName = _commandFormatter.FormatCommandName(command.Name);
-            output.WriteLine(Color.White, "NAME:");
+            output.WriteLine(Colors.White, "NAME:");
             output.Write(' ', NestedLineOffset);
-            output.WriteLine(Color.Yellow, commandName);
+            output.WriteLine(Colors.Yellow, commandName);
             output.WriteLine();
 
             if (!String.IsNullOrWhiteSpace(command.Description))
             {
-                output.WriteLine(Color.White, "DESCRIPTION:");
+                output.WriteLine(Colors.White, "DESCRIPTION:");
                 output.Write(' ', NestedLineOffset);
-                output.WriteLine(Color.DarkGray, command.Description);
+                output.WriteLine(Colors.DarkGray, command.Description);
                 output.WriteLine();
             }
 
             string syntax = _commandFormatter.FormatCommand(command);
-            output.WriteLine(Color.White, "SYNTAX:");
+            output.WriteLine(Colors.White, "SYNTAX:");
             output.Write(' ', NestedLineOffset);
             output.WriteLine(syntax);
             output.WriteLine();
@@ -140,7 +140,7 @@ namespace VoidMain.Application.Commands.Help
 
         private void PrintOptionsList(ICommandLineOutput output, ArgumentModel[] options, int nameSpace)
         {
-            output.WriteLine(Color.White, "OPTIONS:");
+            output.WriteLine(Colors.White, "OPTIONS:");
 
             foreach (var opt in options)
             {
@@ -149,21 +149,21 @@ namespace VoidMain.Application.Commands.Help
 
                 if (!String.IsNullOrWhiteSpace(opt.Alias))
                 {
-                    output.Write(Color.DarkGreen, '-');
-                    output.Write(Color.DarkGreen, opt.Alias);
-                    output.Write(Color.DarkGreen, OptionNameAliasSeparator);
+                    output.Write(Colors.DarkGreen, '-');
+                    output.Write(Colors.DarkGreen, opt.Alias);
+                    output.Write(Colors.DarkGreen, OptionNameAliasSeparator);
                     nameLength += 1 + opt.Alias.Length + OptionNameAliasSeparator.Length;
                 }
 
-                output.Write(Color.DarkGreen, "--");
-                output.Write(Color.DarkGreen, opt.Name);
+                output.Write(Colors.DarkGreen, "--");
+                output.Write(Colors.DarkGreen, opt.Name);
                 nameLength += 2 + opt.Name.Length;
 
                 if (!String.IsNullOrWhiteSpace(opt.Description))
                 {
                     int descrOffset = GetPadding(nameLength, nameSpace) + DescriptionOffset;
                     output.Write(' ', descrOffset);
-                    output.Write(Color.DarkGray, opt.Description);
+                    output.Write(Colors.DarkGray, opt.Description);
                 }
 
                 output.WriteLine();
@@ -172,20 +172,20 @@ namespace VoidMain.Application.Commands.Help
 
         private void PrintOperandsList(ICommandLineOutput output, ArgumentModel[] operands, int nameSpace)
         {
-            output.WriteLine(Color.White, "OPERANDS:");
+            output.WriteLine(Colors.White, "OPERANDS:");
 
             foreach (var opr in operands)
             {
                 output.Write(' ', NestedLineOffset);
                 int nameLength = opr.Name.Length;
 
-                output.Write(Color.DarkCyan, opr.Name);
+                output.Write(Colors.DarkCyan, opr.Name);
 
                 if (!String.IsNullOrWhiteSpace(opr.Description))
                 {
                     int descrOffset = GetPadding(nameLength, nameSpace) + DescriptionOffset;
                     output.Write(' ', descrOffset);
-                    output.Write(Color.DarkGray, opr.Description);
+                    output.Write(Colors.DarkGray, opr.Description);
                 }
 
                 output.WriteLine();

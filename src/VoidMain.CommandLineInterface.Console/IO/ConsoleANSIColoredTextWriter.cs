@@ -20,7 +20,7 @@ namespace VoidMain.CommandLineInterface.IO
             _command = new StringBuilder(64);
         }
 
-        public void SetColors(Color foreground, Color background)
+        public void SetColors(Color? foreground, Color? background)
         {
             ChangeForeground(foreground);
             ChangeBackground(background);
@@ -31,17 +31,17 @@ namespace VoidMain.CommandLineInterface.IO
             _console.Write(ResetColorsCommand);
         }
 
-        private void ChangeForeground(Color foreground)
+        private void ChangeForeground(Color? foreground)
         {
             if (foreground == null) return;
-            string colorCommand = GetColorCommand(foreground, ForegroundCode);
+            string colorCommand = GetColorCommand(foreground.Value, ForegroundCode);
             _console.Write(colorCommand);
         }
 
-        private void ChangeBackground(Color background)
+        private void ChangeBackground(Color? background)
         {
             if (background == null) return;
-            string colorCommand = GetColorCommand(background, BackgroundCode);
+            string colorCommand = GetColorCommand(background.Value, BackgroundCode);
             _console.Write(colorCommand);
         }
 

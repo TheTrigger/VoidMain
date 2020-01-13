@@ -63,10 +63,10 @@ namespace VoidMain.CommandLineInterface.IO.Templates
             IColoredTextWriter textWriter,
             MessageTemplate.ArgumentToken arg,
             string formatedValue,
-            Color textForegroud,
-            Color textBackground,
-            Color valueForeground,
-            Color valueBackground)
+            Color? textForegroud,
+            Color? textBackground,
+            Color? valueForeground,
+            Color? valueBackground)
         {
             if (arg.Alignment > 0)
             {

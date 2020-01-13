@@ -6,10 +6,10 @@ namespace VoidMain.CommandLineInterface.Highlighting
     {
         public static TextStyle Default { get; } = new TextStyle(null);
 
-        public Color Foreground { get; }
-        public Color Background { get; }
+        public Color? Foreground { get; }
+        public Color? Background { get; }
 
-        public TextStyle(Color foreground, Color background = null)
+        public TextStyle(Color? foreground, Color? background = null)
         {
             Foreground = foreground;
             Background = background;
