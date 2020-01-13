@@ -71,12 +71,25 @@ namespace VoidMain.CommandLineInterface.IO.Views
             }
             else
             {
+                int initialLeft = _console.CursorLeft - Position;
+                if (initialLeft < 0)
+                {
+                    initialLeft = _console.BufferWidth + initialLeft % _console.BufferWidth;
+                }
+                int currentLeft = (initialLeft + Position + 1) % _console.BufferWidth;
+
                 int available = _maxPosition - Position;
                 _consoleCursor.Move(available);
 
                 int fill = offset - available;
                 _console.Write(' ', fill);
                 _maxPosition += fill;
+
+                if (currentLeft == 0 && _console.CursorLeft == _console.BufferWidth - 1)
+                {
+                    _console.Write(' ');
+                    _console.Write('\b');
+                }
             }
         }
 
@@ -205,6 +218,12 @@ namespace VoidMain.CommandLineInterface.IO.Views
 
             _consoleCursor.Move(written - Position);
 
+            int initialLeft = _console.CursorLeft - written;
+            if (initialLeft < 0)
+            {
+                initialLeft = _console.BufferWidth + initialLeft % _console.BufferWidth;
+            }
+
             for (int i = lastUnchanged + 1; i < highlights.Count; i++)
             {
                 var highlight = highlights[i];
@@ -221,6 +240,14 @@ namespace VoidMain.CommandLineInterface.IO.Views
             }
 
             int clearSpace = WriteBlank(_prevLength - written);
+
+            int currentLeft = (initialLeft + written + clearSpace) % _console.BufferWidth;
+            if (currentLeft == 0 && _console.CursorLeft == _console.BufferWidth - 1)
+            {
+                _console.Write(' ');
+                _console.Write('\b');
+            }
+
             _consoleCursor.Move(Position - written - clearSpace);
 
             _prevLength = written;
