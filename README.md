@@ -10,21 +10,21 @@ The framework is still in early development. The API is not final and some featu
 
 **The current state of planned features:**
 - Command-line interface
-  - Masked/hidden input **(done)**
-  - Undo/redo **(done)**
-  - Commands history **(done)**
-  - Custom prompt message **(done)**
-  - Syntax highlighting **(done\*)**
-  - Autocomplete
+  - [x] Masked/hidden input
+  - [x] Undo/redo
+  - [x] Commands history
+  - [x] Custom prompt message
+  - [x] Syntax highlighting*
+  - [ ] Autocomplete
 - Standard commands
-  - Clear output **(done)**
-  - Close application **(done)**
-  - Show help **(done)**
-  - Show version
+  - [x] Clear output
+  - [x] Close application
+  - [x] Show help
+  - [ ] Show version
 - Configuration
-  - Method signature **(done)**
-  - Attributes **(done)**
-  - Expression trees
+  - [x] Method signature
+  - [x] Attributes
+  - [ ] Expression trees
 
 **\*** *Errors highlighting is not supported yet.*
 
@@ -126,11 +126,6 @@ public void ConfigureServices(IServiceCollection services)
     services.AddCommands();
 }
 ```
-
-## Known issues
-
-- **Application closes instead of canceling the current operation after pressing `Ctrl+C` if it was started with `dotnet run`.**<br>This is due to the [issue](https://github.com/dotnet/cli/issues/812) in the .NET CLI. Use `dotnet publish` and run the compiled executable instead.
-- **Command line reader is not working on Linux as expected (at all).**<br>Terminal works differently than the Windows console. .NET team tried to make a `Console` API to behave the same way on all platforms with many hacks and compromises, but it is still have differences and bugs. `PowerShell` have some native calls to make it work on Linux. I hope, someday I can make it work too.
 
 ## License
 MIT License. See [LICENSE](LICENSE) file for more details.
