@@ -4,8 +4,6 @@ namespace VoidMain
 {
     public readonly struct Color : IEquatable<Color>, IFormattable
     {
-        private const string FormatError = "Input string was not in a correct format.";
-
         private const int AlphaShift = 24;
         private const int RedShift = 16;
         private const int GreenShift = 8;
@@ -48,20 +46,21 @@ namespace VoidMain
                 ));
         }
 
-        public static Color Parse(string value)
+        public static Color Parse(string value) => Parse(value.AsSpan());
+
+        public static Color Parse(ReadOnlySpan<char> span)
         {
-            if (TryParse(value, out Color color))
+            if (TryParse(span, out Color color))
             {
                 return color;
             }
-            throw new FormatException(FormatError);
+            throw new FormatException("Input string was not in a correct format.");
         }
 
-        public static bool TryParse(string value, out Color color)
+        public static bool TryParse(ReadOnlySpan<char> span, out Color color)
         {
-            // Index of the first digit
-            int i = value.Length > 0 && value[0] == '#' ? 1 : 0;
-            int length = value.Length - i;
+            int i = span.Length > 0 && span[0] == '#' ? 1 : 0;
+            int length = span.Length - i;
 
             int alpha = 255;
             int red = -1;
@@ -70,31 +69,31 @@ namespace VoidMain
 
             if (length == 8)
             {
-                alpha = HexToDec(value[i++]) * 16 + HexToDec(value[i++]);
+                alpha = HexToDec(span[i++]) * 16 + HexToDec(span[i++]);
                 length -= 2;
             }
 
             if (length == 6)
             {
-                red = HexToDec(value[i++]) * 16 + HexToDec(value[i++]);
-                green = HexToDec(value[i++]) * 16 + HexToDec(value[i++]);
-                blue = HexToDec(value[i++]) * 16 + HexToDec(value[i]); // No need to increment the last one
+                red = HexToDec(span[i++]) * 16 + HexToDec(span[i++]);
+                green = HexToDec(span[i++]) * 16 + HexToDec(span[i++]);
+                blue = HexToDec(span[i++]) * 16 + HexToDec(span[i]);
             }
 
             if (length == 4)
             {
-                alpha = HexToDec(value[i++]);
+                alpha = HexToDec(span[i++]);
                 alpha = alpha * 16 + alpha;
                 length--;
             }
 
             if (length == 3)
             {
-                red = HexToDec(value[i++]);
+                red = HexToDec(span[i++]);
                 red = red * 16 + red;
-                green = HexToDec(value[i++]);
+                green = HexToDec(span[i++]);
                 green = green * 16 + green;
-                blue = HexToDec(value[i]); // No need to increment the last one
+                blue = HexToDec(span[i]);
                 blue = blue * 16 + blue;
             }
 
@@ -110,9 +109,9 @@ namespace VoidMain
 
         private static int HexToDec(char hex)
         {
-            if (hex >= '0' && hex <= '9') return hex - '0';
-            if (hex >= 'a' && hex <= 'f') return hex - 'a' + 10;
-            if (hex >= 'A' && hex <= 'F') return hex - 'A' + 10;
+            if ('0' <= hex && hex <= '9') return hex - '0';
+            if ('a' <= hex && hex <= 'f') return hex - 'a' + 10;
+            if ('A' <= hex && hex <= 'F') return hex - 'A' + 10;
             return -1;
         }
 
@@ -121,42 +120,64 @@ namespace VoidMain
         /// <summary>
         /// Converts the color value of this instance to its
         /// equivalent string representation using the specified format.
-        /// <para>Supported formats: argb-dec, rgb-dec, argb-hex, rgb-hex, ARGB-HEX, RGB-HEX.</para>
+        /// <para>Supported formats: argb, #argb, ARGB, #ARGB, rgb, #rgb, RGB, #RGB.</para>
         /// </summary>
         public string ToString(string? format, IFormatProvider? formatProvider = null)
         {
-            var comparer = StringComparer.OrdinalIgnoreCase;
-
-            if (String.IsNullOrEmpty(format))
+            Span<char> destination = stackalloc char[9];
+            if (TryFormat(destination, out int charsWritten, format, formatProvider))
             {
-                format = "argb-hex";
+                return new string(destination.Slice(0, charsWritten));
+            }
+            throw new FormatException("Unknown format.");
+        }
+
+        public bool TryFormat(
+            Span<char> destination,
+            out int charsWritten,
+            ReadOnlySpan<char> format = default,
+            IFormatProvider? provider = null)
+        {
+            charsWritten = 0;
+
+            if (destination.IsEmpty)
+            {
+                return false;
             }
 
-            if (comparer.Equals(format, "argb-hex"))
+            if (format.IsEmpty)
             {
-                return Char.IsUpper(format[0])
-                    ? $"#{Value:X8}"
-                    : $"#{Value:x8}";
+                format = "#ARGB";
             }
 
-            if (comparer.Equals(format, "rgb-hex"))
+            if (format[0] == '#')
             {
-                return Char.IsUpper(format[0])
-                    ? $"#{(Value << 8) / 256:X6}"
-                    : $"#{(Value << 8) / 256:x6}";
+                destination[0] = '#';
+                charsWritten = 1;
+                destination = destination.Slice(1);
+                format = format.Slice(1);
             }
 
-            if (comparer.Equals(format, "argb-dec"))
+            uint value = Value;
+            ReadOnlySpan<char> valueFormat = default;
+
+            if (format.Equals("ARGB", StringComparison.OrdinalIgnoreCase))
             {
-                return $"({A},{R},{G},{B})";
+                valueFormat = format[0] == 'A' ? "X8" : "x8";
+                charsWritten += 8;
+            }
+            else if (format.Equals("RGB", StringComparison.OrdinalIgnoreCase))
+            {
+                valueFormat = format[0] == 'R' ? "X6" : "x6";
+                value = (Value << 8) / 256;
+                charsWritten += 6;
+            }
+            else
+            {
+                return false;
             }
 
-            if (comparer.Equals(format, "rgb-dec"))
-            {
-                return $"({R},{G},{B})";
-            }
-
-            throw new FormatException(FormatError);
+            return value.TryFormat(destination, out _, valueFormat, provider);
         }
 
         public override int GetHashCode() => Value.GetHashCode();
