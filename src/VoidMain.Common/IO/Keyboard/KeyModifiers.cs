@@ -3,7 +3,7 @@
 namespace VoidMain.IO.Keyboard
 {
     [Flags]
-    public enum KeyModifiers
+    public enum KeyModifiers : byte
     {
         None = 0x0,
         Alt = 0x1,

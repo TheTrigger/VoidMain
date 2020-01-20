@@ -1,6 +1,6 @@
 ﻿namespace VoidMain.IO.Keyboard
 {
-    public enum Key
+    public enum Key : byte
     {
         Unknown,
         D0,
