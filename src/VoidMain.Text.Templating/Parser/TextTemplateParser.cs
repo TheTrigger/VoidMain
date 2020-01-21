@@ -13,7 +13,7 @@ namespace VoidMain.Text.Templating.Parser
             _placeholderConstraint = new PlaceholderConstraint();
         }
 
-        public void Parse<TVisitor>(string templateText, TVisitor visitor)
+        public void Parse<TVisitor>(string templateText, ref TVisitor visitor)
             where TVisitor : ITextTemplateVisitor<TPlaceholder>
         {
             if (templateText == null)

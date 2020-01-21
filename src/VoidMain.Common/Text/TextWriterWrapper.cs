@@ -36,7 +36,7 @@ namespace VoidMain.Text
             ArrayPool<char>.Shared.Return(array);
         }
 
-        public void Write(string value) => _textWriter.Write(value);
+        public void Write(string? value) => _textWriter.Write(value);
 
         public void Write(ReadOnlySpan<char> value) => _textWriter.Write(value);
 
