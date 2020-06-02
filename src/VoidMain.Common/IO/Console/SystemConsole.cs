@@ -5,7 +5,7 @@ using C = System.Console;
 
 namespace VoidMain.IO.Console
 {
-    public sealed class SystemConsole : IConsole
+    public class SystemConsole : IConsole
     {
         public event ConsoleCancelEventHandler CancelKeyPress
         {
