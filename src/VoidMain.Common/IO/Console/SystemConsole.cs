@@ -122,9 +122,9 @@ namespace VoidMain.IO.Console
             ArrayPool<char>.Shared.Return(array);
         }
 
-        public void Write(string value) => C.Write(value);
+        public void Write(string? value) => C.Write(value);
 
-        public void Write(object value) => C.Write(value);
+        public void Write(object? value) => C.Write(value);
 
         public void Write(ReadOnlySpan<char> value) => C.Out.Write(value);
 
@@ -132,9 +132,9 @@ namespace VoidMain.IO.Console
 
         public void WriteLine() => C.WriteLine();
 
-        public void WriteLine(string value) => C.WriteLine(value);
+        public void WriteLine(string? value) => C.WriteLine(value);
 
-        public void WriteLine(object value) => C.WriteLine(value);
+        public void WriteLine(object? value) => C.WriteLine(value);
 
         public void WriteLine(ReadOnlySpan<char> value) => C.Out.WriteLine(value);
 
