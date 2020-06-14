@@ -4,12 +4,12 @@ namespace VoidMain.Text
 {
     public readonly struct TextStyle : IEquatable<TextStyle>
     {
-        public Nullable<Color> Foreground { get; }
-        public Nullable<Color> Background { get; }
+        public Color? Foreground { get; }
+        public Color? Background { get; }
 
         public TextStyle(
-            Nullable<Color> foreground = default,
-            Nullable<Color> background = default)
+            Color? foreground = default,
+            Color? background = default)
         {
             Foreground = foreground;
             Background = background;
