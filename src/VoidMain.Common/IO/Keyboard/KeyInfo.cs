@@ -1,21 +1,19 @@
-﻿namespace VoidMain.IO.Keyboard
+﻿using System;
+
+namespace VoidMain.IO.Keyboard
 {
-    public readonly struct KeyInfo
+    public readonly struct KeyInfo : IEquatable<KeyInfo>
     {
         public Key Key { get; }
         public KeyModifiers Modifiers { get; }
-        public char Character { get; }
-        public bool HasMore { get; }
 
-        public KeyInfo(
-            Key key, KeyModifiers modifiers,
-            char character, bool hasMore)
+        public KeyInfo(Key key, KeyModifiers modifiers = KeyModifiers.None)
         {
             Key = key;
             Modifiers = modifiers;
-            Character = character;
-            HasMore = hasMore;
         }
+
+        public static readonly KeyInfo AnyKey = default;
 
         public override string ToString()
         {
@@ -23,5 +21,18 @@
                 ? Key.ToString()
                 : $"{Modifiers} + {Key}";
         }
+
+        public override int GetHashCode()
+            => HashCode.Combine(Key, Modifiers);
+
+        public override bool Equals(object? obj)
+            => obj is KeyInfo info && Equals(info);
+
+        public bool Equals(KeyInfo other)
+            => Key == other.Key && Modifiers == other.Modifiers;
+
+        public static bool operator ==(KeyInfo a, KeyInfo b) => a.Equals(b);
+
+        public static bool operator !=(KeyInfo a, KeyInfo b) => !a.Equals(b);
     }
 }
