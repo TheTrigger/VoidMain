@@ -1,4 +1,4 @@
-﻿namespace VoidMain.Text.Templating.Parser
+﻿namespace VoidMain.Text.Templates.Parser
 {
     public interface ITextTemplateParser<TPlaceholder>
     {

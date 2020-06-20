@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Text.Templating.Formatter
+namespace VoidMain.Text.Templates.Formatter
 {
     public interface IValueFormatter
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VoidMain.Text.Templating.Formatter
+namespace VoidMain.Text.Templates.Formatter
 {
     public struct DictionaryValueSource : IValueSource<string>
     {

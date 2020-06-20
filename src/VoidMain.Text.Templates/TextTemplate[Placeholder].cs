@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VoidMain.Text.Templating
+namespace VoidMain.Text.Templates
 {
-    public class TextTemplate<TPlaceholder, TStyle> : IReadOnlyList<TextTemplate<TPlaceholder, TStyle>.Token>
+    public class TextTemplate<TPlaceholder> : IReadOnlyList<TextTemplate<TPlaceholder>.Token>
     {
         private readonly List<Token> _tokens;
 
@@ -53,50 +53,50 @@ namespace VoidMain.Text.Templating
             _tokens.Add(token);
         }
 
-        public void Add(ReadOnlyMemory<char> text, TStyle style = default)
+        public void Add(ReadOnlyMemory<char> text)
         {
-            _tokens.Add(new TextToken(text, style));
+            _tokens.Add(new TextToken(text));
         }
 
-        public void Add(string text, TStyle style = default)
+        public void Add(string text)
         {
             if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
-            _tokens.Add(new TextToken(text.AsMemory(), style));
+            _tokens.Add(new TextToken(text.AsMemory()));
         }
 
-        public void Add(TPlaceholder placeholder, TStyle style = default)
+        public void Add(TPlaceholder placeholder)
         {
             if (placeholder == null)
             {
                 throw new ArgumentNullException(nameof(placeholder));
             }
-            _tokens.Add(new PlaceholderToken(placeholder, style));
+            _tokens.Add(new PlaceholderToken(placeholder));
         }
 
-        public void InsertAt(int index, ReadOnlyMemory<char> text, TStyle style = default)
+        public void InsertAt(int index, ReadOnlyMemory<char> text)
         {
-            _tokens.Insert(index, new TextToken(text, style));
+            _tokens.Insert(index, new TextToken(text));
         }
 
-        public void InsertAt(int index, string text, TStyle style = default)
+        public void InsertAt(int index, string text)
         {
             if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
-            _tokens.Insert(index, new TextToken(text.AsMemory(), style));
+            _tokens.Insert(index, new TextToken(text.AsMemory()));
         }
 
-        public void InsertAt(int index, TPlaceholder placeholder, TStyle style = default)
+        public void InsertAt(int index, TPlaceholder placeholder)
         {
             if (placeholder == null)
             {
                 throw new ArgumentNullException(nameof(placeholder));
             }
-            _tokens.Insert(index, new PlaceholderToken(placeholder, style));
+            _tokens.Insert(index, new PlaceholderToken(placeholder));
         }
 
         public void RemoveAt(Token token)
@@ -114,8 +114,8 @@ namespace VoidMain.Text.Templating
             _tokens.Clear();
         }
 
-        public void Accept<TVisitor>(TVisitor visitor)
-            where TVisitor : ITextTemplateVisitor<TPlaceholder, TStyle>
+        public void Accept<TVisitor>(ref TVisitor visitor)
+            where TVisitor : ITextTemplateVisitor<TPlaceholder>
         {
             if (visitor == null)
             {
@@ -129,10 +129,10 @@ namespace VoidMain.Text.Templating
                 switch (token)
                 {
                     case TextToken tt:
-                        visitor.Visit(tt.Text, tt.Style);
+                        visitor.Visit(tt.Text);
                         break;
                     case PlaceholderToken pt:
-                        visitor.Visit(pt.Placeholder, pt.Style);
+                        visitor.Visit(pt.Placeholder);
                         break;
                     default:
                         token.Accept(ref visitor);
@@ -145,25 +145,22 @@ namespace VoidMain.Text.Templating
 
         public abstract class Token
         {
-            public TStyle Style { get; set; }
-
             public abstract void Accept<TVisitor>(ref TVisitor visitor)
-                where TVisitor : ITextTemplateVisitor<TPlaceholder, TStyle>;
+                where TVisitor : ITextTemplateVisitor<TPlaceholder>;
         }
 
         public sealed class TextToken : Token
         {
             public ReadOnlyMemory<char> Text { get; set; }
 
-            public TextToken(ReadOnlyMemory<char> text, TStyle style = default)
+            public TextToken(ReadOnlyMemory<char> text)
             {
                 Text = text;
-                Style = style;
             }
 
             public sealed override void Accept<TVisitor>(ref TVisitor visitor)
             {
-                visitor.Visit(Text, Style);
+                visitor.Visit(Text);
             }
 
             public override string ToString() => Text.ToString();
@@ -173,15 +170,14 @@ namespace VoidMain.Text.Templating
         {
             public TPlaceholder Placeholder { get; set; }
 
-            public PlaceholderToken(TPlaceholder placeholder, TStyle style = default)
+            public PlaceholderToken(TPlaceholder placeholder)
             {
                 Placeholder = placeholder;
-                Style = style;
             }
 
             public sealed override void Accept<TVisitor>(ref TVisitor visitor)
             {
-                visitor.Visit(Placeholder, Style);
+                visitor.Visit(Placeholder);
             }
 
             public override string ToString() => Placeholder.ToString();

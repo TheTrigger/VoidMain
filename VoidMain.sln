@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Common", "src\Void
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "redesign", "redesign", "{58ECB7C3-E8C2-435B-ABDE-23ADB08E0A6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Text.Templating", "src\VoidMain.Text.Templating\VoidMain.Text.Templating.csproj", "{72E77890-6890-4B07-A6D1-BE18A82B8D41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.Text.Templates", "src\VoidMain.Text.Templates\VoidMain.Text.Templates.csproj", "{72E77890-6890-4B07-A6D1-BE18A82B8D41}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoidMain.IO.Console", "src\VoidMain.IO.Console\VoidMain.IO.Console.csproj", "{C433B656-6203-45A6-9D19-9D354CF35FB0}"
 EndProject

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VoidMain.Text.Templating
+namespace VoidMain.Text.Templates
 {
     public readonly struct ValuePlaceholder<TValueKey> : IEquatable<ValuePlaceholder<TValueKey>>
     {

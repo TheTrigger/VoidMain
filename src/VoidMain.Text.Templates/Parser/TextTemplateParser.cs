@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Text.Templating.Parser
+namespace VoidMain.Text.Templates.Parser
 {
     public class TextTemplateParser<TPlaceholder> : ITextTemplateParser<TPlaceholder>
     {

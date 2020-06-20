@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Text.Templating
+namespace VoidMain.Text.Templates
 {
     public interface ITextTemplateVisitor<TPlaceholder>
     {

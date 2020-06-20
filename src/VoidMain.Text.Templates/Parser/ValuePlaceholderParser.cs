@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Text.Templating.Parser
+namespace VoidMain.Text.Templates.Parser
 {
     public class ValuePlaceholderParser<TValueKey, TValueKeyParser> : IPlaceholderParser<ValuePlaceholder<TValueKey>>
         where TValueKeyParser : IValueKeyParser<TValueKey>

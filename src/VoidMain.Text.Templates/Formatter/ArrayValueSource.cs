@@ -1,4 +1,4 @@
-namespace VoidMain.Text.Templating.Formatter
+namespace VoidMain.Text.Templates.Formatter
 {
     public struct ArrayValueSource : IValueSource<int>
     {
