@@ -13,6 +13,12 @@ namespace VoidMain.IO.Keyboard
             Modifiers = modifiers;
         }
 
+        public void Deconstruct(out Key key, out KeyModifiers modifiers)
+        {
+            key = Key;
+            modifiers = Modifiers;
+        }
+
         public static readonly KeyInfo AnyKey = default;
 
         public override string ToString()
@@ -34,5 +40,7 @@ namespace VoidMain.IO.Keyboard
         public static bool operator ==(KeyInfo a, KeyInfo b) => a.Equals(b);
 
         public static bool operator !=(KeyInfo a, KeyInfo b) => !a.Equals(b);
+
+        public static implicit operator KeyInfo(Key key) => new KeyInfo(key);
     }
 }

@@ -9,7 +9,7 @@ namespace VoidMain
         private const int GreenShift = 8;
         private const int BlueShift = 0;
 
-        public uint Value { get; }
+        public int Value { get; }
 
         /// <summary>
         /// Alpha
@@ -31,19 +31,19 @@ namespace VoidMain
         /// </summary>
         public byte B => (byte)(Value >> BlueShift & 0xFF);
 
-        public Color(uint value) => Value = value;
+        public Color(int value) => Value = value;
 
         public Color(byte red, byte green, byte blue)
             : this(255, red, green, blue) { }
 
         public Color(byte alpha, byte red, byte green, byte blue)
         {
-            Value = unchecked((uint)(
+            Value = unchecked(
                 alpha << AlphaShift |
                 red << RedShift |
                 green << GreenShift |
                 blue << BlueShift
-                ));
+                );
         }
 
         public static Color Parse(string value) => Parse(value.AsSpan());
@@ -158,8 +158,8 @@ namespace VoidMain
                 format = format.Slice(1);
             }
 
-            uint value = Value;
-            ReadOnlySpan<char> valueFormat = default;
+            int value = Value;
+            ReadOnlySpan<char> valueFormat;
 
             if (format.Equals("ARGB", StringComparison.OrdinalIgnoreCase))
             {
@@ -180,7 +180,7 @@ namespace VoidMain
             return value.TryFormat(destination, out _, valueFormat, provider);
         }
 
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => Value;
 
         public override bool Equals(object? obj) => obj is Color c && Equals(c);
 
