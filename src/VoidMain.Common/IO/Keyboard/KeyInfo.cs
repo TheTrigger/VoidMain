@@ -23,7 +23,7 @@ namespace VoidMain.IO.Keyboard
         }
 
         public override int GetHashCode()
-            => HashCode.Combine(Key, Modifiers);
+            => (byte)Key | (byte)Modifiers << 8;
 
         public override bool Equals(object? obj)
             => obj is KeyInfo info && Equals(info);
