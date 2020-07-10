@@ -6,25 +6,25 @@ namespace VoidMain.IO.Keyboard
     {
         public KeyInfo KeyInfo { get; }
         public char Character { get; }
-        public bool HasMore { get; }
+        public bool IsNextKeyAvailable { get; }
 
-        public KeyInput(KeyInfo keyInfo, char character, bool hasMore)
+        public KeyInput(KeyInfo keyInfo, char character, bool isNextKeyAvailable)
         {
             KeyInfo = keyInfo;
             Character = character;
-            HasMore = hasMore;
+            IsNextKeyAvailable = isNextKeyAvailable;
         }
 
         public override string ToString() => KeyInfo.ToString();
 
         public override int GetHashCode()
-            => HashCode.Combine(KeyInfo, Character, HasMore);
+            => HashCode.Combine(KeyInfo, Character, IsNextKeyAvailable);
 
         public override bool Equals(object? obj)
             => obj is KeyInput input && Equals(input);
 
         public bool Equals(KeyInput other)
-            => KeyInfo == other.KeyInfo && Character == other.Character && HasMore == other.HasMore;
+            => KeyInfo == other.KeyInfo && Character == other.Character && IsNextKeyAvailable == other.IsNextKeyAvailable;
 
         public static bool operator ==(KeyInput a, KeyInput b) => a.Equals(b);
 
