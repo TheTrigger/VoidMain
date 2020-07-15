@@ -78,6 +78,12 @@ namespace VoidMain.IO.TextEditors
             _keyBindings.Remove(key);
         }
 
+        public void UnbindFromAllKeys()
+        {
+            _keyBindings.Clear();
+            _anyKeyBindings = null;
+        }
+
         public async Task EditAsync(
             TText text,
             IEditingEventsListener? eventsListener = null,

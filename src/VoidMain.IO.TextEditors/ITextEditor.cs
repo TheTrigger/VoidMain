@@ -18,6 +18,8 @@ namespace VoidMain.IO.TextEditors
         void UnbindFromKey(KeyInfo key, KeyHandler<TText> handler);
         void UnbindFromKey(KeyInfo key);
 
+        void UnbindFromAllKeys();
+
         Task EditAsync(TText text, IEditingEventsListener? eventsListener = null, CancellationToken token = default);
     }
 }
