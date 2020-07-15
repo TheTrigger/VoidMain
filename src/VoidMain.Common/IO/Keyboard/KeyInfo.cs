@@ -19,7 +19,9 @@ namespace VoidMain.IO.Keyboard
             modifiers = Modifiers;
         }
 
-        public static readonly KeyInfo AnyKey = default;
+        public static readonly KeyInfo NoKey = default;
+
+        public static readonly KeyInfo AnyKey = Key.Any;
 
         public override string ToString()
         {

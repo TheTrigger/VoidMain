@@ -2,7 +2,7 @@
 {
     public enum Key : byte
     {
-        Unknown,
+        None,
         D0,
         D1,
         D2,
@@ -130,6 +130,8 @@
         OemPlus,
         OemComma,
         OemMinus,
-        OemPeriod
+        OemPeriod,
+        Unknown = byte.MaxValue - 1,
+        Any = byte.MaxValue
     }
 }
