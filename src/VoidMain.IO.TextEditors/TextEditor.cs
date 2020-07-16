@@ -35,6 +35,7 @@ namespace VoidMain.IO.TextEditors
         public void BindToKey(KeyInfo key, KeyHandler<TText> handler)
         {
             if (handler == null) return;
+            if (key == KeyInfo.NoKey) return;
 
             if (key == KeyInfo.AnyKey)
             {

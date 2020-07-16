@@ -19,7 +19,7 @@ namespace VoidMain.IO.Keyboard
             modifiers = Modifiers;
         }
 
-        public static readonly KeyInfo NoKey = default;
+        public static readonly KeyInfo NoKey = Key.None;
 
         public static readonly KeyInfo AnyKey = Key.Any;
 
