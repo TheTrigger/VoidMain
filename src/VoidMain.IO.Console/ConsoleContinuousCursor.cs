@@ -2,11 +2,11 @@
 
 namespace VoidMain.IO.Console
 {
-    public class ConsoleCursor
+    public class ConsoleContinuousCursor
     {
         private readonly IConsole _console;
 
-        public ConsoleCursor(IConsole console)
+        public ConsoleContinuousCursor(IConsole console)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
         }
@@ -23,7 +23,7 @@ namespace VoidMain.IO.Console
 
             if (leftOffset >= width)
             {
-                top = Math.DivRem(leftOffset, width, out left);
+                top += Math.DivRem(leftOffset, width, out left);
             }
             else if (leftOffset < 0)
             {
