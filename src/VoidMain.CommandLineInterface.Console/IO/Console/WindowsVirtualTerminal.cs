@@ -5,37 +5,38 @@ namespace VoidMain.CommandLineInterface.IO.Console
 {
     public static class WindowsVirtualTerminal
     {
-        public static bool TryEnable() => TryChangeMode(true);
-        public static bool TryDisable() => TryChangeMode(false);
+        public static bool IsEnabled()
+        {
+            if (!TryGetHandle(out var handle)) return false;
+            if (!GetConsoleMode(handle, out uint mode)) return false;
+            return (mode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) == ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        }
 
-        private static bool TryChangeMode(bool enabled)
+        public static bool TryEnable() => TrySetEnabled(true);
+        public static bool TryDisable() => TrySetEnabled(false);
+
+        public static bool TrySetEnabled(bool enabled)
+        {
+            if (!TryGetHandle(out var handle)) return false;
+            if (!GetConsoleMode(handle, out uint mode)) return false;
+
+            mode = enabled
+                ? mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING
+                : mode & ~ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+            return SetConsoleMode(handle, mode);
+        }
+
+        private static bool TryGetHandle(out IntPtr handle)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                handle = IntPtr.Zero;
                 return false;
             }
 
-            var handle = GetStdHandle(STD_OUTPUT_HANDLE);
-            if (handle == IntPtr.Zero)
-            {
-                return false;
-            }
-
-            if (!GetConsoleMode(handle, out uint mode))
-            {
-                return false;
-            }
-
-            if (enabled)
-            {
-                mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            }
-            else
-            {
-                mode &= ~ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            }
-
-            return SetConsoleMode(handle, mode);
+            handle = GetStdHandle(STD_OUTPUT_HANDLE);
+            return handle != IntPtr.Zero;
         }
 
         private const int STD_OUTPUT_HANDLE = -11;
