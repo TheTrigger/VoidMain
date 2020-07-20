@@ -13,6 +13,8 @@ namespace VoidMain.IO.Keyboard
         private KeyInput _nextKey;
         private bool _hasNext;
 
+        public bool FixNextKeyAvailabilityStatus { get; set; } = true;
+
         public VirtualKeyboard()
         {
             var options = new UnboundedChannelOptions
@@ -29,7 +31,19 @@ namespace VoidMain.IO.Keyboard
 
         public void Dispose() => _writer.TryComplete();
 
-        public async ValueTask<KeyInput> ReadKeyAsync(CancellationToken token = default)
+        public ValueTask<KeyInput> ReadKeyAsync(CancellationToken token = default)
+        {
+            if (FixNextKeyAvailabilityStatus)
+            {
+                return ReadKeyFixedAsync(token);
+            }
+            else
+            {
+                return _reader.ReadAsync(token);
+            }
+        }
+
+        private async ValueTask<KeyInput> ReadKeyFixedAsync(CancellationToken token = default)
         {
             if (!_hasNext)
             {
