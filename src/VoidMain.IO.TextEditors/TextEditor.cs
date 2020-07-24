@@ -24,6 +24,13 @@ namespace VoidMain.IO.TextEditors
             _keyBindings = new Dictionary<KeyInfo, KeyHandler<TText>>();
         }
 
+        public bool IsKeyBound(KeyInfo key)
+        {
+            return key == KeyInfo.AnyKey
+                ? _anyKeyBindings != null
+                : _keyBindings.ContainsKey(key);
+        }
+
         public void BindToAnyKey(KeyHandler<TText> handler)
             => _anyKeyBindings += handler;
 
@@ -92,12 +99,12 @@ namespace VoidMain.IO.TextEditors
         {
             token.ThrowIfCancellationRequested();
 
-            _context.Reset();
             StartEditing?.Invoke(text);
 
             try
             {
                 _context.Text = text;
+                _context.Cancellation = token;
 
                 while (!token.IsCancellationRequested)
                 {
@@ -117,7 +124,7 @@ namespace VoidMain.IO.TextEditors
                     if (_keyBindings.TryGetValue(_context.Input.KeyInfo, out var handlers))
                     {
                         _context.IsKeyBound = true;
-                        handlers(_context);
+                        handlers.Invoke(_context);
                     }
                     else
                     {
@@ -137,7 +144,7 @@ namespace VoidMain.IO.TextEditors
             }
             finally
             {
-                _context.Text = null!;
+                _context.Reset();
                 StopEditing?.Invoke(text);
             }
 
@@ -146,7 +153,7 @@ namespace VoidMain.IO.TextEditors
 
         private async Task EditModalAsync(IEditingEventsListener? eventsListener, CancellationToken token)
         {
-            _context.IsModalKeyHandlingActive = true;
+            _context.IsModalKeyHandlingInProgress = true;
             _context.IsKeyBound = false;
 
             while (!token.IsCancellationRequested)
@@ -164,7 +171,7 @@ namespace VoidMain.IO.TextEditors
                     return;
                 }
 
-                if (!_context.IsModalKeyHandlingActive)
+                if (!_context.IsModalKeyHandlingInProgress)
                 {
                     if (_context.IsModalKeyHandled)
                     {
@@ -186,6 +193,7 @@ namespace VoidMain.IO.TextEditors
         private sealed class Context : IEditingContext<TText>
         {
             public TText Text { get; set; } = null!;
+            public CancellationToken Cancellation { get; set; }
 
             public KeyInput Input { get; set; }
             public uint InputId { get; set; }
@@ -193,7 +201,7 @@ namespace VoidMain.IO.TextEditors
 
             public KeyHandler<TText> ModalKeyHandler { get; private set; } = null!;
             public bool IsModalKeyHandlingEnabled => ModalKeyHandler != null;
-            public bool IsModalKeyHandlingActive { get; set; }
+            public bool IsModalKeyHandlingInProgress { get; set; }
             public bool IsModalKeyHandled { get; private set; }
 
             public void EnterModalKeyHandling(KeyHandler<TText> handler)
@@ -207,13 +215,13 @@ namespace VoidMain.IO.TextEditors
 
             public void ExitModalKeyHandling(bool isKeyHandled)
             {
-                if (!IsModalKeyHandlingActive)
+                if (!IsModalKeyHandlingInProgress)
                 {
                     throw new Exception("Can't exit modal key handling because it is not active.");
                 }
                 ModalKeyHandler = null!;
                 IsModalKeyHandled = isKeyHandled;
-                IsModalKeyHandlingActive = false;
+                IsModalKeyHandlingInProgress = false;
             }
 
             public bool IsCloseRequested { get; private set; }
@@ -221,10 +229,12 @@ namespace VoidMain.IO.TextEditors
 
             public void Reset()
             {
+                Text = null!;
+                Cancellation = default;
                 InputId = 0;
                 IsKeyBound = false;
                 ModalKeyHandler = null!;
-                IsModalKeyHandlingActive = false;
+                IsModalKeyHandlingInProgress = false;
                 IsModalKeyHandled = false;
                 IsCloseRequested = false;
             }
