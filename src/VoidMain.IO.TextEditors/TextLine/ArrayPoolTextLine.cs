@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Buffers;
 
-namespace VoidMain.IO.TextEditors
+namespace VoidMain.IO.TextEditors.TextLine
 {
-    public class InMemoryTextLine : ITextLine, IDisposable
+    public class ArrayPoolTextLine : ITextLine, IDisposable
     {
         private char[] _text;
         private int _position;
@@ -25,7 +25,7 @@ namespace VoidMain.IO.TextEditors
 
         public uint ContentVersion { get; private set; }
 
-        public InMemoryTextLine(int minCapacity)
+        public ArrayPoolTextLine(int minCapacity)
         {
             _text = ArrayPool<char>.Shared.Rent(minCapacity);
             _position = 0;
@@ -33,7 +33,7 @@ namespace VoidMain.IO.TextEditors
             ContentVersion = 0;
         }
 
-        ~InMemoryTextLine() => Dispose();
+        ~ArrayPoolTextLine() => Dispose();
 
         public void Dispose()
         {

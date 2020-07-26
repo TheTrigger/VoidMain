@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.IO.TextEditors
+namespace VoidMain.IO.TextEditors.TextLine
 {
     public interface ITextLine
     {
