@@ -170,5 +170,30 @@ namespace VoidMain.IO.TextEditors
             ArrayPool<char>.Shared.Return(_text, clearArray: true);
             _text = newText;
         }
+
+        public void ClearState()
+        {
+            Length = 0;
+            _position = 0;
+            ContentVersion = 0;
+        }
+
+        public void SetState(ReadOnlySpan<char> text, int position)
+        {
+            if (position < 0 || position > text.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position));
+            }
+
+            if (text.Length > _text.Length)
+            {
+                Resize(text.Length);
+            }
+
+            text.CopyTo(_text.AsSpan());
+            Length = text.Length;
+            _position = position;
+            ContentVersion = 0;
+        }
     }
 }
