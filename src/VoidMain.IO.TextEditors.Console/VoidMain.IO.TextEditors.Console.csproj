@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>VoidMain.IO.TextEditors</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VoidMain.IO.Console\VoidMain.IO.Console.csproj" />
+    <ProjectReference Include="..\VoidMain.IO.TextEditors\VoidMain.IO.TextEditors.csproj" />
+  </ItemGroup>
+
+</Project>
