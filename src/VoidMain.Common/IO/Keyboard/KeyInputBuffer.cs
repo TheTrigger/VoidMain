@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace VoidMain.IO.Keyboard
 {
-    public class VirtualKeyboard : IKeyReader, IDisposable
+    public class KeyInputBuffer : IKeyReader, IDisposable
     {
-        private readonly Channel<KeyInput> _keysChannel;
         private readonly ChannelReader<KeyInput> _reader;
         private readonly ChannelWriter<KeyInput> _writer;
         private KeyInput _nextKey;
@@ -15,7 +14,7 @@ namespace VoidMain.IO.Keyboard
 
         public bool FixNextKeyAvailabilityStatus { get; set; } = true;
 
-        public VirtualKeyboard()
+        public KeyInputBuffer()
         {
             var options = new UnboundedChannelOptions
             {
@@ -24,30 +23,25 @@ namespace VoidMain.IO.Keyboard
                 SingleWriter = true
             };
 
-            _keysChannel = Channel.CreateUnbounded<KeyInput>(options);
-            _reader = _keysChannel.Reader;
-            _writer = _keysChannel.Writer;
+            var channel = Channel.CreateUnbounded<KeyInput>(options);
+            _reader = channel.Reader;
+            _writer = channel.Writer;
         }
 
         public void Dispose() => _writer.TryComplete();
 
         public ValueTask<KeyInput> ReadKeyAsync(CancellationToken token = default)
         {
-            if (FixNextKeyAvailabilityStatus)
-            {
-                return ReadKeyFixedAsync(token);
-            }
-            else
-            {
-                return _reader.ReadAsync(token);
-            }
+            return FixNextKeyAvailabilityStatus
+                ? ReadKeyFixedAsync(token)
+                : _reader.ReadAsync(token);
         }
 
         private async ValueTask<KeyInput> ReadKeyFixedAsync(CancellationToken token = default)
         {
             if (!_hasNext)
             {
-                _nextKey = await _reader.ReadAsync(token);
+                _nextKey = await _reader.ReadAsync(token).ConfigureAwait(false);
             }
 
             _hasNext = _reader.TryRead(out var nextKey);
@@ -57,5 +51,11 @@ namespace VoidMain.IO.Keyboard
         }
 
         public bool TryWriteKey(KeyInput input) => _writer.TryWrite(input);
+
+        public void Clear()
+        {
+            if (_hasNext) _hasNext = false;
+            while (_reader.TryRead(out _)) { }
+        }
     }
 }
