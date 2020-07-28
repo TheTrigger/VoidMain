@@ -9,7 +9,7 @@ namespace VoidMain.Text.Templates.Formatter
 
         public ValueFormatter()
         {
-            _tryFormatToSpan = TryFormatToSpanDelegate.Value;
+            _tryFormatToSpan = EmitTryFormatToSpan();
         }
 
         public bool TryFormatToSpan(object value, ReadOnlySpan<char> format,
@@ -58,8 +58,6 @@ namespace VoidMain.Text.Templates.Formatter
 
             return result;
         }
-
-        public static readonly Lazy<TryFormatToSpanFunc> TryFormatToSpanDelegate = new Lazy<TryFormatToSpanFunc>(EmitTryFormatToSpan);
 
         public delegate bool TryFormatToSpanFunc(
             object value, Span<char> destination, out int charsWritten,

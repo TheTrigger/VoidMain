@@ -51,5 +51,10 @@ namespace VoidMain.Text.Templates
 
             return hashCode.ToHashCode();
         }
+
+        public static implicit operator ValuePlaceholder<TValueKey>(TValueKey key)
+        {
+            return new ValuePlaceholder<TValueKey>(key);
+        }
     }
 }

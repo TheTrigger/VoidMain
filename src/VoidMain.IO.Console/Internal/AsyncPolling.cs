@@ -7,8 +7,8 @@ namespace VoidMain.IO.Console.Internal
 {
     public class AsyncPolling<TState> : IValueTaskSource, IDisposable
     {
-        private static TimerCallback OnPollCallback = OnPoll;
-        private static Action<object?> OnCancelCallback = OnCancel;
+        private static readonly TimerCallback OnPollCallback = OnPoll;
+        private static readonly Action<object?> OnCancelCallback = OnCancel;
 
         // Mutable struct. Do not make this readonly.
         private ManualResetValueTaskSourceCore<bool> _taskSource;
