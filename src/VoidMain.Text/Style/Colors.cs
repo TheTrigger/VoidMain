@@ -1,4 +1,4 @@
-﻿namespace VoidMain
+﻿namespace VoidMain.Text.Style
 {
     public static class Colors
     {

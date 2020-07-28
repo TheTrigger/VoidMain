@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain
+namespace VoidMain.Text.Style
 {
     public readonly struct Color : IEquatable<Color>, IFormattable
     {

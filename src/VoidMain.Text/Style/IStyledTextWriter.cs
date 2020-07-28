@@ -1,4 +1,4 @@
-﻿namespace VoidMain.Text
+﻿namespace VoidMain.Text.Style
 {
     public interface IStyledTextWriter<TStyle> : ITextWriter
     // TODO: where TStyle : notnull ???

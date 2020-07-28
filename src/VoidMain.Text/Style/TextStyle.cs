@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoidMain.Text
+namespace VoidMain.Text.Style
 {
     public readonly struct TextStyle : IEquatable<TextStyle>
     {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VoidMain.IO.FileSystem
 {
-    public class PhisicalFileSystem : IFileSystem
+    public class FileSystem : IFileSystem
     {
         private const int DefaultBufferSize = 4096;
 

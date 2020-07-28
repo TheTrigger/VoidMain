@@ -6,5 +6,6 @@ namespace VoidMain.IO.Clock
     {
         DateTime Now();
         DateTime UtcNow();
+        long GetTimestamp();
     }
 }

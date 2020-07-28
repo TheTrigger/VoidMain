@@ -1,4 +1,4 @@
-﻿using VoidMain.Text;
+﻿using VoidMain.Text.Style;
 
 namespace VoidMain.IO.Console
 {
