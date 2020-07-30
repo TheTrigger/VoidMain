@@ -36,5 +36,7 @@ namespace VoidMain.Text.Style
         public static bool operator ==(in TextStyle a, in TextStyle b) => a.Equals(b);
 
         public static bool operator !=(in TextStyle a, in TextStyle b) => !a.Equals(b);
+
+        public static implicit operator TextStyle(Color foreground) => new TextStyle(foreground);
     }
 }
