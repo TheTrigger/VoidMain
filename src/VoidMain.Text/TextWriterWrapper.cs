@@ -40,7 +40,7 @@ namespace VoidMain.Text
 
         public void Write(ReadOnlySpan<char> value) => _textWriter.Write(value);
 
-        public void WriteNewLine() => _textWriter.WriteLine();
+        public void WriteLine() => _textWriter.WriteLine();
 
         public void Flush() => _textWriter.Flush();
 

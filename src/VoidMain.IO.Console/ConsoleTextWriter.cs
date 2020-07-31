@@ -16,6 +16,6 @@ namespace VoidMain.IO.Console
         public void Write(char value, int count) => _console.Write(value, count);
         public void Write(string? value) => _console.Write(value);
         public void Write(ReadOnlySpan<char> value) => _console.Write(value);
-        public void WriteNewLine() => _console.WriteLine();
+        public void WriteLine() => _console.WriteLine();
     }
 }

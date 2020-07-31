@@ -28,7 +28,7 @@ namespace VoidMain.Text
 
         public void Write(ReadOnlySpan<char> value) => _stringBuilder.Append(value);
 
-        public void WriteNewLine() => _stringBuilder.AppendLine();
+        public void WriteLine() => _stringBuilder.AppendLine();
 
         public void Clear() => _stringBuilder.Clear();
 

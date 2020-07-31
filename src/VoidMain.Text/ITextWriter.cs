@@ -8,6 +8,6 @@ namespace VoidMain.Text
         void Write(char value, int count);
         void Write(string? value);
         void Write(ReadOnlySpan<char> value);
-        void WriteNewLine();
+        void WriteLine();
     }
 }
