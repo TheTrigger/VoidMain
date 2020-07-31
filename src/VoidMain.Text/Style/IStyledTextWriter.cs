@@ -2,7 +2,7 @@
 {
     public interface IStyledTextWriter<TStyle> : ITextWriter
     {
-        void WriteStyle(TStyle style);
         void ClearStyle();
+        void SetStyle(TStyle style);
     }
 }

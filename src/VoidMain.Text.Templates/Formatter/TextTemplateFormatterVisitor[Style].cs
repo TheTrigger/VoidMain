@@ -40,7 +40,7 @@ namespace VoidMain.Text.Templates.Formatter
 
         public void Visit(ReadOnlyMemory<char> text, TStyle style)
         {
-            _textWriter.WriteStyle(style);
+            _textWriter.SetStyle(style);
             _textWriter.Write(text.Span);
         }
 
@@ -48,7 +48,7 @@ namespace VoidMain.Text.Templates.Formatter
         {
             var value = _valueSource.GetValue(placeholder.Key);
 
-            _textWriter.WriteStyle(style);
+            _textWriter.SetStyle(style);
 
             Span<char> buffer = stackalloc char[64];
             if (_valueFormatter.TryFormatToSpan(value, placeholder.Format.Span, _formatProvider, buffer, out int charsWritten))

@@ -10,7 +10,7 @@ namespace VoidMain.IO.TextEditors.TextLine
         where TStyle : IEquatable<TStyle>
     {
         private readonly IConsole _console;
-        private readonly IStyledTextWriter<TStyle> _writer;
+        private readonly IConsoleStyleSetter<TStyle> _styleSetter;
         private readonly ITextColorizer<TStyle> _colorizer;
         private readonly ColorizerVisitor _visitor;
         private readonly ConsoleContinuousCursor _cursor;
@@ -40,10 +40,13 @@ namespace VoidMain.IO.TextEditors.TextLine
 
         public uint ContentVersion => _line.ContentVersion;
 
-        public ConsoleStyledTextLineView(IConsole console, IStyledTextWriter<TStyle> writer, ITextColorizer<TStyle> colorizer)
+        public ConsoleStyledTextLineView(
+            IConsole console,
+            IConsoleStyleSetter<TStyle> styleSetter,
+            ITextColorizer<TStyle> colorizer)
         {
             _console = console ?? throw new ArgumentNullException(nameof(console));
-            _writer = writer ?? throw new ArgumentNullException(nameof(writer));
+            _styleSetter = styleSetter ?? throw new ArgumentNullException(nameof(styleSetter));
             _colorizer = colorizer ?? throw new ArgumentNullException(nameof(colorizer));
             _visitor = new ColorizerVisitor();
             _cursor = new ConsoleContinuousCursor(console);
@@ -198,15 +201,15 @@ namespace VoidMain.IO.TextEditors.TextLine
                 {
                     var highlight = highlights.Current;
 
-                    _writer.WriteStyle(highlight.Style);
-                    _writer.Write(highlight.Text.Span);
+                    _styleSetter.SetStyle(highlight.Style);
+                    _console.Write(highlight.Text.Span);
 
                     int length = highlight.Text.Length;
                     written += length;
                     left += length;
                 } while (highlights.MoveNext());
 
-                _writer.ClearStyle();
+                _styleSetter.ClearStyle();
                 highlights.Dispose();
             }
 
@@ -215,14 +218,14 @@ namespace VoidMain.IO.TextEditors.TextLine
 
             if (clear > 0)
             {
-                _writer.Write(' ', clear);
+                _console.Write(' ', clear);
                 written += clear;
                 left += clear;
             }
 
             if (left % width == 0)
             {
-                _writer.Write(' ');
+                _console.Write(' ');
                 _console.CursorLeft = 0;
             }
 

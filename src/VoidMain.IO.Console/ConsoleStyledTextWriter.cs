@@ -1,38 +1,20 @@
-﻿using VoidMain.Text.Style;
+﻿using System;
+using VoidMain.Text.Style;
 
 namespace VoidMain.IO.Console
 {
-    public class ConsoleStyledTextWriter : ConsoleTextWriter, IStyledTextWriter<TextStyle>
+    public class ConsoleStyledTextWriter<TStyle> : ConsoleTextWriter, IStyledTextWriter<TStyle>
     {
-        private readonly ConsoleAnsiWriter _ansi;
+        private readonly IConsoleStyleSetter<TStyle> _styleSetter;
 
-        public ConsoleStyledTextWriter(IConsole console)
+        public ConsoleStyledTextWriter(IConsole console, IConsoleStyleSetter<TStyle> styleSetter)
                 : base(console)
         {
-            _ansi = new ConsoleAnsiWriter(console);
+            _styleSetter = styleSetter ?? throw new ArgumentNullException(nameof(styleSetter));
         }
 
-        public void ClearStyle() => _ansi.WriteReset();
+        public void ClearStyle() => _styleSetter.ClearStyle();
 
-        public void WriteStyle(TextStyle style)
-        {
-            if (style.Foreground is Color foreground)
-            {
-                _ansi.WriteForeground(foreground);
-            }
-            else
-            {
-                _ansi.WriteDefaultForeground();
-            }
-
-            if (style.Background is Color background)
-            {
-                _ansi.WriteBackground(background);
-            }
-            else
-            {
-                _ansi.WriteDefaultBackground();
-            }
-        }
+        public void SetStyle(TStyle style) => _styleSetter.SetStyle(style);
     }
 }
