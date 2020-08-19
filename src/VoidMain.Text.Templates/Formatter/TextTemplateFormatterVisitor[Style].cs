@@ -9,14 +9,14 @@ namespace VoidMain.Text.Templates.Formatter
     {
         private static readonly Type CustomFormatterType = typeof(ICustomFormatter);
 
-        private IStyledTextWriter<TStyle> _textWriter;
+        private ITextWriter<TStyle> _textWriter;
         private TValueSource _valueSource;
         private IValueFormatter _valueFormatter;
         private IFormatProvider _formatProvider;
         private ICustomFormatter _customFormatter;
 
         public TextTemplateFormatterVisitor(
-            IStyledTextWriter<TStyle> textWriter,
+            ITextWriter<TStyle> textWriter,
             TValueSource valueSource,
             IValueFormatter valueFormatter,
             IFormatProvider formatProvider = null)

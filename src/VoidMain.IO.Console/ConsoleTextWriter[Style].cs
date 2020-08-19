@@ -3,11 +3,11 @@ using VoidMain.Text.Style;
 
 namespace VoidMain.IO.Console
 {
-    public class ConsoleStyledTextWriter<TStyle> : ConsoleTextWriter, IStyledTextWriter<TStyle>
+    public class ConsoleTextWriter<TStyle> : ConsoleTextWriter, ITextWriter<TStyle>
     {
         private readonly IConsoleStyleSetter<TStyle> _styleSetter;
 
-        public ConsoleStyledTextWriter(IConsole console, IConsoleStyleSetter<TStyle> styleSetter)
+        public ConsoleTextWriter(IConsole console, IConsoleStyleSetter<TStyle> styleSetter)
                 : base(console)
         {
             _styleSetter = styleSetter ?? throw new ArgumentNullException(nameof(styleSetter));
