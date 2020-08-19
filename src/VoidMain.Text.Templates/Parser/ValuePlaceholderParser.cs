@@ -16,27 +16,28 @@ namespace VoidMain.Text.Templates.Parser
             _formatProvider = formatProvider;
         }
 
-        public int Parse<TPlaceholderConstraint>(string template, int position,
-            TPlaceholderConstraint placeholderConstraint, out ValuePlaceholder<TValueKey> placeholder)
-            where TPlaceholderConstraint : struct, IPlaceholderConstraint
+        public int Parse<TParseRange>(
+            string template, int position,
+            TParseRange range, out ValuePlaceholder<TValueKey> placeholder)
+            where TParseRange : struct, IParseRange
         {
-            int consumed = ParserKey(template, position, placeholderConstraint, out var key);
-            consumed += ParseAlignment(template, position + consumed, placeholderConstraint, out int alignment);
-            consumed += ParseFormat(template, position + consumed, placeholderConstraint, out var format);
+            int consumed = ParserKey(template, position, range, out var key);
+            consumed += ParseAlignment(template, position + consumed, range, out int alignment);
+            consumed += ParseFormat(template, position + consumed, range, out var format);
 
             placeholder = new ValuePlaceholder<TValueKey>(key, alignment, format);
             return consumed;
         }
 
-        protected int ParserKey<TPlaceholderConstraint>(
-            string template, int position, TPlaceholderConstraint placeholderConstraint, out TValueKey key)
-            where TPlaceholderConstraint : struct, IPlaceholderConstraint
+        protected int ParserKey<TParseRange>(
+            string template, int position, TParseRange range, out TValueKey key)
+            where TParseRange : struct, IParseRange
         {
             int start = position;
 
             while (position < template.Length)
             {
-                if (placeholderConstraint.IsEndOfPlaceholder(template, position))
+                if (range.IsEndOfRange(template, position))
                 {
                     break;
                 }
@@ -62,9 +63,9 @@ namespace VoidMain.Text.Templates.Parser
             return consumed;
         }
 
-        protected int ParseAlignment<TPlaceholderConstraint>(
-            string template, int position, TPlaceholderConstraint placeholderConstraint, out int alignment)
-            where TPlaceholderConstraint : struct, IPlaceholderConstraint
+        protected int ParseAlignment<TParseRange>(
+            string template, int position, TParseRange range, out int alignment)
+            where TParseRange : struct, IParseRange
         {
             if (position >= template.Length || template[position] != ',')
             {
@@ -77,7 +78,7 @@ namespace VoidMain.Text.Templates.Parser
 
             while (position < template.Length)
             {
-                if (placeholderConstraint.IsEndOfPlaceholder(template, position))
+                if (range.IsEndOfRange(template, position))
                 {
                     break;
                 }
@@ -104,9 +105,9 @@ namespace VoidMain.Text.Templates.Parser
             return consumed;
         }
 
-        protected int ParseFormat<TPlaceholderConstraint>(
-            string template, int position, TPlaceholderConstraint placeholderConstraint, out ReadOnlyMemory<char> format)
-            where TPlaceholderConstraint : struct, IPlaceholderConstraint
+        protected int ParseFormat<TParseRange>(
+            string template, int position, TParseRange range, out ReadOnlyMemory<char> format)
+            where TParseRange : struct, IParseRange
         {
             if (position >= template.Length || template[position] != ':')
             {
@@ -119,7 +120,7 @@ namespace VoidMain.Text.Templates.Parser
 
             while (position < template.Length)
             {
-                if (placeholderConstraint.IsEndOfPlaceholder(template, position))
+                if (range.IsEndOfRange(template, position))
                 {
                     break;
                 }

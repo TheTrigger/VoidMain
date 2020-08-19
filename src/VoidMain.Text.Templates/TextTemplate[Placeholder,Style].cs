@@ -114,7 +114,7 @@ namespace VoidMain.Text.Templates
             _tokens.Clear();
         }
 
-        public void Accept<TVisitor>(TVisitor visitor)
+        public void Accept<TVisitor>(ref TVisitor visitor)
             where TVisitor : ITextTemplateVisitor<TPlaceholder, TStyle>
         {
             if (visitor == null)

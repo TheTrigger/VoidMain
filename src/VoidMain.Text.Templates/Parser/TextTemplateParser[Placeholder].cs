@@ -5,12 +5,12 @@ namespace VoidMain.Text.Templates.Parser
     public class TextTemplateParser<TPlaceholder> : ITextTemplateParser<TPlaceholder>
     {
         private readonly IPlaceholderParser<TPlaceholder> _placeholderParser;
-        private readonly PlaceholderConstraint _placeholderConstraint;
+        private readonly ParseRange _placeholderRange;
 
         public TextTemplateParser(IPlaceholderParser<TPlaceholder> placeholderParser)
         {
             _placeholderParser = placeholderParser ?? throw new ArgumentNullException(nameof(placeholderParser));
-            _placeholderConstraint = new PlaceholderConstraint();
+            _placeholderRange = new ParseRange('}');
         }
 
         public void Parse<TVisitor>(string templateText, ref TVisitor visitor)
@@ -53,7 +53,9 @@ namespace VoidMain.Text.Templates.Parser
                         }
                         else
                         {
-                            int consumed = _placeholderParser.Parse(templateText, position, _placeholderConstraint, out var placeholder);
+                            int consumed = _placeholderParser.Parse(
+                                templateText, position, _placeholderRange, out var placeholder);
+
                             visitor.Visit(placeholder);
                             position += consumed;
 
@@ -91,7 +93,7 @@ namespace VoidMain.Text.Templates.Parser
                     default:
                         int start = position;
                         do { position++; }
-                        while (position < templateText.Length && templateText[position] != '{' && templateText[position] != '}');
+                        while (position < templateText.Length && !IsControl(templateText[position]));
                         visitor.Visit(templateText.AsMemory(start, position - start));
                         break;
                 }
@@ -100,12 +102,7 @@ namespace VoidMain.Text.Templates.Parser
             visitor.AfterVisitAll();
         }
 
-        private readonly struct PlaceholderConstraint : IPlaceholderConstraint
-        {
-            public bool IsEndOfPlaceholder(string template, int position)
-            {
-                return template[position] == '}';
-            }
-        }
+        private static bool IsControl(char symbol)
+            => symbol == '{' || symbol == '}' || symbol == '[' || symbol == ']';
     }
 }
