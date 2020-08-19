@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace VoidMain.IO.TextEditors.Internal
 {
-    [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class PushOutCollection<T> : IReadOnlyList<T>
     {
         private readonly T[] _elements;
@@ -101,5 +101,7 @@ namespace VoidMain.IO.TextEditors.Internal
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private string GetDebuggerDisplay() => $"Count = {Count}";
     }
 }

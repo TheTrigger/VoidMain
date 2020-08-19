@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace VoidMain.Text.Style
 {
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public readonly struct TextStyle : IEquatable<TextStyle>
     {
         public Color? Foreground { get; }
@@ -17,7 +19,7 @@ namespace VoidMain.Text.Style
 
         public static readonly TextStyle Default = default;
 
-        public override string ToString()
+        private string GetDebuggerDisplay()
         {
             string f = Foreground?.ToString() ?? " --- ";
             string b = Background?.ToString() ?? " --- ";
