@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading;
-using VoidMain.IO.Console;
 
-namespace Experiments.Design.IO.TextEditors.Console
+namespace VoidMain.IO.Console
 {
     public class ConsoleCancelKeyTokenSource : IDisposable
     {

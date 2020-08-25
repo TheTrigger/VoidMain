@@ -2,11 +2,11 @@
 
 namespace VoidMain.IO.Console
 {
-    public class ConsoleAnsiStyleSetter : IConsoleStyleSetter<TextStyle>
+    public class ConsoleAnsiTextStyleSetter : IConsoleStyleSetter<TextStyle>
     {
         private readonly ConsoleAnsiWriter _ansi;
 
-        public ConsoleAnsiStyleSetter(IConsole console)
+        public ConsoleAnsiTextStyleSetter(IConsole console)
         {
             _ansi = new ConsoleAnsiWriter(console);
         }
